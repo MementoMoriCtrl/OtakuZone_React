@@ -57,6 +57,7 @@ export default function AppRouter() {
           <Route path="cuenta" element={<MiCuenta />} />
           <Route element={<RequireAuth />}><Route path="perfil" element={<Perfil />} /></Route>
           <Route element={<RequireAuth role="ADMIN" />}><Route path="admin" element={<Admin />} /></Route>
+          <Route element={<RequireAuth role="ADMIN" />}><Route path="admin/:section" element={<Admin />} /></Route>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

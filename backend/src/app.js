@@ -16,6 +16,9 @@ import { createAuthRoutes } from './routes/auth.js'
 import { createCommerceRoutes } from './routes/commerce.js'
 import { createCommerceRepository } from './repositories/commerceRepository.js'
 import { createCommerceService } from './services/commerceService.js'
+import { createAdminRoutes } from './routes/admin.js'
+import { createAdminRepository } from './repositories/adminRepository.js'
+import { createAdminService } from './services/adminService.js'
 
 export function createApp({ config = loadConfig(), repository, authPool } = {}) {
   const app = express()
@@ -34,7 +37,7 @@ export function createApp({ config = loadConfig(), repository, authPool } = {}) 
       if (!origin || config.origins.includes(origin)) return callback(null, true)
       return callback(new HttpError(403, 'CORS_ORIGIN_DENIED', 'El origen de la solicitud no está permitido.'))
     },
-    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Accept', 'Content-Type', 'X-OtakuZone-CSRF'],
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Accept', 'Content-Type', 'X-OtakuZone-CSRF'],
     exposedHeaders: ['RateLimit', 'RateLimit-Policy', 'Retry-After'], credentials: true, maxAge: 600,
   }))
   app.use('/api/v1', rateLimit({
@@ -44,6 +47,7 @@ export function createApp({ config = loadConfig(), repository, authPool } = {}) 
   }))
   app.use(express.json({ limit: '10kb', strict: true }))
   app.use('/api/v1', createAuthRoutes(authService, config))
+  app.use('/api/v1', createAdminRoutes(authenticationPool ? createAdminService(createAdminRepository(authenticationPool)) : null, authService, config))
   app.use('/api/v1', createCommerceRoutes(authenticationPool ? createCommerceService(createCommerceRepository(authenticationPool)) : null, authService, config))
   app.use('/api/v1', createRoutes(createCatalogService(source.repository)))
   app.use(notFound)

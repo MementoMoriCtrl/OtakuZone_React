@@ -49,7 +49,7 @@ export async function openBrowser() {
     }
     const navigate = async (path) => {
       await send('Page.navigate', { url: `${globalThis.process.env.AUDIT_URL ?? 'http://127.0.0.1:5173'}${path}` })
-      await waitFor(`location.pathname === ${JSON.stringify(path.split('?')[0])} && !!document.querySelector('main h1')`)
+      await waitFor(`location.pathname === ${JSON.stringify(path.split('?')[0])} && !!document.querySelector('main h1')`, 30000)
     }
     const click = async (selector) => { await evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`); await delay(80) }
     const input = async (selector, value) => {

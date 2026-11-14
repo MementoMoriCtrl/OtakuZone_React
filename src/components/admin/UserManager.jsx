@@ -1,0 +1,3 @@
+import useAdminList from '../../hooks/useAdminList.js'
+import { Collection,Record } from './AdminShared.jsx'
+export default function UserManager(){const resource=useAdminList('users');return <div className="space-y-6"><p className="text-sm text-neo-white/70">Consulta de usuarios. Los roles no se modifican desde el panel; requieren el procedimiento de mantenimiento autorizado. No se exponen contraseñas ni hashes.</p><Collection resource={resource}>{u=><Record key={u.id} title={u.name}><p>{u.email}</p><p>#{u.id} · {u.role} · {u.status}</p><p className="text-sm">Registro: {new Date(u.createdAt).toLocaleString('es-PE')}</p></Record>}</Collection></div>}

@@ -46,7 +46,7 @@ try {
   for (const port of [4407, 5177]) {
     const probe = createServer().listen(port, '127.0.0.1'); await once(probe, 'listening'); await new Promise(resolve => probe.close(resolve))
   }
-  console.log('Esquema origen (solo lectura):', JSON.stringify(await checkDatabaseSchema(admin)))
+  console.log('Esquema origen (solo lectura):', JSON.stringify(await checkDatabaseSchema(admin, {allowPendingAdmin:process.argv.includes('--admin')})))
   const [ledger] = await admin.execute('SELECT version,checksum FROM schema_migrations ORDER BY version')
   for (const row of ledger) {
     assert.match(row.version, /^\d{3}_[a-z_]+\.sql$/)
@@ -70,17 +70,25 @@ try {
     const fields = columns.map(c => quoted(c.name)).join(',')
     await connection.query(`INSERT INTO ${quoted(database)}.${quoted(table)} (${fields}) SELECT ${fields} FROM ${quoted(source.database)}.${quoted(table)}`)
   }
+  if (process.argv.includes('--admin') && !ledger.some(r=>r.version==='007_admin_inventory.sql')) {
+    const sql=await readFile(new URL('../database/migrations/007_admin_inventory.sql',import.meta.url),'utf8')
+    await connection.query(sql)
+    await connection.execute('INSERT INTO schema_migrations (version,checksum) VALUES (?,?)',['007_admin_inventory.sql',createHash('sha256').update(sql.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n')).digest('hex')])
+    console.log('007 aplicada únicamente en la base aislada')
+  }
   await connection.query('CREATE USER ?@\'127.0.0.1\' IDENTIFIED BY ?', [user, password]); account = true
   await connection.query(`GRANT SELECT,INSERT,UPDATE,DELETE ON ${quoted(database)}.* TO ?@'127.0.0.1'`, [user])
   Object.assign(process.env, env)
   await assertTestIsolation(loadDatabaseConfig())
   console.log('Base aislada preparada:', database, '; sin usuarios, sesiones ni pedidos de origen')
-  await run('backend/scripts/verify-commerce.js')
+  if(!process.argv.includes('--admin-only')) await run('backend/scripts/verify-commerce.js')
+  if(process.argv.includes('--admin')) await run('backend/scripts/verify-admin.js')
   const api = child('backend/src/server.js'); services.push(api)
   await ready(env.API_URL + '/health', api)
   const vite = child('node_modules/vite/bin/vite.js', ['--host', '127.0.0.1', '--port', '5177', '--strictPort']); services.push(vite)
   await ready(env.AUDIT_URL, vite)
-  await run('scripts/audit-commerce-browser.mjs')
+  if(!process.argv.includes('--admin-only')) await run('scripts/audit-commerce-browser.mjs')
+  if(process.argv.includes('--admin')) await run('scripts/audit-admin-browser.mjs')
   console.log('PASS cierre funcional HTTP + navegador sobre MySQL aislado')
 } catch (error) {
   console.error('Cierre aislado detenido:', error.code ?? error.message); process.exitCode = 1

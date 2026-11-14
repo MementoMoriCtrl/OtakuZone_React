@@ -1,0 +1,9 @@
+import useAdminList from '../../hooks/useAdminList.js'
+import useAsyncAction from '../../hooks/useAsyncAction.js'
+import ActionMessage from '../common/ActionMessage.jsx'
+import { adminWrite } from '../../services/admin.js'
+import { Field,Collection,Record,buttonClass } from './AdminShared.jsx'
+export default function InventoryManager(){const resource=useAdminList('inventory'),movements=useAdminList('movements'),action=useAsyncAction()
+  const update=(e,p)=>{e.preventDefault();const f=new FormData(e.currentTarget);action.run(async()=>{await adminWrite(`inventory/${p.id}`,'PATCH',{quantity:Number(f.get('quantity')),expectedQuantity:p.quantity,reason:f.get('reason')});resource.retry();movements.retry()},'Inventario actualizado y movimiento registrado.')}
+  return <div className="space-y-6"><p className="text-sm text-neo-white/70">Bajo inventario: hasta 5 unidades disponibles. Se comprueba que las existencias no hayan cambiado mientras editas y se respetan las unidades reservadas.</p><ActionMessage action={action}/><Collection resource={resource}>{p=><Record key={p.id} title={p.name}><p>Total: {p.quantity} · Reservadas: {p.reserved} · Disponibles: {p.available}</p><form onSubmit={e=>update(e,p)} className="space-y-3"><Field key={p.quantity} label="Nueva cantidad total" type="number" name="quantity" min={p.reserved} max="1000000" required defaultValue={p.quantity}/><Field label="Motivo del ajuste" name="reason" required minLength={5} maxLength={300}/><button className={buttonClass} disabled={action.loading}>Guardar existencias</button></form></Record>}</Collection><h2 className="font-heading text-xl">Movimientos de inventario</h2><Collection resource={movements}>{m=><Record key={m.id} title={m.productId}><p>{m.beforeQuantity} → {m.afterQuantity} ({m.delta>0?'+':''}{m.delta})</p><p>{m.reason} · Responsable #{m.actorId}</p><p className="text-xs">{new Date(m.createdAt).toLocaleString('es-PE')}</p></Record>}</Collection></div>
+}

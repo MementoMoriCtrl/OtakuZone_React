@@ -25,3 +25,10 @@ GRANT SELECT, INSERT ON otakuzone_db.historial_pedidos TO 'otakuzone_app'@'127.0
 GRANT SELECT ON otakuzone_db.suscripciones TO 'otakuzone_app'@'127.0.0.1';
 GRANT SELECT, INSERT ON otakuzone_db.historial_suscripciones TO 'otakuzone_app'@'127.0.0.1';
 GRANT UPDATE (estado,fecha_fin) ON otakuzone_db.historial_suscripciones TO 'otakuzone_app'@'127.0.0.1';
+-- Fase 8: aplicar manualmente tras 007; la API autoriza siempre ADMIN.
+-- No se concede UPDATE de rol_id ni acceso de escritura a roles.
+GRANT INSERT, UPDATE ON otakuzone_db.productos TO 'otakuzone_app'@'127.0.0.1';
+GRANT INSERT, UPDATE ON otakuzone_db.categorias TO 'otakuzone_app'@'127.0.0.1';
+GRANT INSERT ON otakuzone_db.inventario TO 'otakuzone_app'@'127.0.0.1';
+GRANT UPDATE (estado) ON otakuzone_db.pedidos TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT ON otakuzone_db.movimientos_inventario TO 'otakuzone_app'@'127.0.0.1';

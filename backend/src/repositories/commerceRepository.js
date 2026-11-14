@@ -59,6 +59,7 @@ export function createCommerceRepository(pool) {
         await rows(c, sql.insertLine, [id, item.quantity, item.productId])
         const result = await rows(c, sql.consumeStock, [item.quantity, item.productId, item.quantity])
         if (result.affectedRows !== 1) fail('INSUFFICIENT_STOCK', 'El stock cambió. Inténtalo de nuevo.')
+        await rows(c, 'INSERT INTO movimientos_inventario (producto_id,actor_id,pedido_id,delta,cantidad_anterior,cantidad_nueva,motivo) SELECT producto_id,?,?,?,cantidad_total+?,cantidad_total,\'Compra demostrativa\' FROM inventario WHERE producto_id=?', [userId,id,-item.quantity,item.quantity,item.productId])
       }
       await rows(c, sql.insertHistory, [id])
       await rows(c, sql.convertCart, [cart.id, userId])

@@ -178,6 +178,7 @@ finally {
   try {
     const [users] = await pool.execute('SELECT id FROM usuarios WHERE email IN (?,?)', emails)
     for (const { id } of users) {
+      await pool.execute('DELETE FROM movimientos_inventario WHERE actor_id=?', [id])
       await pool.execute('DELETE h FROM historial_pedidos h JOIN pedidos p ON p.id=h.pedido_id WHERE p.usuario_id=?', [id])
       await pool.execute('DELETE d FROM detalles_pedido d JOIN pedidos p ON p.id=d.pedido_id WHERE p.usuario_id=?', [id])
       await pool.execute('DELETE FROM pedidos WHERE usuario_id=?', [id])

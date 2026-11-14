@@ -4,5 +4,6 @@
   { "file": "003_roles_and_plans.sql", "transactional": true },
   { "file": "004_demo_catalog.sql", "transactional": true },
   { "file": "005_auth_sessions.sql", "transactional": false },
-  { "file": "006_commerce.sql", "transactional": false }
+  { "file": "006_commerce.sql", "transactional": false },
+  { "file": "007_admin_inventory.sql", "transactional": false }
 ]

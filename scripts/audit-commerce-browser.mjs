@@ -121,6 +121,7 @@ finally {
       await withTransaction(pool, async (c) => {
         const [[user]] = await c.execute('SELECT id FROM usuarios WHERE email=? FOR UPDATE', [email])
         if (!user) return
+        await c.execute('DELETE FROM movimientos_inventario WHERE actor_id=?', [user.id])
         await c.execute('DELETE h FROM historial_pedidos h JOIN pedidos p ON p.id=h.pedido_id WHERE p.usuario_id=?', [user.id])
         await c.execute('DELETE d FROM detalles_pedido d JOIN pedidos p ON p.id=d.pedido_id WHERE p.usuario_id=?', [user.id])
         await c.execute('DELETE FROM pedidos WHERE usuario_id=?', [user.id])

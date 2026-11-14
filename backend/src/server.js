@@ -17,6 +17,7 @@ try {
     if (authPool !== source.pool) await checkDatabaseConnection(authPool)
     await authPool.execute('SELECT id FROM auth_sesiones LIMIT 0')
     await authPool.execute('SELECT id FROM historial_pedidos LIMIT 0')
+    await authPool.execute('SELECT id FROM movimientos_inventario LIMIT 0')
     await authPool.execute('SELECT carrito_origen_id,clave_solicitud FROM pedidos LIMIT 0')
   }
   const server = createApp({ config, repository: source.repository, authPool }).listen(config.port, config.host, () => {
