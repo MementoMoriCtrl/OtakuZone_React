@@ -3,5 +3,6 @@
   { "file": "002_relational_schema.sql", "transactional": false },
   { "file": "003_roles_and_plans.sql", "transactional": true },
   { "file": "004_demo_catalog.sql", "transactional": true },
-  { "file": "005_auth_sessions.sql", "transactional": false }
+  { "file": "005_auth_sessions.sql", "transactional": false },
+  { "file": "006_commerce.sql", "transactional": false }
 ]

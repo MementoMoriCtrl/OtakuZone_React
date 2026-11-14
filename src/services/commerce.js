@@ -1,0 +1,12 @@
+import { accountRequest } from './auth.js'
+export const getCart = (options) => accountRequest('/cart', { ...options, privateRequest: true })
+export const addCartItem = (productId, quantity = 1) => accountRequest('/cart/items', { method: 'POST', data: { productId, quantity }, privateRequest: true })
+export const setCartQuantity = (id, quantity) => accountRequest(`/cart/items/${encodeURIComponent(id)}`, { method: 'PATCH', data: { quantity }, privateRequest: true })
+export const removeCartItem = (id) => accountRequest(`/cart/items/${encodeURIComponent(id)}`, { method: 'DELETE', data: {}, privateRequest: true })
+export const createOrder = (cartId, idempotencyKey) => accountRequest('/orders', { method: 'POST', data: { cartId, idempotencyKey }, privateRequest: true })
+export const getOrders = (options) => accountRequest('/orders', { ...options, privateRequest: true })
+export const getOrder = (id, options) => accountRequest(`/orders/${encodeURIComponent(id)}`, { ...options, privateRequest: true })
+export const getPlans = (options) => accountRequest('/plans', options)
+export const getSubscription = (options) => accountRequest('/subscription', { ...options, privateRequest: true })
+export const changeSubscription = (code) => accountRequest('/subscription', { method: 'PATCH', data: { code }, privateRequest: true })
+export const money = (value) => new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(Number(value))

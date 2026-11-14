@@ -16,7 +16,8 @@
     "db:verify": "node scripts/verify-db.js",
     "db:verify:http": "node scripts/verify-db-http.js",
     "auth:verify": "node scripts/verify-auth.js",
-    "auth:secret": "node scripts/init-auth-secret.js"
+    "auth:secret": "node scripts/init-auth-secret.js",
+    "commerce:verify": "node scripts/verify-commerce.js"
   },
   "dependencies": {
     "bcryptjs": "3.0.3",

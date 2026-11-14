@@ -2,7 +2,7 @@ import { executeRows } from '../db/pool.js'
 import { catalogSql } from '../db/catalogSql.js'
 import { withTransaction } from '../db/transaction.js'
 
-const productDto = (row) => ({ ...row, price: Number(row.price) })
+const productDto = (row) => ({ ...row, price: Number(row.price), available: Number(row.available) })
 export function createMysqlCatalogRepository(pool) {
   return {
     async findProducts({ categoryId, q } = {}) {

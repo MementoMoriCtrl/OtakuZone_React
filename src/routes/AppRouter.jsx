@@ -11,6 +11,10 @@ import NotFound from '../pages/NotFound.jsx'
 import Perfil from '../pages/Perfil.jsx'
 import Admin from '../pages/Admin.jsx'
 import RequireAuth from '../components/account/RequireAuth.jsx'
+import Carrito from '../pages/Carrito.jsx'
+import Pedidos from '../pages/Pedidos.jsx'
+import Suscripciones from '../pages/Suscripciones.jsx'
+import Producto from '../pages/Producto.jsx'
 
 function PublicLayout() {
   const { pathname } = useLocation()
@@ -46,6 +50,9 @@ export default function AppRouter() {
           <Route index element={<Home />} />
           <Route path="animes" element={<Animes />} />
           <Route path="tienda" element={<Tienda />} />
+          <Route path="tienda/:id" element={<Producto />} />
+          <Route path="suscripciones" element={<Suscripciones />} />
+          <Route element={<RequireAuth />}><Route path="carrito" element={<Carrito />} /><Route path="pedidos" element={<Pedidos />} /><Route path="pedidos/:id" element={<Pedidos />} /></Route>
           <Route path="favoritos" element={<Favoritos />} />
           <Route path="cuenta" element={<MiCuenta />} />
           <Route element={<RequireAuth />}><Route path="perfil" element={<Perfil />} /></Route>

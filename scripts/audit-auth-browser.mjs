@@ -87,7 +87,10 @@ try {
 } finally {
   try { if (browser) await browser.close() }
   finally {
-    try { await pool.execute('DELETE FROM usuarios WHERE email = ?', [email]); console.log('Cuenta técnica del navegador y sesiones eliminadas.') }
+    try {
+      await pool.execute('DELETE h FROM historial_suscripciones h JOIN usuarios u ON u.id=h.usuario_id WHERE u.email=?', [email])
+      await pool.execute('DELETE FROM usuarios WHERE email = ?', [email]); console.log('Cuenta técnica del navegador, suscripción y sesiones eliminadas.')
+    }
     finally { await pool.end() }
   }
 }

@@ -13,3 +13,15 @@ GRANT INSERT (rol_id, nombre, email, password_hash, estado) ON otakuzone_db.usua
 GRANT UPDATE (nombre, presentacion) ON otakuzone_db.usuarios TO 'otakuzone_app'@'127.0.0.1';
 GRANT SELECT, INSERT, DELETE ON otakuzone_db.auth_sesiones TO 'otakuzone_app'@'127.0.0.1';
 GRANT UPDATE (revocada_en) ON otakuzone_db.auth_sesiones TO 'otakuzone_app'@'127.0.0.1';
+-- Fase 7: operaciones comerciales propias, sin DDL ni administración del catálogo.
+GRANT SELECT ON otakuzone_db.inventario TO 'otakuzone_app'@'127.0.0.1';
+GRANT UPDATE (cantidad_total) ON otakuzone_db.inventario TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT ON otakuzone_db.carritos TO 'otakuzone_app'@'127.0.0.1';
+GRANT UPDATE (estado) ON otakuzone_db.carritos TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT, UPDATE, DELETE ON otakuzone_db.detalles_carrito TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT ON otakuzone_db.pedidos TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT ON otakuzone_db.detalles_pedido TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT ON otakuzone_db.historial_pedidos TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT ON otakuzone_db.suscripciones TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT ON otakuzone_db.historial_suscripciones TO 'otakuzone_app'@'127.0.0.1';
+GRANT UPDATE (estado,fecha_fin) ON otakuzone_db.historial_suscripciones TO 'otakuzone_app'@'127.0.0.1';

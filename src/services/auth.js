@@ -3,15 +3,15 @@ let csrfToken = null
 let sessionPending = null
 let revision = 0
 
-async function request(path, { method = 'GET', data, privateRequest = false } = {}) {
+export async function accountRequest(path, { method = 'GET', data, privateRequest = false, signal } = {}) {
   let response
   try {
     response = await fetch(`${AUTH_API_URL}${path}`, {
-      method, credentials: 'include', signal: AbortSignal.timeout(15000),
+      method, credentials: 'include', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(15000)]) : AbortSignal.timeout(15000),
       headers: { Accept: 'application/json', ...(method !== 'GET' ? { 'Content-Type': 'application/json', 'X-OtakuZone-CSRF': privateRequest ? csrfToken ?? '' : '1' } : {}) },
       ...(data !== undefined ? { body: JSON.stringify(data) } : {}),
     })
-  } catch { throw new Error('No se pudo conectar con tu cuenta. Comprueba tu conexión e inténtalo de nuevo.') }
+  } catch (error) { if (signal?.aborted) throw error; throw new Error('No se pudo conectar con OtakuZone. Comprueba tu conexión e inténtalo de nuevo.') }
   let body
   try { body = await response.json() } catch { throw new Error('El servicio de cuenta devolvió una respuesta inesperada.') }
   if (!response.ok || body?.success !== true) {
@@ -20,6 +20,7 @@ async function request(path, { method = 'GET', data, privateRequest = false } = 
   }
   return body.data
 }
+const request = accountRequest
 
 export function loadSession() {
   if (!sessionPending) {

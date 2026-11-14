@@ -4,8 +4,19 @@ import { readStoreCollection } from './storeContract.js'
 
 export const OTAKUZONE_URL = (import.meta.env?.VITE_OTAKUZONE_API_URL || 'http://127.0.0.1:4000/api/v1').replace(/\/$/, '')
 const get = createClient({ ttl: 30000 })
+const getLive = createClient({ ttl: 0 })
+function adaptProduct(item) {
+  return { ...item, category: 'Producto de demostración', image: safeImage(item.image) || productImages[item.imageKey] || null, imageAlt: item.imageAlt || `Imagen ilustrativa de ${item.name}` }
+}
+export async function getProduct(id, options) {
+  return getLive(`${OTAKUZONE_URL}/products/${encodeURIComponent(id)}`, { ...options, transform: (body) => {
+    const item = body?.success === true ? body.data : body
+    if (!item?.id || !Number.isFinite(item.price)) throw new ApiError('Producto no disponible.')
+    return adaptProduct(item)
+  } })
+}
 export async function getProducts(options) {
-  return get(`${OTAKUZONE_URL}/products`, { ...options, transform: (body) => readStoreCollection(body).map((item) => {
+  return getLive(`${OTAKUZONE_URL}/products`, { ...options, transform: (body) => readStoreCollection(body).map((item) => {
     if (!item || !['string', 'number'].includes(typeof item.id) || !item.id || typeof item.name !== 'string' || !Number.isFinite(item.price) || item.price < 0) throw new ApiError('La API de tienda devolvió un producto inválido.')
     return { ...item, category: 'Producto de demostración', description: typeof item.description === 'string' ? item.description : 'Producto ficticio de demostración.', image: safeImage(item.image) || productImages[item.imageKey] || null, imageAlt: typeof item.imageAlt === 'string' ? item.imageAlt : `Imagen ilustrativa de ${item.name}` }
   }) })

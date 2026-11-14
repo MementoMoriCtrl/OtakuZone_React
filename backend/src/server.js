@@ -16,6 +16,8 @@ try {
     authPool = source.pool ?? createDatabasePool(config.database)
     if (authPool !== source.pool) await checkDatabaseConnection(authPool)
     await authPool.execute('SELECT id FROM auth_sesiones LIMIT 0')
+    await authPool.execute('SELECT id FROM historial_pedidos LIMIT 0')
+    await authPool.execute('SELECT carrito_origen_id,clave_solicitud FROM pedidos LIMIT 0')
   }
   const server = createApp({ config, repository: source.repository, authPool }).listen(config.port, config.host, () => {
     console.log(`OtakuZone API: http://${config.host}:${config.port}/api/v1`)

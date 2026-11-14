@@ -8,7 +8,7 @@ export default function MiCuenta() {
   const auth = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const entered = () => navigate(['/perfil', '/admin'].includes(location.state?.from) ? location.state.from : '/perfil', { replace: true })
+  const entered = () => navigate(['/perfil', '/admin', '/carrito', '/pedidos', '/suscripciones'].includes(location.state?.from) ? location.state.from : /^\/pedidos\/[1-9]\d*$/.test(location.state?.from ?? '') ? location.state.from : '/perfil', { replace: true })
   return <div className="space-y-8">
     <div><p className="text-xs tracking-wider text-neo-cyan">TU ESPACIO OTAKUZONE</p><h1 className="mt-3 font-heading text-3xl font-semibold sm:text-5xl">Mi Cuenta<span className="text-neo-cyan">.</span></h1><p className="mt-4 text-sm leading-relaxed text-neo-white/70">Accede a tu perfil o crea una cuenta.</p></div>
     {auth.loading ? <p role="status" className="text-sm text-neo-cyan">Comprobando sesión…</p> : <>

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const slug = z.string().min(1).max(64).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-export const productQuery = z.object({ q: z.string().trim().max(100).optional(), categoryId: slug.optional() }).strict()
+export const productQuery = z.object({ q: z.string().trim().max(100).optional(), categoryId: slug.optional(), order: z.enum(['default', 'price-asc', 'price-desc', 'name']).optional() }).strict()
 export const emptyQuery = z.object({}).strict()
 export const idParams = z.object({ id: slug }).strict()
 
