@@ -10,8 +10,16 @@ export default function AnimeDetailsDialog({ anime, onClose }) {
     return () => { if (element.open) element.close() }
   }, [])
 
+  const closeOnBackdrop = (event) => {
+    if (event.target !== event.currentTarget) return
+    const { left, right, top, bottom } = event.currentTarget.getBoundingClientRect()
+    if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) {
+      event.currentTarget.close()
+    }
+  }
+
   return (
-    <dialog ref={dialog} onClose={() => { if (!dialog.current?.open) onClose() }} onClick={(event) => { if (event.target === event.currentTarget) dialog.current.close() }} aria-labelledby="anime-dialog-title" aria-describedby="anime-dialog-note" className="fixed inset-0 m-auto max-h-[90svh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto rounded-2xl border border-neo-violet/50 bg-neo-midnight p-6 text-neo-white shadow-2xl backdrop:bg-neo-midnight/85 sm:p-8">
+    <dialog ref={dialog} onClose={() => { if (!dialog.current?.open) onClose() }} onClick={closeOnBackdrop} aria-labelledby="anime-dialog-title" aria-describedby="anime-dialog-note" className="fixed inset-0 m-auto max-h-[90svh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto rounded-2xl border border-neo-violet/50 bg-neo-midnight p-6 text-neo-white shadow-2xl backdrop:bg-neo-midnight/85 sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <p className="text-xs font-semibold tracking-wider text-neo-cyan">FICHA DEMOSTRATIVA</p>
         <button type="button" autoFocus onClick={() => dialog.current.close()} aria-label="Cerrar detalles" className="-mr-2 -mt-2 inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-lg text-neo-white/70 hover:bg-neo-slate focus-visible:outline-2 focus-visible:outline-neo-cyan"><X aria-hidden="true" className="size-5" /></button>

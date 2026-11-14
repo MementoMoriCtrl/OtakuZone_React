@@ -2,6 +2,7 @@ import { Camera, Mail, MessageCircle, Video, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const linkClass = 'rounded-sm text-sm text-neo-white/70 transition-colors hover:text-neo-cyan motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neo-cyan'
+const copyrightYear = new Date().getFullYear()
 const socialIcons = [
   { name: 'Instagram', Icon: Camera },
   { name: 'YouTube', Icon: Video },
@@ -41,7 +42,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-9 flex flex-col gap-3 border-t border-neo-white/10 pt-6 text-xs leading-relaxed text-neo-white/55 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} OtakuZone. Todos los derechos reservados.</p>
+          <p>© {copyrightYear} OtakuZone. Todos los derechos reservados.</p>
           <p>NEO TOKYO · PROYECTO ACADÉMICO</p>
         </div>
       </div>

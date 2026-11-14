@@ -2,6 +2,8 @@
 
 Proyecto académico de JavaScript Avanzado. FASES 1 a 4: configuración inicial, navegación multipágina y Home Neo Tokyo con contenido demostrativo local.
 
+Auditoría y consolidación del frontend (13/11/2026): [informe de la Fase 1](AUDITORIA_FASE_1.md), con versiones instaladas, hallazgos, correcciones, validaciones y pendientes. Las fases descritas a continuación son el historial de entregas anteriores. La comprobación de navegador se puede repetir con `node scripts/audit-browser.mjs` mientras Vite está en ejecución; no requiere instalar dependencias.
+
 ## Requisitos
 
 - Entorno comprobado: Node.js v24.16.0 y npm 11.13.0.
