@@ -28,7 +28,7 @@ function PublicLayout() {
       <Header key={pathname} />
       <main ref={main} id="main-content" tabIndex={-1} className={`mx-auto w-full flex-1 px-5 py-10 outline-none sm:px-8 sm:py-12 ${pathname === '/' ? 'max-w-7xl' : 'max-w-5xl'}`}>
         <Outlet />
-        {pathname !== '/' && <p className="mt-6 text-xs leading-relaxed text-neo-white/55">OtakuZone — Neo Tokyo · Proyecto académico · Páginas provisionales</p>}
+        {pathname !== '/' && <p className="mt-6 text-xs leading-relaxed text-neo-white/55">OtakuZone — Neo Tokyo · Proyecto académico{['/favoritos', '/cuenta'].includes(pathname) ? ' · Página provisional' : ''}</p>}
       </main>
       <Footer />
     </div>

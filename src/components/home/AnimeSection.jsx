@@ -1,18 +1,17 @@
-import { useState } from 'react'
 import SectionHeading from '../common/SectionHeading.jsx'
-import AnimeCard from './AnimeCard.jsx'
-import AnimeDetailsDialog from './AnimeDetailsDialog.jsx'
+import ResourceState from '../common/ResourceState.jsx'
+import AnimeCollection from './AnimeCollection.jsx'
+import useResource from '../../hooks/useResource.js'
 
-export default function AnimeSection({ id, title, eyebrow, description, anime, isNew = false }) {
-  const [selectedAnime, setSelectedAnime] = useState(null)
+export default function AnimeSection({ id, title, eyebrow, description, loader, isNew = false }) {
+  const resource = useResource(loader)
+  const anime = resource.data?.items ?? []
 
   return (
     <section aria-labelledby={id}>
       <SectionHeading id={id} eyebrow={eyebrow} title={title} description={description} to="/animes" linkLabel={isNew ? 'Explorar novedades' : 'Ver todos'} />
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {anime.map((item) => <AnimeCard key={item.id} anime={item} isNew={isNew} onDetails={setSelectedAnime} />)}
-      </div>
-      {selectedAnime && <AnimeDetailsDialog anime={selectedAnime} onClose={() => setSelectedAnime(null)} />}
+      <ResourceState resource={resource} empty={!anime.length} />
+      {!resource.loading && !resource.error && <AnimeCollection anime={anime} isNew={isNew} />}
     </section>
   )
 }

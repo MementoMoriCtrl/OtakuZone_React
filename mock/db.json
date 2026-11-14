@@ -1,0 +1,148 @@
+{
+  "products": [
+    {
+      "id": "figura-mensajera",
+      "name": "Figura Mensajera de Distrito Cero",
+      "categoryId": "figuras",
+      "price": 129.9,
+      "imageKey": "figura",
+      "imageAlt": "Imagen ilustrativa de demostración: Figura Mensajera de Distrito Cero",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "figura-lunar",
+      "name": "Figura Guardiana Lunar",
+      "categoryId": "figuras",
+      "price": 149.9,
+      "imageKey": "figura",
+      "imageAlt": "Imagen ilustrativa de demostración: Figura Guardiana Lunar",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "figura-orbita",
+      "name": "Figura Exploradora Órbita",
+      "categoryId": "figuras",
+      "price": 139.9,
+      "imageKey": "figura",
+      "imageAlt": "Imagen ilustrativa de demostración: Figura Exploradora Órbita",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "manga-distrito-1",
+      "name": "Distrito Cero · Volumen 01",
+      "categoryId": "mangas",
+      "price": 39.9,
+      "imageKey": "manga",
+      "imageAlt": "Imagen ilustrativa de demostración: Distrito Cero · Volumen 01",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "manga-distrito-2",
+      "name": "Distrito Cero · Volumen 02",
+      "categoryId": "mangas",
+      "price": 39.9,
+      "imageKey": "manga",
+      "imageAlt": "Imagen ilustrativa de demostración: Distrito Cero · Volumen 02",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "manga-jardin",
+      "name": "El jardín de cristal · Volumen 01",
+      "categoryId": "mangas",
+      "price": 42.9,
+      "imageKey": "manga",
+      "imageAlt": "Imagen ilustrativa de demostración: El jardín de cristal · Volumen 01",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "polo-midnight",
+      "name": "Polo Neo Tokyo · Midnight",
+      "categoryId": "polos",
+      "price": 59.9,
+      "imageKey": "polo",
+      "imageAlt": "Imagen ilustrativa de demostración: Polo Neo Tokyo · Midnight",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "polo-cyan",
+      "name": "Polo Neo Tokyo · Cyan",
+      "categoryId": "polos",
+      "price": 64.9,
+      "imageKey": "polo",
+      "imageAlt": "Imagen ilustrativa de demostración: Polo Neo Tokyo · Cyan",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "polo-orbita",
+      "name": "Polo Órbita · Edición demo",
+      "categoryId": "polos",
+      "price": 69.9,
+      "imageKey": "polo",
+      "imageAlt": "Imagen ilustrativa de demostración: Polo Órbita · Edición demo",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "llavero-luna",
+      "name": "Llavero Luna de Neón",
+      "categoryId": "accesorios",
+      "price": 19.9,
+      "imageKey": "llavero",
+      "imageAlt": "Imagen ilustrativa de demostración: Llavero Luna de Neón",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "llavero-orbita",
+      "name": "Llavero Órbita Azul",
+      "categoryId": "accesorios",
+      "price": 24.9,
+      "imageKey": "llavero",
+      "imageAlt": "Imagen ilustrativa de demostración: Llavero Órbita Azul",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    },
+    {
+      "id": "llavero-jardin",
+      "name": "Llavero Jardín de Cristal",
+      "categoryId": "accesorios",
+      "price": 22.9,
+      "imageKey": "llavero",
+      "imageAlt": "Imagen ilustrativa de demostración: Llavero Jardín de Cristal",
+      "description": "Producto ficticio para la tienda académica OtakuZone. La imagen es ilustrativa y puede reutilizarse entre variantes; no hay compras ni stock real."
+    }
+  ],
+  "categories": [
+    {
+      "id": "figuras",
+      "name": "Figuras coleccionables"
+    },
+    {
+      "id": "mangas",
+      "name": "Mangas"
+    },
+    {
+      "id": "polos",
+      "name": "Polos"
+    },
+    {
+      "id": "accesorios",
+      "name": "Accesorios"
+    },
+    {
+      "id": "papeleria",
+      "name": "Papelería (sin productos por ahora)"
+    }
+  ],
+  "promotions": [
+    {
+      "id": "neo-tokyo",
+      "title": "Colección Neo Tokyo",
+      "description": "Explora nuestra selección de productos ficticios. Imágenes ilustrativas y precios de demostración.",
+      "to": "/tienda"
+    },
+    {
+      "id": "universo",
+      "title": "Tu próxima historia",
+      "description": "Descubre información real de anime mediante Jikan. La tienda sigue siendo una simulación académica.",
+      "to": "/animes"
+    }
+  ]
+}

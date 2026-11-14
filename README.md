@@ -1,5 +1,86 @@
 ﻿# OtakuZone — Neo Tokyo
 
+## Estado actual — Fase 2: integración de APIs
+
+Frontend React existente con Jikan para anime real y JSON Server para productos, categorías y promociones demostrativas. Se conservan las cinco rutas, la 404, las tarjetas, los diálogos, los assets locales y Neo Tokyo. No se implementan Express, MySQL, compras ni autenticación.
+
+**Disponibilidad comprobada:** JSON Server respondió HTTP 200 y React mostró sus 12 productos. Jikan dio timeout desde Node y Chrome en este entorno. El frontend muestra ese error sin sustituirlo por animes ficticios. El consumo exitoso simultáneo de ambas APIs queda pendiente de conectividad con Jikan; no se simularon respuestas exitosas.
+
+### Iniciar los servicios
+
+Requisitos comprobados: Node.js 24.16.0 y npm 11.13.0. Desde la raíz del proyecto:
+
+```sh
+npm ci
+```
+
+Terminal 1 — JSON Server independiente:
+
+```sh
+npm run api
+```
+
+Sirve `mock/db.json` con JSON Server 0.17.4 y observa cambios. URLs:
+
+- http://127.0.0.1:3001/products — 12 productos ficticios.
+- http://127.0.0.1:3001/categories — 5 categorías; Papelería no tiene productos.
+- http://127.0.0.1:3001/promotions — 2 promociones demostrativas.
+
+Terminal 2 — frontend:
+
+```sh
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+Abrir http://127.0.0.1:5173/ y mantener ambas terminales abiertas. Estos dos comandos se iniciaron correctamente en esta entrega. Si un puerto está ocupado, detener el proceso anterior o ajustar el puerto y su URL. Jikan es un servicio público remoto: no se inicia localmente y no necesita clave privada.
+
+La configuración funciona sin `.env`. Para cambiar URLs, copiar `.env.example` a `.env.local`, editar y reiniciar Vite:
+
+```dotenv
+VITE_JIKAN_API_URL=https://api.jikan.moe/v4
+VITE_OTAKUZONE_API_URL=http://127.0.0.1:3001
+```
+
+Las variables `VITE_*` son públicas: no colocar secretos. `127.0.0.1` corresponde al desarrollo local; un despliegue HTTPS necesita una API de tienda accesible también por HTTPS.
+
+### Uso y validación
+
+- Home: populares, temporada y géneros reales de Jikan; productos y promociones demostrativos de JSON Server. Carga/error/reintento independientes por fuente.
+- `/animes`: búsqueda por título al enviar formulario, filtro por género, paginación y detalles en el diálogo. Parámetros guardados en la URL.
+- `/tienda`: 12 productos, categorías y precios de muestra en PEN. Elegir Papelería comprueba el estado vacío.
+- Las caídas de una API no se ocultan con muestras de reserva. «Reintentar» vuelve a consultar el servicio.
+
+Con los servicios activos:
+
+```sh
+npm run check:apis
+node scripts/audit-apis-browser.mjs
+```
+
+`check:apis` consulta servicios reales y devuelve código 1 si alguno falla. Si populares responde, comprueba también temporada, géneros, búsqueda Naruto y detalles. Usa Jikan público; `OTAKUZONE_API_URL` permite cambiar la URL de tienda para este script.
+
+La auditoría de navegador usa Chrome/Edge instalado y Node 24, sin dependencias adicionales. `CHROME_PATH` indica otro ejecutable y `AUDIT_URL` otro frontend. Comprueba carga, productos, vacío, responsive, navegación y un bloqueo intencional de conexión seguido de recuperación. No fabrica éxitos de Jikan y termina con código 1 si no puede comprobar ambas fuentes. `node scripts/audit-browser.mjs` ejecuta esta auditoría actualizada.
+
+```sh
+npm test
+npm run lint
+npm run build
+npm run preview -- --host 127.0.0.1
+```
+
+Las pruebas unitarias usan dobles explícitos para comprobar HTTP, normalización, cancelación, deduplicación y caché; no prueban disponibilidad de Internet. Resultados y limitaciones: [informe de Fase 2](INTEGRACION_FASE_2.md). Auditoría anterior: [Fase 1](AUDITORIA_FASE_1.md).
+
+### Arquitectura y documentación
+
+`src/services/http.js`: fetch, timeout de 15 segundos por intento, un reintento automático para conexión/429/5xx, caché corta y solicitudes compartidas. Un `Retry-After` mayor de 10 segundos requiere reintento manual. Jikan limita los inicios a uno cada 1.1 segundos por pestaña. La cancelación aborta el transporte cuando ya no hay consumidores. `useResource` ignora resultados cancelados.
+
+`src/services/jikan.js` adapta los datos reales para las tarjetas. `src/services/otakuzone.js` valida los registros locales y resuelve las imágenes existentes: cuatro ilustraciones se reutilizan entre variantes, indicándolo en la interfaz. Los planes Free/Premium siguen siendo propuestas estáticas de demostración.
+
+Fuentes: [documentación oficial de Jikan](https://docs.api.jikan.moe/), [especificación oficial v4](https://github.com/jikan-me/jikan-rest/blob/master/storage/api-docs/api-docs.json) y [JSON Server 0.17.4](https://github.com/typicode/json-server/tree/v0.17.4).
+
+<details>
+<summary>Historial de entregas anteriores; no describe el estado actual de las APIs</summary>
+
 Proyecto académico de JavaScript Avanzado. FASES 1 a 4: configuración inicial, navegación multipágina y Home Neo Tokyo con contenido demostrativo local.
 
 Auditoría y consolidación del frontend (13/11/2026): [informe de la Fase 1](AUDITORIA_FASE_1.md), con versiones instaladas, hallazgos, correcciones, validaciones y pendientes. Las fases descritas a continuación son el historial de entregas anteriores. La comprobación de navegador se puede repetir con `node scripts/audit-browser.mjs` mientras Vite está en ejecución; no requiere instalar dependencias.
@@ -226,3 +307,5 @@ Comprobaciones ejecutadas en Chrome mediante el protocolo de depuración, sin in
 La FASE 4 integra exclusivamente el frontend con datos locales. No incluye backend, MySQL, autenticación, APIs externas, CRUD, administración, reproducción de episodios, videojuegos, pagos ni carrito funcional. No se instalaron dependencias ni se modificó Tailwind CSS 4.
 
 Cualquier fase posterior requiere nuevas indicaciones.
+
+</details>
