@@ -38,7 +38,7 @@ export default function Header() {
         </Link>
         <div className="hidden lg:block"><Navbar /></div>
         <div className="flex items-center gap-0.5 sm:gap-1" aria-label="Acciones de usuario">
-          <button type="button" disabled aria-label="Búsqueda — próximamente" title="Búsqueda disponible en una próxima fase" className={`${iconClass} cursor-not-allowed text-neo-white/40`}><Search aria-hidden="true" className="size-5" /></button>
+          <Link to="/animes" onClick={closeMenu} aria-label="Buscar anime" title="Buscar anime" className={`${iconClass} text-neo-white/75 hover:bg-neo-slate hover:text-neo-cyan`}><Search aria-hidden="true" className="size-5" /></Link>
           <button type="button" disabled aria-label="Carrito — próximamente" title="Carrito disponible en una próxima fase" className={`${iconClass} cursor-not-allowed text-neo-white/40`}><ShoppingBag aria-hidden="true" className="size-5" /></button>
           <NavLink to="/cuenta" end onClick={closeMenu} aria-label="Mi Cuenta" title="Mi Cuenta" className={({ isActive }) => `${iconClass} transition-colors motion-reduce:transition-none ${isActive ? 'border-neo-cyan/30 bg-neo-violet/15 text-neo-cyan' : 'text-neo-white/75 hover:bg-neo-slate hover:text-neo-cyan'}`}><UserRound aria-hidden="true" className="size-5" /></NavLink>
           <button ref={menuButton} type="button" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} aria-controls="mobile-navigation" className={`${iconClass} cursor-pointer text-neo-cyan transition-colors hover:bg-neo-slate motion-reduce:transition-none lg:hidden`}>
@@ -48,7 +48,7 @@ export default function Header() {
       </div>
       <div id="mobile-navigation" hidden={!menuOpen} className="border-t border-neo-white/10 bg-neo-slate/40 px-4 py-4 sm:px-8 lg:hidden">
         <Navbar mobile onNavigate={closeMenu} />
-        <p className="mt-4 border-t border-neo-white/10 pt-4 text-xs leading-relaxed text-neo-white/55">Búsqueda y carrito: próximamente.</p>
+        <p className="mt-4 border-t border-neo-white/10 pt-4 text-xs leading-relaxed text-neo-white/55">Busca animes en el catálogo. Carrito: próximamente.</p>
       </div>
     </header>
   )

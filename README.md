@@ -1,6 +1,40 @@
 ﻿# OtakuZone — Neo Tokyo
 
-## Estado actual — Fase 2: integración de APIs
+## Estado actual — Fase 3: interactividad y estado
+
+Búsqueda dinámica con **450 ms de debounce**, filtros por género y estado, orden por puntuación/popularidad, favoritos persistentes y formularios de registro demostrativo y perfil local. Se conserva la integración Jikan/JSON Server de la fase anterior, las cinco rutas y Neo Tokyo. No hay autenticación, backend nuevo ni MySQL.
+
+Para ejecutar, desde la raíz y en terminales separadas:
+
+```sh
+npm run api
+```
+
+```sh
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+- Catálogo real: http://127.0.0.1:5173/animes — Jikan sigue siendo la fuente por defecto.
+- Catálogo demostrativo: http://127.0.0.1:5173/animes?source=demo — 12 obras ficticias locales, con aviso visible. No requiere que Jikan o JSON Server estén activos.
+- Favoritos: http://127.0.0.1:5173/favoritos — agregar/quitar desde tarjetas y fichas; conservan su procedencia real/demo y persisten en este navegador.
+- Registro demo/perfil: http://127.0.0.1:5173/cuenta — validación local; no crea una cuenta real. Solo nombre, correo y presentación se pueden guardar. Nunca se guardan ni envían contraseñas.
+
+La fuente se selecciona explícitamente en el catálogo; no existe un cambio silencioso a datos ficticios. La búsqueda se ejecuta al dejar de escribir o al pulsar Buscar. Género, estado y orden se aplican al cambiar los controles y se guardan en la URL. El registro validado prepara nombre/correo en el perfil, conservando su presentación; para persistirlo hay que pulsar Guardar perfil.
+
+**Disponibilidad externa:** la búsqueda real se intentó nuevamente desde Chrome. Jikan no entregó resultados y mostró error. Las interacciones se comprobaron con el modo demo explícito; esto **no valida** la integración externa. La tienda JSON Server se conserva y respondió HTTP 200 en la comprobación de esta fase.
+
+```sh
+npm test
+npm run lint
+npm run build
+node scripts/audit-interactivity.mjs
+```
+
+La auditoría de interactividad necesita Chrome/Edge instalado y Vite activo. Usa un perfil temporal separado: no altera los datos de tu navegador personal. Comprueba búsqueda/filtros, favoritos/persistencia, modal, formularios, storage corrupto/bloqueado y responsive; además intenta una búsqueda Jikan real e informa su limitación por separado. `CHROME_PATH` y `AUDIT_URL` permiten otro ejecutable o frontend. Las comprobaciones externas de Fase 2 siguen disponibles con `npm run check:apis` y `node scripts/audit-apis-browser.mjs`; no se convierten en éxitos si Jikan falla.
+
+Informe completo: [INTERACTIVIDAD_FASE_3.md](INTERACTIVIDAD_FASE_3.md). Las instrucciones de instalación/configuración de las APIs se conservan a continuación. No se avanzó a la Fase 4.
+
+## Referencia — Fase 2: integración de APIs
 
 Frontend React existente con Jikan para anime real y JSON Server para productos, categorías y promociones demostrativas. Se conservan las cinco rutas, la 404, las tarjetas, los diálogos, los assets locales y Neo Tokyo. No se implementan Express, MySQL, compras ni autenticación.
 

@@ -1,4 +1,5 @@
 import { ApiError, createClient, createRateGate, requireList, safeImage } from './http.js'
+import { buildAnimeSearchParams } from '../domain/catalog.js'
 
 export const JIKAN_URL = (import.meta.env?.VITE_JIKAN_API_URL || 'https://api.jikan.moe/v4').replace(/\/$/, '')
 const get = createClient({ gate: createRateGate() })
@@ -9,6 +10,9 @@ export function normalizeAnime(item) {
   const title = text(item.title, text(item.title_english, 'Título no disponible'))
   return {
     id: item.mal_id, title, source: 'jikan',
+    genreIds: Array.isArray(item.genres) ? item.genres.map((genre) => genre?.mal_id).filter(Number.isInteger) : [],
+    popularity: Number.isInteger(item.popularity) && item.popularity > 0 ? item.popularity : null,
+    statusCode: { 'Currently Airing': 'airing', 'Finished Airing': 'complete', 'Not yet aired': 'upcoming' }[item.status] ?? '',
     image: safeImage(item.images?.webp?.large_image_url) || safeImage(item.images?.jpg?.large_image_url),
     imageAlt: `Portada de ${title}`,
     genre: Array.isArray(item.genres) ? item.genres.map((genre) => genre?.name).filter((name) => typeof name === 'string').join(' · ') || 'Género no disponible' : 'Género no disponible',
@@ -30,10 +34,8 @@ async function list(path, options) {
 
 export const getPopularAnime = (options) => list('/top/anime?filter=bypopularity&limit=4&sfw=true', options)
 export const getCurrentAnime = (options) => list('/seasons/now?limit=4&sfw=true', options)
-export function searchAnime({ query = '', genre = '', page = 1 } = {}, options) {
-  const params = new URLSearchParams({ page: String(page), limit: '12', sfw: 'true', order_by: 'popularity', sort: 'asc' })
-  if (query.trim()) params.set('q', query.trim())
-  if (/^\d+$/.test(String(genre))) params.set('genres', String(genre))
+export function searchAnime(filters = {}, options) {
+  const params = buildAnimeSearchParams(filters)
   return list(`/anime?${params}`, options)
 }
 export async function getAnimeDetails(id, options) {

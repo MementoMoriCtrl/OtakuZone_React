@@ -1,5 +1,6 @@
 import { ArrowUpRight, Star } from 'lucide-react'
 import MediaImage from '../common/MediaImage.jsx'
+import FavoriteButton from '../common/FavoriteButton.jsx'
 
 export default function AnimeCard({ anime, isNew = false, onDetails }) {
   return (
@@ -11,11 +12,14 @@ export default function AnimeCard({ anime, isNew = false, onDetails }) {
         <span aria-label={anime.score == null ? 'Sin puntuación disponible' : `Puntuación: ${anime.score} de 10`} className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-md bg-neo-midnight/90 px-2 py-1 text-xs font-semibold text-neo-cyan"><Star aria-hidden="true" className="size-3.5" />{anime.score?.toFixed(1) ?? 'S/P'}<span className="text-neo-white/55">/10</span></span>
       </div>
       <div className="flex flex-1 flex-col p-4">
+        <p className="mb-2 text-[11px] font-semibold tracking-wider text-neo-cyan">{anime.source === 'demo' ? 'DEMO LOCAL · OBRA FICTICIA' : 'JIKAN · INFORMACIÓN REAL'}</p>
         <p className="text-xs leading-relaxed text-neo-cyan">{anime.genre}</p>
         <h3 className="mt-2 font-heading text-lg font-semibold leading-snug">{anime.title}</h3>
         <p className="mt-2 text-xs text-neo-white/55">{anime.season}</p>
+        <p className="mt-2 text-xs text-neo-white/65">{anime.status || 'Estado no disponible'}{anime.popularity ? ` · Popularidad #${anime.popularity}` : ''}</p>
         <p className="mb-5 mt-3 line-clamp-4 text-sm leading-relaxed text-neo-white/70">{anime.description}</p>
         <button type="button" onClick={() => onDetails(anime)} aria-label={`Consultar detalles de ${anime.title}, ${anime.season}`} className="mt-auto inline-flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-md border-t border-neo-white/10 pt-3 text-left text-sm font-medium text-neo-white transition-colors hover:text-neo-cyan focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neo-cyan motion-reduce:transition-none">Consultar detalles<ArrowUpRight aria-hidden="true" className="size-4 shrink-0 text-neo-cyan" /></button>
+        <div className="mt-3"><FavoriteButton anime={anime} /></div>
       </div>
     </article>
   )
