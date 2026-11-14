@@ -1,0 +1,39 @@
+﻿@import 'tailwindcss';
+
+@theme {
+  --color-neo-midnight: #0B1020;
+  --color-neo-slate: #222B45;
+  --color-neo-violet: #6366F1;
+  --color-neo-cyan: #22D3EE;
+  --color-neo-white: #F1F5F9;
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+}
+
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+    color: var(--color-neo-white);
+    background-color: var(--color-neo-midnight);
+    color-scheme: dark;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background-image: radial-gradient(ellipse at top right, #6366F11A, transparent 60%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  ::selection {
+    background: var(--color-neo-cyan);
+    color: var(--color-neo-midnight);
+  }
+}
