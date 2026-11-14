@@ -1,3 +1,5 @@
+> Actualización posterior: Fase 6 añade la migración 005 y autenticación. Este informe conserva los resultados históricos de Fase 5. Consultar [AUTENTICACION_FASE_6.md](AUTENTICACION_FASE_6.md) para el esquema y validaciones actuales.
+
 # OtakuZone — Estado de Fase 5
 
 Fecha: 13/11/2026. **Fase 5 validada contra MySQL real 8.0.46.** La base otakuzone_db está creada, las cuatro migraciones están aplicadas y Express está utilizando MySQL como fuente del catálogo.

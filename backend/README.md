@@ -1,5 +1,23 @@
 # OtakuZone API
 
+## Fase 6 — configuración vigente
+
+JWT en cookies HttpOnly, sesiones revocables MySQL, bcrypt, CSRF y roles ADMIN/CLIENTE. Guía de ejecución, endpoints, ejemplos de solicitudes/respuestas y pruebas reales: [AUTENTICACION_FASE_6.md](../AUTENTICACION_FASE_6.md).
+
+Configurar el archivo local ignorado `backend/.env`: AUTH_ENABLED=true, acceso DB y CATALOG_SOURCE=mysql. Desde la raíz:
+
+```sh
+npm --prefix backend run auth:secret
+npm --prefix backend run db:migrate
+npm --prefix backend run dev
+```
+
+Frontend http://127.0.0.1:5173; API http://127.0.0.1:4000/api/v1. CORS vigente admite credenciales, GET/HEAD/POST/PATCH/OPTIONS y X-OtakuZone-CSRF. El catálogo conserva sus endpoints de lectura. AUTH_ENABLED=false responde 503 en autenticación y administración, nunca permite acceso privado.
+
+Pruebas: `npm --prefix backend run auth:verify` (MySQL/HTTP reales), `npm --prefix backend test` (unitarias/fixtures), `node scripts/audit-auth-browser.mjs` (Chrome con frontend/backend activos). No ejecutar verificaciones de escritura en producción.
+
+Las secciones siguientes son referencia histórica de Fases 4/5; las afirmaciones sobre ausencia de autenticación o CORS sin credenciales describen esas fases.
+
 ## Fase 5 — MySQL
 
 Se conserva el API de Fase 4 y se incorpora mysql2 con pool, repositorio de catálogo y transacciones. El modelo contiene las doce entidades solicitadas, promociones para el Home existente y metadata de migraciones. No se añade autenticación ni una API pública de escrituras.

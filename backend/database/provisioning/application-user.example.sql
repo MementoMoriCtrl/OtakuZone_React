@@ -6,3 +6,10 @@ CREATE USER 'otakuzone_app'@'127.0.0.1' IDENTIFIED BY RANDOM PASSWORD;
 GRANT SELECT ON otakuzone_db.productos TO 'otakuzone_app'@'127.0.0.1';
 GRANT SELECT ON otakuzone_db.categorias TO 'otakuzone_app'@'127.0.0.1';
 GRANT SELECT ON otakuzone_db.promociones TO 'otakuzone_app'@'127.0.0.1';
+-- Auth de Fase 6: no se concede UPDATE de rol_id/password_hash desde runtime.
+GRANT SELECT ON otakuzone_db.roles TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT ON otakuzone_db.usuarios TO 'otakuzone_app'@'127.0.0.1';
+GRANT INSERT (rol_id, nombre, email, password_hash, estado) ON otakuzone_db.usuarios TO 'otakuzone_app'@'127.0.0.1';
+GRANT UPDATE (nombre, presentacion) ON otakuzone_db.usuarios TO 'otakuzone_app'@'127.0.0.1';
+GRANT SELECT, INSERT, DELETE ON otakuzone_db.auth_sesiones TO 'otakuzone_app'@'127.0.0.1';
+GRANT UPDATE (revocada_en) ON otakuzone_db.auth_sesiones TO 'otakuzone_app'@'127.0.0.1';

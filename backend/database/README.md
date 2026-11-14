@@ -1,4 +1,6 @@
-# MySQL — operación de Fase 5
+# MySQL — operación de Fases 5 y 6
+
+Configuración de autenticación y resultados vigentes: [Fase 6](../../AUTENTICACION_FASE_6.md). Las migraciones 001–004 permanecen intactas; 005 añade sesiones revocables sobre usuarios y roles existentes. El esquema actual comprobado tiene 15 tablas InnoDB, 13 FK, 19 CHECK y cinco migraciones; las cantidades y limitaciones sobre autenticación de la referencia de Fase 5 siguiente son históricas.
 
 Modelo y diagrama ER: [MODELO.md](MODELO.md). Objetivo: MySQL 8.0.16+; recomendado 8.0.46/8.4. No se sustituye por MariaDB/SQLite. Los CHECK deben estar aplicados, no meramente aceptados por un servidor antiguo.
 
@@ -28,6 +30,7 @@ npm --prefix backend run db:verify
 | migrations/002_relational_schema.sql | 13 tablas de negocio, FK, CHECK e índices |
 | migrations/003_roles_and_plans.sql | Roles/planes, sin usuarios ni credenciales |
 | migrations/004_demo_catalog.sql | 12 productos, 5 categorías, 12 inventarios y 2 promociones de muestra |
+| migrations/005_auth_sessions.sql | Sesiones revocables, FK a usuarios, expiración e índices |
 | migrations/manifest.json | Orden y carácter transaccional de cada versión |
 
 El DDL de MySQL implica commits y el archivo completo no es una transacción reversible. Si falla parcialmente, revisar el error y las tablas creadas, corregir y volver a ejecutar: CREATE TABLE IF NOT EXISTS permite reanudar, pero no corrige una tabla existente con definición distinta. Nunca se deshabilitan las FK ni se ejecuta DROP automático. En una base no vacía realizar respaldo antes de cualquier nueva migración.

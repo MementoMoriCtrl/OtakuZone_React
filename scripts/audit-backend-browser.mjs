@@ -20,7 +20,7 @@ try {
   await waitFor(`document.querySelector('[aria-labelledby="shop-title"]').querySelectorAll('article').length === 4 && document.querySelector('[aria-label="Promociones de demostración"]').querySelectorAll('a').length === 2`)
   assert.ok(backendResponses().some((response) => response.url.endsWith('/promotions') && response.status === 200))
   await click('main a[href="/cuenta"]')
-  assert.ok(await evaluate(`document.querySelector('form[aria-label="Registro demostrativo"]') !== null`))
+  await waitFor(`document.querySelector('form[aria-label="Registro"]') !== null`)
   await navigate('/animes?source=demo')
   await waitFor(`document.querySelectorAll('main article').length === 12`)
   await click('main article button[aria-pressed]')

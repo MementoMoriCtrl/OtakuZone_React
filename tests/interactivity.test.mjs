@@ -4,7 +4,7 @@ import { buildAnimeSearchParams, filterDemoAnime, readCatalogParams } from '../s
 import { favoriteKey, favoritesReducer, sanitizeFavorites } from '../src/domain/favorites.js'
 import { createFavoritesStore } from '../src/services/favoritesStore.js'
 import { FAVORITES_KEY, PROFILE_KEY, readFavorites, readProfile, saveProfile } from '../src/services/localRepository.js'
-import { validateProfile, validateRegistration } from '../src/domain/validation.js'
+import { validateProfile, validateRegistration, validateLogin } from '../src/domain/validation.js'
 
 const anime = { id: 'demo-1', source: 'demo', title: 'Órbita Demo', genreIds: [24], statusCode: 'complete', score: 9, popularity: 2 }
 const memoryStorage = () => {
@@ -88,6 +88,14 @@ test('registro valida obligatorios, correo, contraseña y confirmación', () => 
   assert.ok(validateRegistration({ ...valid, password: '12345678' }).password)
   assert.ok(validateRegistration({ ...valid, confirmPassword: 'Otra12345' }).confirmPassword)
   assert.ok(validateProfile({ name: ' ', email: 'bad', bio: 'a'.repeat(301) }).bio)
+})
+
+test('autenticación valida el límite UTF-8 de bcrypt y login obligatorio', () => {
+  const password = 'Á1'.repeat(25)
+  assert.ok(validateRegistration({ name: 'Aiko', email: 'aiko@example.test', password, confirmPassword: password }).password)
+  assert.ok(validateLogin({ email: 'bad', password: '' }).email)
+  assert.ok(validateLogin({ email: 'aiko@example.test', password: '' }).password)
+  assert.deepEqual(validateLogin({ email: 'aiko@example.test', password: 'Clave12345' }), {})
 })
 
 test('perfil solo persiste los campos permitidos; nunca contraseñas', () => {

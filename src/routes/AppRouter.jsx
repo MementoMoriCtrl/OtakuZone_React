@@ -8,6 +8,9 @@ import Tienda from '../pages/Tienda.jsx'
 import Favoritos from '../pages/Favoritos.jsx'
 import MiCuenta from '../pages/MiCuenta.jsx'
 import NotFound from '../pages/NotFound.jsx'
+import Perfil from '../pages/Perfil.jsx'
+import Admin from '../pages/Admin.jsx'
+import RequireAuth from '../components/account/RequireAuth.jsx'
 
 function PublicLayout() {
   const { pathname } = useLocation()
@@ -45,6 +48,8 @@ export default function AppRouter() {
           <Route path="tienda" element={<Tienda />} />
           <Route path="favoritos" element={<Favoritos />} />
           <Route path="cuenta" element={<MiCuenta />} />
+          <Route element={<RequireAuth />}><Route path="perfil" element={<Perfil />} /></Route>
+          <Route element={<RequireAuth role="ADMIN" />}><Route path="admin" element={<Admin />} /></Route>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -39,7 +39,7 @@ await check('/products', 400, { method: 'POST', headers: { 'Content-Type': 'appl
 await check('/products', 413, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ huge: 'x'.repeat(11000) }) })
 const allowed = await check('/products', 200, { headers: { Origin: 'http://127.0.0.1:5173' } })
 assert.equal(allowed.response.headers.get('access-control-allow-origin'), 'http://127.0.0.1:5173')
-assert.equal(allowed.response.headers.get('access-control-allow-credentials'), null)
+assert.equal(allowed.response.headers.get('access-control-allow-credentials'), 'true')
 const denied = await check('/products', 403, { headers: { Origin: 'https://untrusted.example' } })
 assert.equal(denied.response.headers.get('access-control-allow-origin'), null)
 const preflight = await fetch(`${base}/products`, { method: 'OPTIONS', headers: { Origin: 'http://127.0.0.1:5173', 'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type' } })

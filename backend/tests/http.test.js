@@ -85,7 +85,7 @@ test('CORS permite frontend, rechaza otros orígenes y responde preflight', asyn
   const allowed = await fetch(`${base}/products`, { headers: { Origin: 'http://127.0.0.1:5173' } })
   assert.equal(allowed.status, 200)
   assert.equal(allowed.headers.get('access-control-allow-origin'), 'http://127.0.0.1:5173')
-  assert.equal(allowed.headers.get('access-control-allow-credentials'), null)
+  assert.equal(allowed.headers.get('access-control-allow-credentials'), 'true')
   const denied = await fetch(`${base}/products`, { headers: { Origin: 'https://blocked.example' } })
   assert.equal(denied.status, 403)
   assert.equal(denied.headers.get('access-control-allow-origin'), null)
@@ -93,7 +93,7 @@ test('CORS permite frontend, rechaza otros orígenes y responde preflight', asyn
   const preflight = await fetch(`${base}/products`, { method: 'OPTIONS', headers: { Origin: 'http://localhost:5173', 'Access-Control-Request-Method': 'GET' } })
   assert.equal(preflight.status, 204)
   assert.equal(preflight.headers.get('access-control-allow-origin'), 'http://localhost:5173')
-  assert.ok(!preflight.headers.get('access-control-allow-methods').includes('POST'))
+  assert.ok(preflight.headers.get('access-control-allow-methods').includes('POST'))
 })
 
 test('rate limiting real devuelve 429, Retry-After y se recupera', async (context) => {

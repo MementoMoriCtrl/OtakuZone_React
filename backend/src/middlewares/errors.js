@@ -15,6 +15,6 @@ export function errorHandler(error, _request, response, next) {
   if (error.type === 'entity.too.large') return failure(response, 413, 'PAYLOAD_TOO_LARGE', 'El cuerpo de la solicitud supera el límite permitido.')
   if (error instanceof URIError) return failure(response, 400, 'INVALID_PATH', 'La ruta contiene una codificación inválida.')
   // El detalle queda solo en el servidor; no se devuelve ni siquiera en desarrollo.
-  console.error('[otakuzone-api] Error interno:', error)
+  console.error('[otakuzone-api] Error interno:', error.code ?? error.name ?? 'ERROR')
   return failure(response, 500, 'INTERNAL_ERROR', 'No se pudo completar la solicitud.')
 }

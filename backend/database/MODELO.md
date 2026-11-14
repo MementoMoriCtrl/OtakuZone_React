@@ -1,10 +1,13 @@
-# Modelo relacional de OtakuZone — Fase 5
+# Modelo relacional de OtakuZone — Fases 5 y 6
+
+En Fase 6 se reutilizan usuarios y roles para autenticación real; el perfil se guarda en MySQL. La migración 005 añade únicamente sesiones revocables. El contexto inicial siguiente corresponde al diseño de Fase 5.
 
 Diseñado tras revisar las rutas, los servicios, los DTO del catálogo y `mock/db.json`. El API actual expone productos/categorías/promociones con identificadores slug; el frontend conserva favoritos y perfil locales, y Jikan sigue siendo externo. No se añaden endpoints públicos de escritura ni autenticación en esta fase.
 
 ```mermaid
 erDiagram
   roles ||--o{ usuarios : asigna
+  usuarios ||--o{ auth_sesiones : inicia
   usuarios ||--o{ favoritos : guarda
   usuarios ||--o{ carritos : posee
   carritos ||--o{ detalles_carrito : contiene
@@ -31,6 +34,8 @@ erDiagram
 - **schema_migrations:** metadatos técnicos de versiones/checksums, sin función comercial.
 
 ## Integridad
+
+**auth_sesiones (Fase 6):** un usuario puede tener varias sesiones. Identificador aleatorio único, fechas de creación/expiración/revocación y FK con CASCADE. No almacena JWT ni duplica datos de usuario o rol: el servidor consulta el estado actual en cada acceso privado. La contraseña se guarda como hash bcrypt en la columna existente de usuarios; los nuevos registros públicos requieren contraseña.
 
 MySQL 8.0.16 o posterior, InnoDB, utf8mb4. PK/FK del mismo tipo y collation. Importes DECIMAL; cantidades enteras. CHECK para valores no negativos, cantidades positivas, reserva <= total, booleanos y fechas ordenadas. Claves únicas para correo, códigos de rol/plan y líneas/favoritos. Índices de FK y de consultas por usuario/estado/fecha/categoría; no se duplican índices ya cubiertos por el prefijo de una PK/índice compuesto.
 

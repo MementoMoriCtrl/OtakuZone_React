@@ -11,7 +11,14 @@ export function validateProfile(values) {
 export function validateRegistration(values) {
   const errors = validateProfile(values)
   const password = values.password ?? ''
-  if (password.length < 8 || password.length > 128 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) errors.password = 'Usa entre 8 y 128 caracteres, con al menos una letra y un número.'
+  if (password.length < 8 || new TextEncoder().encode(password).length > 72 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) errors.password = 'Usa al menos 8 caracteres, una letra y un número; máximo 72 bytes.'
   if (!values.confirmPassword || values.confirmPassword !== password) errors.confirmPassword = 'Las contraseñas deben coincidir.'
+  return errors
+}
+
+export function validateLogin(values) {
+  const errors = {}
+  if (validateProfile({ name: 'Cuenta', email: values.email }).email) errors.email = 'Escribe un correo electrónico válido.'
+  if (!values.password || new TextEncoder().encode(values.password).length > 72) errors.password = 'Escribe tu contraseña (máximo 72 bytes).'
   return errors
 }

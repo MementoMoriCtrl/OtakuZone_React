@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { z } from 'zod'
 import { loadDatabaseConfig } from './database.js'
+import { loadAuthConfig } from './auth.js'
 
 const backendRoot = fileURLToPath(new URL('../../', import.meta.url))
 const developmentOrigins = 'http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:4173,http://localhost:4173'
@@ -20,6 +21,7 @@ const schema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().int().min(1).max(100000).default(120),
   DEMO_DATA_PATH: z.string().trim().min(1).default('../mock/db.json'),
   CATALOG_SOURCE: z.enum(['demo', 'mysql']).default('demo'),
+  AUTH_ENABLED: z.enum(['true', 'false']).default('false'),
 })
 
 export function loadConfig(environment = process.env) {
@@ -33,6 +35,7 @@ export function loadConfig(environment = process.env) {
     rateLimitWindowMs: value.RATE_LIMIT_WINDOW_MS, rateLimitMax: value.RATE_LIMIT_MAX,
     demoDataPath: resolve(backendRoot, value.DEMO_DATA_PATH),
     catalogSource: value.CATALOG_SOURCE,
-    database: value.CATALOG_SOURCE === 'mysql' ? loadDatabaseConfig(environment) : null,
+    database: value.CATALOG_SOURCE === 'mysql' || value.AUTH_ENABLED === 'true' ? loadDatabaseConfig(environment) : null,
+    auth: value.AUTH_ENABLED === 'true' ? loadAuthConfig(environment) : null,
   })
 }

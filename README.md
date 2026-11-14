@@ -1,6 +1,14 @@
 ﻿# OtakuZone — Neo Tokyo
 
-## Estado actual — Fase 5: modelo relacional e integración MySQL
+## Estado actual — Fase 6: autenticación y seguridad
+
+Registro, login, logout y perfil conectados a Express/MySQL. Contraseñas bcrypt, JWT en cookie HttpOnly, CSRF, autorización ADMIN/CLIENTE en el servidor y rutas privadas en React. No se avanza a Fase 7.
+
+Guía vigente de ejecución, endpoints y resultados reales: [AUTENTICACION_FASE_6.md](AUTENTICACION_FASE_6.md). MySQL 8.0.46: 15 tablas, 13 FK, 19 CHECK y cinco migraciones. Se conservan las cuatro migraciones originales; 005 añade sesiones revocables.
+
+Las secciones siguientes documentan fases históricas; sus afirmaciones sobre ausencia de autenticación, formularios locales o CORS describen aquellas fases.
+
+## Referencia histórica — Fase 5: modelo relacional e integración MySQL
 
 Implementación MySQL en `backend/` con mysql2, pool, SQL parametrizado, migraciones versionadas y un repositorio intercambiable que conserva los endpoints actuales. Modelo de roles, usuarios, categorías, productos, inventario, favoritos por ID de Jikan, carritos, pedidos, planes/historial de suscripción y promociones. No se implementa autenticación ni se avanza a la Fase 6.
 
