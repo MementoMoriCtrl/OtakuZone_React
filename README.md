@@ -1,6 +1,54 @@
 ﻿# OtakuZone — Neo Tokyo
 
-## Estado actual — Fase 3: interactividad y estado
+## Estado actual — Fase 4: backend Node.js + Express
+
+Backend independiente en `backend/`, sin mover el frontend ni cambiar sus dependencias. API propia de solo lectura bajo `/api/v1`, con Express, dotenv, CORS, Helmet, rate limiting, Zod y errores JSON centralizados. No hay autenticación ni MySQL.
+
+Instalación desde la raíz (dos lockfiles independientes):
+
+```sh
+npm ci
+npm --prefix backend ci
+```
+
+Terminal 1 — backend:
+
+```sh
+npm --prefix backend run dev
+```
+
+Terminal 2 — frontend:
+
+```sh
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+- Frontend: http://127.0.0.1:5173/
+- Health: http://127.0.0.1:4000/api/v1/health
+- Productos: http://127.0.0.1:4000/api/v1/products
+- Categorías: http://127.0.0.1:4000/api/v1/categories
+- Promociones: http://127.0.0.1:4000/api/v1/promotions
+
+La tienda usa Express por defecto. Si existe `.env.local`, verificar `VITE_OTAKUZONE_API_URL=http://127.0.0.1:4000/api/v1` y reiniciar Vite. La configuración y ejemplos de solicitudes/respuestas están en [backend/README.md](backend/README.md); las variables están en `backend/.env.example` y `.env.example`. No colocar secretos en variables `VITE_*`.
+
+**JSON Server se conserva como simulación opcional de desarrollo:** `npm run api` continúa usando el puerto 3001 y `mock/db.json`. Para probarlo desde React, configurar explícitamente `VITE_OTAKUZONE_API_URL=http://127.0.0.1:3001` y reiniciar Vite. No existe fallback automático entre proveedores. Express lee ese mismo JSON mediante un repositorio de solo lectura: no se mantienen bases demostrativas divergentes.
+
+**Jikan se conserva sin cambios:** sus servicios siguen separados de los endpoints propios. No se añade un proxy de anime ni se declara resuelta su limitación de conectividad anterior. Se mantienen el modo demo explícito, los favoritos y los formularios locales de la Fase 3.
+
+```sh
+npm --prefix backend test
+npm --prefix backend run check:http
+npm test
+npm run lint
+npm run build
+node scripts/audit-backend-browser.mjs
+```
+
+Resultados: 8 pruebas de backend y 17 del frontend pasan; 21 solicitudes HTTP reales al servidor activo pasan. Chrome comprobó el consumo de Express y también de JSON Server en una instancia de Vite configurada para esa alternativa. El script de navegador usa `STORE_API_URL` para indicar otro proveedor y `AUDIT_URL` para indicar otro frontend. La auditoría anterior `audit-apis-browser.mjs` también admite estas variables; su éxito completo sigue dependiendo de Jikan.
+
+Informe de entrega: [BACKEND_FASE_4.md](BACKEND_FASE_4.md). No se avanzó a la Fase 5.
+
+## Referencia — Fase 3: interactividad y estado
 
 Búsqueda dinámica con **450 ms de debounce**, filtros por género y estado, orden por puntuación/popularidad, favoritos persistentes y formularios de registro demostrativo y perfil local. Se conserva la integración Jikan/JSON Server de la fase anterior, las cinco rutas y Neo Tokyo. No hay autenticación, backend nuevo ni MySQL.
 

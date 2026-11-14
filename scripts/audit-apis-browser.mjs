@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const base = process.env.AUDIT_URL ?? 'http://127.0.0.1:5173'
+const storeBase = (process.env.STORE_API_URL ?? 'http://127.0.0.1:4000/api/v1').replace(/\/$/, '')
 const candidates = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].filter(Boolean)
 let executable
 for (const candidate of candidates) { try { await access(candidate); executable = candidate; break } catch { /* siguiente */ } }
@@ -39,7 +40,7 @@ try {
     }
     if (message.method === 'Runtime.exceptionThrown') exceptions.push(message.params)
     if (message.method === 'Runtime.consoleAPICalled' && message.params.type === 'error') consoleErrors.push(message.params)
-    if (message.method === 'Network.responseReceived' && /api.jikan.moe|127.0.0.1:3001/.test(message.params.response.url)) responses.push({ url: message.params.response.url, status: message.params.response.status })
+    if (message.method === 'Network.responseReceived' && (message.params.response.url.includes('api.jikan.moe') || message.params.response.url.startsWith(storeBase + '/'))) responses.push({ url: message.params.response.url, status: message.params.response.status })
     if (message.method === 'Network.loadingFailed') failedRequests.push(message.params.errorText)
   }
   const send = (method, params = {}) => new Promise((resolve, reject) => {
@@ -73,7 +74,7 @@ try {
   console.log('Home, registros reales renderizados:', JSON.stringify(counts))
   assert.equal(counts.products, 4)
   live = counts.popular > 0 && counts.current > 0 && counts.genres > 0
-  console.log(live ? 'PASS: consumo simultáneo Jikan + JSON Server en Home' : 'FAIL: consumo simultáneo incompleto; Jikan no produjo todas sus secciones. No se sustituyeron sus datos.')
+  console.log(live ? `PASS: consumo simultáneo Jikan + ${storeBase} en Home` : 'FAIL: consumo simultáneo incompleto; Jikan no produjo todas sus secciones. No se sustituyeron sus datos.')
   if (counts.popular) {
     await click('main article button')
     await waitFor(`!!document.querySelector('dialog[open]')`)
@@ -86,7 +87,7 @@ try {
   assert.ok(await evaluate(`location.pathname === '/cuenta' && !!document.querySelector('header a[aria-current="page"][href="/cuenta"]')`))
   await navigate('/tienda'); await settled()
   assert.equal(await evaluate(`document.querySelectorAll('main article').length`), 12)
-  console.log('PASS: 12 productos de JSON Server renderizados en React')
+  console.log('PASS: 12 productos de la API configurada renderizados en React')
   await evaluate(`const select = document.querySelector('main select'); select.value = 'papeleria'; select.dispatchEvent(new Event('change', {bubbles:true}))`)
   await waitFor(`document.querySelectorAll('main article').length === 0 && document.querySelector('main').textContent.includes('No hay productos')`)
   console.log('PASS: estado vacío con categoría real sin productos')
@@ -96,13 +97,13 @@ try {
     assert.ok(await evaluate('document.documentElement.scrollWidth <= innerWidth'), `Responsive @${width}`)
   }
   // Fallo intencional, separado de la evidencia de servicios disponibles.
-  await send('Network.setBlockedURLs', { urls: ['*127.0.0.1:3001/products*'] })
+  await send('Network.setBlockedURLs', { urls: [`${storeBase}/products*`] })
   await navigate('/tienda'); await settled()
   assert.ok(await evaluate(`document.querySelector('main [role="alert"]').textContent.includes('conectar')`))
   await send('Network.setBlockedURLs', { urls: [] })
   await click('main [role="alert"] button'); await settled()
   assert.equal(await evaluate(`document.querySelectorAll('main article').length`), 12)
-  console.log('PASS: fallo de conexión intencional, error visible y recuperación con Reintentar contra JSON Server real')
+  console.log('PASS: fallo de conexión intencional, error visible y recuperación con Reintentar contra la API real configurada')
   await navigate('/animes'); await settled()
   if (live) {
     assert.ok(await evaluate(`document.querySelectorAll('main article').length >= 10`), 'Catálogo real con al menos diez resultados')

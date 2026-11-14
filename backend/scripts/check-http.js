@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict'
+
+const base = (process.env.API_URL || 'http://127.0.0.1:4000/api/v1').replace(/\/$/, '')
+let count = 0
+async function check(path, status = 200, options = {}) {
+  const response = await fetch(`${base}${path}`, { signal: AbortSignal.timeout(10000), ...options })
+  assert.equal(response.status, status, `${path}: HTTP ${response.status}`)
+  const body = await response.json()
+  assert.equal(body.success, status < 400)
+  if (status >= 400) { assert.ok(body.error.code); assert.ok(!JSON.stringify(body).includes('stack')) }
+  count++
+  console.log(`${options.method || 'GET'} ${base}${path} → ${status}`)
+  return { response, body }
+}
+const health = await check('/health')
+assert.equal(health.body.data.status, 'ok')
+assert.equal(health.response.headers.get('x-powered-by'), null)
+assert.equal(health.response.headers.get('x-content-type-options'), 'nosniff')
+const products = await check('/products')
+assert.equal(products.body.data.length, 12)
+assert.equal(products.body.meta.source, 'demo')
+await check('/products/figura-mensajera')
+const categories = await check('/categories')
+assert.equal(categories.body.data.length, 5)
+await check('/categories/figuras')
+await check('/promotions')
+const filtered = await check('/products?categoryId=mangas&q=volumen')
+assert.ok(filtered.body.data.length && filtered.body.data.every((item) => item.categoryId === 'mangas'))
+assert.deepEqual((await check('/products?categoryId=papeleria')).body.data, [])
+await check('/products/no-existe', 404)
+await check('/categories/no-existe', 404)
+await check('/products?q=' + 'a'.repeat(101), 400)
+await check('/products?categoryId=../secret', 400)
+await check('/products?unknown=1', 400)
+await check('/products?q=uno&q=dos', 400)
+await check('/ruta-inexistente', 404)
+await check('/products', 405, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+await check('/products', 400, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{invalid' })
+await check('/products', 413, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ huge: 'x'.repeat(11000) }) })
+const allowed = await check('/products', 200, { headers: { Origin: 'http://127.0.0.1:5173' } })
+assert.equal(allowed.response.headers.get('access-control-allow-origin'), 'http://127.0.0.1:5173')
+assert.equal(allowed.response.headers.get('access-control-allow-credentials'), null)
+const denied = await check('/products', 403, { headers: { Origin: 'https://untrusted.example' } })
+assert.equal(denied.response.headers.get('access-control-allow-origin'), null)
+const preflight = await fetch(`${base}/products`, { method: 'OPTIONS', headers: { Origin: 'http://127.0.0.1:5173', 'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type' } })
+assert.equal(preflight.status, 204)
+assert.equal(preflight.headers.get('access-control-allow-origin'), 'http://127.0.0.1:5173')
+assert.ok(preflight.headers.get('access-control-allow-methods').includes('GET'))
+count++
+console.log(`PASS: ${count} solicitudes HTTP reales, validaciones, CORS y cabeceras correctas`)

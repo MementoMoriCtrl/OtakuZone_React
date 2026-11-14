@@ -30,7 +30,7 @@ export default function Home() {
         </div>
       </section>
       <section aria-labelledby="shop-title">
-        <SectionHeading id="shop-title" eyebrow="LLEVA TU UNIVERSO CONTIGO" title="Tienda Otaku" description="Productos dinámicos de la API simulada OtakuZone. Productos, imágenes ilustrativas y precios en soles son demostrativos. No se realizan compras." to="/tienda" linkLabel="Explorar tienda" />
+        <SectionHeading id="shop-title" eyebrow="LLEVA TU UNIVERSO CONTIGO" title="Tienda Otaku" description="Productos dinámicos de la API OtakuZone. Productos, imágenes ilustrativas y precios en soles son demostrativos. No se realizan compras." to="/tienda" linkLabel="Explorar tienda" />
         <ResourceState resource={products} empty={!products.data?.length} />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {products.data?.slice(0, 4).map((product) => <ProductCard key={product.id} product={product} />)}
