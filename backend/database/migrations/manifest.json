@@ -1,0 +1,6 @@
+[
+  { "file": "001_create_database.sql", "transactional": false },
+  { "file": "002_relational_schema.sql", "transactional": false },
+  { "file": "003_roles_and_plans.sql", "transactional": true },
+  { "file": "004_demo_catalog.sql", "transactional": true }
+]

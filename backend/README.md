@@ -1,4 +1,26 @@
-# OtakuZone API — Fase 4
+# OtakuZone API
+
+## Fase 5 — MySQL
+
+Se conserva el API de Fase 4 y se incorpora mysql2 con pool, repositorio de catálogo y transacciones. El modelo contiene las doce entidades solicitadas, promociones para el Home existente y metadata de migraciones. No se añade autenticación ni una API pública de escrituras.
+
+Documentación de base de datos: [database/README.md](database/README.md). Diagrama y decisiones: [database/MODELO.md](database/MODELO.md). Resultados realmente ejecutados: [informe de Fase 5](../MYSQL_FASE_5.md).
+
+Validación completada en MySQL 8.0.46: cuatro migraciones, 14 tablas InnoDB, 12 FK y 18 CHECK activos. El catálogo local está configurado con CATALOG_SOURCE=mysql y se comprobaron persistencia, rollback y lectura real de SQL desde HTTP/React. Las credenciales permanecen exclusivamente en el .env ignorado.
+
+Desde la raíz del proyecto, después de configurar únicamente en `backend/.env` las credenciales locales:
+
+```sh
+npm --prefix backend run db:migrate
+npm --prefix backend run db:check
+npm --prefix backend run db:verify
+```
+
+Para usar MySQL en Express, establecer `CATALOG_SOURCE=mysql` en ese archivo y reiniciar el backend. `CATALOG_SOURCE=demo` conserva el fixture de desarrollo; no es un fallback de conexión. Los scripts db:* siempre usan MySQL real y fallan si no hay acceso. No se ha declarado éxito de MySQL a partir de pruebas unitarias ni del modo demo.
+
+`backend/.env.example` no contiene una contraseña ni una cuenta administrativa real. El `.env` local permanece ignorado. La cuenta temporal autorizada para desarrollo no se crea ni altera desde estas migraciones; la documentación incluye una alternativa de mínimo privilegio para la aplicación.
+
+## Referencia de la API y configuración de Fase 4
 
 Backend independiente de solo lectura, con Node.js, Express 5 y módulos ES. El frontend permanece en la raíz y no se sirve desde Express. No hay autenticación, MySQL, escrituras ni persistencia definitiva.
 

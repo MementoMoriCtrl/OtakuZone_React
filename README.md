@@ -1,6 +1,26 @@
 ﻿# OtakuZone — Neo Tokyo
 
-## Estado actual — Fase 4: backend Node.js + Express
+## Estado actual — Fase 5: modelo relacional e integración MySQL
+
+Implementación MySQL en `backend/` con mysql2, pool, SQL parametrizado, migraciones versionadas y un repositorio intercambiable que conserva los endpoints actuales. Modelo de roles, usuarios, categorías, productos, inventario, favoritos por ID de Jikan, carritos, pedidos, planes/historial de suscripción y promociones. No se implementa autenticación ni se avanza a la Fase 6.
+
+- [Diagrama ER y normalización](backend/database/MODELO.md).
+- [Configuración, migraciones, permisos y pruebas reales](backend/database/README.md).
+- [Informe de ejecución de Fase 5](MYSQL_FASE_5.md): distingue pruebas de código de conexión/persistencia real.
+
+Validación real completada: MySQL **8.0.46**, cuatro migraciones aplicadas, **14 tablas InnoDB, 12 FK y 18 CHECK activos**. Express usa MySQL localmente y la integración HTTP/React está comprobada. Las pruebas de escritura y rollback se ejecutaron en el motor real, sin simular una conexión exitosa.
+
+Guardar las credenciales solamente en `backend/.env` (ignorado por Git), usando `backend/.env.example` como referencia sin secretos. Las migraciones se destinan a `otakuzone_db`; rechazan adoptar tablas previas sin historial y no ejecutan DROP automático.
+
+```sh
+npm --prefix backend run db:migrate
+npm --prefix backend run db:check
+npm --prefix backend run db:verify
+```
+
+Después de migrar y verificar, seleccionar `CATALOG_SOURCE=mysql` en `backend/.env` y reiniciar `npm --prefix backend run dev`. El frontend continúa en su ubicación y usa el mismo Express en 4000/api/v1. `CATALOG_SOURCE=demo` conserva el fixture mientras no se configura MySQL; no se presenta como conexión a base de datos ni cambia automáticamente si MySQL falla. Jikan y JSON Server se mantienen.
+
+## Referencia — Fase 4: backend Node.js + Express
 
 Backend independiente en `backend/`, sin mover el frontend ni cambiar sus dependencias. API propia de solo lectura bajo `/api/v1`, con Express, dotenv, CORS, Helmet, rate limiting, Zod y errores JSON centralizados. No hay autenticación ni MySQL.
 
