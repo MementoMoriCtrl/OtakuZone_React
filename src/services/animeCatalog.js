@@ -1,4 +1,4 @@
-import { getAnimeDetails, getAnimeGenres, searchAnime } from './jikan.js'
+import { getAnimeDetails, getAnimeGenres, searchAnime } from './anilist.js'
 import { filterDemoAnime } from '../domain/catalog.js'
 
 export async function searchCatalog(filters, options) {
@@ -16,6 +16,8 @@ export async function getCatalogGenres(source, options) {
 }
 
 export async function getCatalogDetails(anime, options) {
+  // A MAL/Jikan id is never passed to AniList. Keep old saved records readable.
+  if(anime.source==='jikan')return {...anime,legacy:true}
   if (anime.source !== 'demo') return getAnimeDetails(anime.id, options)
   const { demoAnime } = await import('../data/demoAnime.js')
   options?.signal?.throwIfAborted()

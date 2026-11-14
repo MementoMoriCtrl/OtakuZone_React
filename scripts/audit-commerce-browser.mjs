@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { randomBytes, randomUUID } from 'node:crypto'
-import { openBrowser } from './browser-session.mjs'
+import { openBrowser, assertBrowserApi } from './browser-session.mjs'
 import { loadEnvironment } from '../backend/src/config/loadEnvironment.js'
 import { loadDatabaseConfig } from '../backend/src/config/database.js'
 import { createDatabasePool } from '../backend/src/db/pool.js'
@@ -22,6 +22,7 @@ try {
   browser = await openBrowser()
   const { send, navigate, waitFor, input, click, evaluate, resize, screenshot, events, select } = browser
   await send('Page.navigate', { url: `${process.env.AUDIT_URL ?? 'http://127.0.0.1:5173'}/carrito` }); await waitFor(`location.pathname === '/cuenta' && !!document.querySelector('form[aria-label="Registro"]')`)
+  await assertBrowserApi(browser)
   for (const [name, value] of Object.entries({ name: 'Cliente navegador', email, password, confirmPassword: password })) await input(`form[aria-label="Registro"] [name="${name}"]`, value)
   await evaluate(`document.querySelector('form[aria-label="Registro"]').requestSubmit()`)
   await waitFor(`location.pathname === '/carrito' && document.querySelector('main').textContent.includes('Tu carrito está vacío')`)
@@ -101,12 +102,12 @@ try {
   await navigate('/'); await waitFor(`!!document.querySelector('[aria-label="Promociones de demostración"]')`)
   for (const path of ['/tienda', `/tienda/${productId}`, '/carrito', '/pedidos', `/pedidos/${orderId}`, '/suscripciones']) {
     await navigate(path)
-    for (const width of [320, 390, 768, 1440]) { await resize(width); assert.ok(await evaluate('document.documentElement.scrollWidth <= innerWidth'), `${path}@${width}`) }
+    for (const width of [320, 375, 768, 1024, 1440]) { await resize(width); assert.ok(await evaluate('document.documentElement.scrollWidth <= innerWidth'), `${path}@${width}`) }
   }
   await resize(390); await screenshot('suscripciones-movil')
   const errors = events.filter((event) => event.method === 'Runtime.exceptionThrown' || event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
   assert.deepEqual(errors, [])
-  console.log('PASS Chrome real: login único, búsqueda, vacío, detalle, carrito persistido, pedido MySQL, historial, planes, insignia, publicidad simulada y responsive 320/390/768/1440; sin excepciones de aplicación.')
+  console.log('PASS Chrome real: login único, búsqueda, vacío, detalle, carrito persistido, pedido MySQL, historial, planes, insignia, publicidad simulada y responsive 320/375/768/1024/1440; sin excepciones de aplicación.')
   // Cookie intentionally never printed or copied outside this browser session.
   await send('Network.clearBrowserCookies')
 } catch (error) {

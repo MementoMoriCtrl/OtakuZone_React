@@ -1,0 +1,1 @@
+﻿{"mode":"READ_ONLY","schema":{"version":"8.0.46","tables":17,"foreignKeys":18,"checks":20,"migrations":7},"matchingChecksums":7,"relationsWithoutOrphans":18,"consistency":{"invalidInventory":0,"invalidOrderAmounts":0,"invalidMovementAmounts":0,"activeUsersWithoutBcrypt":0},"runtimeHasGlobalPrivileges":true}

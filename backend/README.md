@@ -1,6 +1,16 @@
 # OtakuZone API
 
-## Fase 6 — configuración vigente
+## Proveedor activo de anime — AniList
+
+Catálogo público centralizado en Express: GET /api/v1/anime, /anime/popular, /anime/season, /anime/genres y /anime/:id. Express realiza POST a https://graphql.anilist.co con consultas fijas y variables; no requiere OAuth. Arquitectura y pruebas: [ANILIST_MIGRACION.md](../ANILIST_MIGRACION.md). Las referencias antiguas a Jikan son históricas.
+
+## Fase 9 — validación
+
+Estado y resultados actuales: [CALIDAD_FASE_9.md](../CALIDAD_FASE_9.md). Esquema: 17 tablas, 18 FK, 20 CHECK y siete migraciones. No ejecutar migraciones durante una auditoría si ya están aplicadas.
+
+Desde la raíz, `npm --prefix backend run quality:verify` prepara una base y cuenta aisladas, ejecuta pruebas HTTP/MySQL/navegador y limpia sus recursos. El chequeo externo activo usa AniList a través de Express y falla si no obtiene resultados reales. Requiere credenciales de mantenimiento en el entorno, MySQL local, Chrome/Edge y puertos 4407/5177/4409 libres. Los scripts de escritura auth/db/commerce/admin rechazan la configuración de desarrollo y deben ejecutarse mediante ese preparador. Para desarrollo sin escrituras: `node backend/scripts/audit-readonly.js`.
+
+## Configuración de Fase 6 (antecedente)
 
 JWT en cookies HttpOnly, sesiones revocables MySQL, bcrypt, CSRF y roles ADMIN/CLIENTE. Guía de ejecución, endpoints, ejemplos de solicitudes/respuestas y pruebas reales: [AUTENTICACION_FASE_6.md](../AUTENTICACION_FASE_6.md).
 

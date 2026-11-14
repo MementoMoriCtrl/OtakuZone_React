@@ -15,7 +15,7 @@ export function wait(ms, signal) {
   })
 }
 
-// Un inicio por segundo, compartido por todos los endpoints de Jikan.
+// Un inicio por segundo, para clientes HTTP heredados; AniList se limita en Express.
 export function createRateGate(interval = 1100) {
   let queue = Promise.resolve()
   let lastStart = 0

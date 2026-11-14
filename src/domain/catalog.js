@@ -6,20 +6,22 @@ export const statusOptions = [
 
 export function readCatalogParams(params) {
   const rawPage = Number(params.get('page') ?? 1)
+  const source=params.get('source')==='demo'?'demo':'anilist'
+  const genre=params.get('genre')??''
   return {
-    source: params.get('source') === 'demo' ? 'demo' : 'jikan',
+    source,
     query: (params.get('q') ?? '').slice(0, 150),
-    genre: /^[1-9]\d*$/.test(params.get('genre') ?? '') ? params.get('genre') : '',
+    genre: (source==='demo'?/^[1-9]\d*$/:/^[A-Za-z][A-Za-z -]{0,49}$/).test(genre)?genre:'',
     status: statusOptions.some((option) => option.value === params.get('status')) ? params.get('status') : '',
     order: params.get('order') === 'score' ? 'score' : 'popularity',
-    page: Number.isSafeInteger(rawPage) && rawPage > 0 ? rawPage : 1,
+    page: Number.isSafeInteger(rawPage) && rawPage > 0 && rawPage<=100 ? rawPage : 1,
   }
 }
 
 export function buildAnimeSearchParams({ query = '', genre = '', status = '', order = 'popularity', page = 1 } = {}) {
-  const params = new URLSearchParams({ page: String(page), limit: '12', sfw: 'true', order_by: order === 'score' ? 'score' : 'popularity', sort: order === 'score' ? 'desc' : 'asc' })
+  const params = new URLSearchParams({ page: String(page), order: order === 'score' ? 'score' : 'popularity' })
   if (query.trim()) params.set('q', query.trim().slice(0, 150))
-  if (/^[1-9]\d*$/.test(String(genre))) params.set('genres', String(genre))
+  if (/^[A-Za-z][A-Za-z -]{0,49}$/.test(String(genre))) params.set('genre', String(genre))
   if (statusOptions.some((option) => option.value === status)) params.set('status', status)
   return params
 }

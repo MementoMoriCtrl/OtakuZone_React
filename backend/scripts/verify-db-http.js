@@ -1,3 +1,4 @@
+import { assertTestIsolation } from './test-isolation.js'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import { loadEnvironment } from '../src/config/loadEnvironment.js'
@@ -8,6 +9,7 @@ import { createMysqlCatalogRepository } from '../src/repositories/mysqlCatalogRe
 import { createProductMaintenanceService } from '../src/services/productMaintenanceService.js'
 
 loadEnvironment()
+await assertTestIsolation(loadDatabaseConfig())
 const base = (process.env.API_URL || 'http://127.0.0.1:4000/api/v1').replace(/\/$/, '')
 const id = `http-verify-${randomUUID()}`
 let pool

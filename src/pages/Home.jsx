@@ -7,7 +7,7 @@ import CTASection from '../components/home/CTASection.jsx'
 import SectionHeading from '../components/common/SectionHeading.jsx'
 import DevelopmentCheck from '../components/common/DevelopmentCheck.jsx'
 import { getPlans } from '../services/commerce.js'
-import { getPopularAnime, getCurrentAnime, getAnimeGenres } from '../services/jikan.js'
+import { getPopularAnime, getCurrentAnime, getAnimeGenres } from '../services/anilist.js'
 import { getProducts, getPromotions } from '../services/otakuzone.js'
 import useResource from '../hooks/useResource.js'
 import ResourceState from '../components/common/ResourceState.jsx'
@@ -23,10 +23,10 @@ export default function Home() {
   return (
     <div className="space-y-14 sm:space-y-20">
       <Hero />
-      <AnimeSection id="popular-title" eyebrow="LA SELECCIÓN OTAKUZONE" title="Animes populares" description="Información real de Jikan / MyAnimeList, ordenada por popularidad. Las sinopsis pueden estar en inglés." loader={getPopularAnime} />
-      <AnimeSection id="latest-title" eyebrow="NUEVAS HISTORIAS, NUEVOS MUNDOS" title="Últimos lanzamientos" description="Animes de la temporada actual según Jikan. Esta selección de temporada no representa un orden por fecha de estreno." loader={getCurrentAnime} isNew />
+      <AnimeSection id="popular-title" eyebrow="LA SELECCIÓN OTAKUZONE" title="Animes populares" description="Información real de AniList, ordenada por popularidad. Las sinopsis pueden estar en inglés." loader={getPopularAnime} />
+      <AnimeSection id="latest-title" eyebrow="NUEVAS HISTORIAS, NUEVOS MUNDOS" title="Últimos lanzamientos" description="Animes de la temporada actual según AniList. Esta selección de temporada no representa un orden por fecha de estreno." loader={getCurrentAnime} isNew />
       <section aria-labelledby="genres-title">
-        <SectionHeading id="genres-title" eyebrow="SIGUE TU CURIOSIDAD" title="Explorar por géneros" description="Géneros reales de Jikan. Elige uno para filtrar el catálogo." />
+        <SectionHeading id="genres-title" eyebrow="SIGUE TU CURIOSIDAD" title="Explorar por géneros" description="Géneros reales de AniList. Elige uno para filtrar el catálogo." />
         <ResourceState resource={genres} empty={!genres.data?.length} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {genres.data?.slice(0, 6).map((category) => <CategoryCard key={category.id} category={category} />)}

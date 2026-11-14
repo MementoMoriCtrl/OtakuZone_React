@@ -12,16 +12,15 @@ const memoryStorage = () => {
   return { getItem: (key) => data.get(key) ?? null, setItem: (key, value) => data.set(key, value) }
 }
 
-test('traduce filtros a parámetros Jikan y orden correcto', () => {
-  const params = buildAnimeSearchParams({ query: ' Naruto & amigos ', genre: '1', status: 'complete', order: 'score', page: 2 })
+test('traduce filtros a parámetros AniList y orden correcto', () => {
+  const params = buildAnimeSearchParams({ query: ' Naruto & amigos ', genre: 'Action', status: 'complete', order: 'score', page: 2 })
   assert.equal(params.get('q'), 'Naruto & amigos')
   assert.equal(params.get('status'), 'complete')
-  assert.equal(params.get('genres'), '1')
-  assert.equal(params.get('order_by'), 'score')
-  assert.equal(params.get('sort'), 'desc')
-  assert.equal(buildAnimeSearchParams().get('sort'), 'asc')
+  assert.equal(params.get('genre'), 'Action')
+  assert.equal(params.get('order'), 'score')
+  assert.equal(buildAnimeSearchParams().get('order'), 'popularity')
   const invalid = readCatalogParams(new URLSearchParams('source=other&genre=-1&status=bad&order=bad&page=NaN'))
-  assert.deepEqual(invalid, { source: 'jikan', query: '', genre: '', status: '', order: 'popularity', page: 1 })
+  assert.deepEqual(invalid, { source: 'anilist', query: '', genre: '', status: '', order: 'popularity', page: 1 })
 })
 
 test('demo: búsqueda con tildes, filtros combinados, puntuación y popularidad', () => {

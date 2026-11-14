@@ -1,11 +1,15 @@
+import { assertTestIsolation } from '../backend/scripts/test-isolation.js'
 import assert from 'node:assert/strict'
 import { randomBytes, randomUUID } from 'node:crypto'
-import { openBrowser } from './browser-session.mjs'
+import { openBrowser, assertBrowserApi } from './browser-session.mjs'
 import { loadEnvironment } from '../backend/src/config/loadEnvironment.js'
 import { loadDatabaseConfig } from '../backend/src/config/database.js'
 import { createDatabasePool } from '../backend/src/db/pool.js'
 
 loadEnvironment()
+await assertTestIsolation(loadDatabaseConfig())
+const api = process.env.API_URL
+assert.ok(api?.startsWith('http://127.0.0.1:4407/'))
 const pool = createDatabasePool(loadDatabaseConfig())
 const email = `browser-auth-${randomUUID()}@example.test`
 const password = `Aa1-${randomBytes(20).toString('hex')}`
@@ -17,6 +21,7 @@ try {
   const submit = (label) => evaluate(`document.querySelector('form[aria-label="${label}"]').requestSubmit()`)
   await resize(1440)
   await navigate('/animes?source=demo')
+  await assertBrowserApi(browser)
   await waitFor(`document.querySelectorAll('main article').length === 12`)
   await click('main article button[aria-pressed]')
   await send('Page.navigate', { url: `${process.env.AUDIT_URL || 'http://127.0.0.1:5173'}/perfil` })
@@ -32,7 +37,7 @@ try {
   await input('form[aria-label="Registro"] [name="confirmPassword"]', password)
   await submit('Registro')
   await waitFor(`location.pathname === '/perfil' && !!document.querySelector('form[aria-label="Perfil"]')`)
-  const { cookies } = await send('Network.getCookies', { urls: ['http://127.0.0.1:4000/api/v1/auth/session'] })
+  const { cookies } = await send('Network.getCookies', { urls: [`${api}/auth/session`] })
   const cookie = cookies.find((item) => item.name === 'otakuzone_session')
   assert.ok(cookie?.httpOnly && cookie.sameSite === 'Lax')
   assert.ok(await evaluate(`!document.cookie.includes('otakuzone_session')`))
@@ -49,6 +54,7 @@ try {
   assert.equal(stored.nombre, 'Aiko actualizado')
   assert.equal(stored.presentacion, 'Perfil autenticado de prueba.')
   assert.ok(stored.hash !== password && stored.hash.startsWith('$2'))
+  for(const width of [320,375,768,1024,1440]) { await resize(width); assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),`Perfil @${width}`) }
   await resize(390); await screenshot('perfil-autenticado-movil')
   await navigate('/favoritos')
   assert.equal(await evaluate(`document.querySelectorAll('main article').length`), 1)
@@ -56,11 +62,11 @@ try {
 
   await navigate('/admin')
   await waitFor(`document.querySelector('main').textContent.includes('Acceso restringido')`)
-  assert.equal(await evaluate(`fetch('http://127.0.0.1:4000/api/v1/admin/overview', { credentials: 'include' }).then(response => response.status)`), 403)
+  assert.equal(await evaluate(`fetch('${api}/admin/overview', { credentials: 'include' }).then(response => response.status)`), 403)
   await pool.execute('UPDATE usuarios SET rol_id = (SELECT id FROM roles WHERE codigo = ?) WHERE email = ?', ['administrador', email])
   await navigate('/admin')
-  await waitFor(`document.querySelectorAll('main dd').length === 3`)
-  assert.ok(events.some((event) => event.method === 'Network.responseReceived' && event.params.response.url.endsWith('/admin/overview') && event.params.response.status === 200))
+  await waitFor(`document.querySelectorAll('main dd').length === 6`)
+  assert.ok(events.some((event) => event.method === 'Network.responseReceived' && event.params.response.url.endsWith('/admin/dashboard') && event.params.response.status === 200))
   await pool.execute('UPDATE usuarios SET rol_id = (SELECT id FROM roles WHERE codigo = ?) WHERE email = ?', ['cliente', email])
   await navigate('/admin')
   await waitFor(`document.querySelector('main').textContent.includes('Acceso restringido')`)
@@ -76,10 +82,10 @@ try {
   await waitFor(`location.pathname === '/perfil' && !!document.querySelector('form[aria-label="Perfil"]')`)
   await click('main button[type="button"]')
   await waitFor(`location.pathname === '/cuenta'`); await account()
-  const afterLogout = await send('Network.getCookies', { urls: ['http://127.0.0.1:4000/'] })
+  const afterLogout = await send('Network.getCookies', { urls: [api] })
   assert.ok(!afterLogout.cookies.some((item) => item.name === 'otakuzone_session'))
   console.log('PASS CLIENTE denegado, ADMIN permitido, rol verificado en servidor, login con error/éxito y logout')
-  for (const width of [320, 390, 768, 1440]) { await resize(width); assert.ok(await evaluate('document.documentElement.scrollWidth <= innerWidth')) }
+  for (const width of [320, 375, 768, 1024, 1440]) { await resize(width); assert.ok(await evaluate('document.documentElement.scrollWidth <= innerWidth')) }
   await screenshot('cuenta-login-registro')
   const runtimeErrors = events.filter((event) => event.method === 'Runtime.exceptionThrown' || event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
   assert.deepEqual(runtimeErrors, [])
@@ -88,6 +94,7 @@ try {
   try { if (browser) await browser.close() }
   finally {
     try {
+      await pool.execute('DELETE c FROM carritos c JOIN usuarios u ON u.id=c.usuario_id WHERE u.email=?', [email])
       await pool.execute('DELETE h FROM historial_suscripciones h JOIN usuarios u ON u.id=h.usuario_id WHERE u.email=?', [email])
       await pool.execute('DELETE FROM usuarios WHERE email = ?', [email]); console.log('Cuenta técnica del navegador, suscripción y sesiones eliminadas.')
     }

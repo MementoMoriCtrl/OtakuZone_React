@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { ApiError, createClient, createRateGate, fetchJSON, requireList, safeImage, wait } from '../src/services/http.js'
 import { normalizeAnime } from '../src/services/jikan.js'
 
-test('normaliza propiedades ausentes sin inventar datos reales', () => {
+test('adaptador Jikan heredado: propiedades ausentes sin inventar datos reales', () => {
   const item = normalizeAnime({ mal_id: 1, title: 'Anime real', score: null, images: null, genres: null })
   assert.equal(item.title, 'Anime real')
   assert.equal(item.image, null)

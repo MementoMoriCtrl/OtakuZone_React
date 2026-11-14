@@ -80,7 +80,7 @@ try {
   for (const path of ['/animes?source=demo', '/favoritos', '/cuenta']) {
     await navigate(path)
     if (path.includes('demo')) await waitFor(`document.querySelectorAll('main article').length === 12`)
-    for (const width of [320, 390, 768, 1440]) {
+    for (const width of [320, 375, 768, 1024, 1440]) {
       await resize(width)
       assert.ok(await evaluate('document.documentElement.scrollWidth <= innerWidth'), `${path} @${width}`)
     }
@@ -88,16 +88,16 @@ try {
   await resize(390); await screenshot('cuenta-movil')
   await navigate('/animes?source=demo'); await waitFor(`document.querySelectorAll('main article').length === 12`)
   await resize(1440); await screenshot('catalogo-demo')
-  console.log('PASS: responsive 320/390/768/1440 en catálogo, favoritos y cuenta')
+  console.log('PASS: responsive 320/375/768/1024/1440 en catálogo, favoritos y cuenta')
 
-  await navigate('/animes?q=Naruto&genre=1&status=complete&order=score')
+  await navigate('/animes?q=Naruto&genre=Action&status=complete&order=score')
   await noLoading()
-  const requests = events.filter((event) => event.method === 'Network.requestWillBeSent' && event.params.request.url.includes('api.jikan.moe/v4/anime?')).map((event) => event.params.request.url)
-  assert.ok(requests.some((url) => { const params = new URL(url).searchParams; return params.get('q') === 'Naruto' && params.get('status') === 'complete' && params.get('genres') === '1' && params.get('order_by') === 'score' && params.get('sort') === 'desc' }))
+  const requests = events.filter((event) => event.method === 'Network.requestWillBeSent' && event.params.request.url.includes('/api/v1/anime?')).map((event) => event.params.request.url)
+  assert.ok(requests.some((url) => { const params = new URL(url).searchParams; return params.get('q') === 'Naruto' && params.get('status') === 'complete' && params.get('genre') === 'Action' && params.get('order') === 'score' }))
   const real = await count()
-  console.log(real ? `PASS: búsqueda real Jikan, ${real} resultados` : 'PENDIENTE EXTERNO: Jikan no entregó resultados; el catálogo mantiene el error y el acceso al modo demo.')
+  console.log(real ? `PASS: búsqueda real AniList, ${real} resultados` : 'PENDIENTE EXTERNO: AniList no entregó resultados; el catálogo mantiene el error y el acceso al modo demo.')
   if (!real) assert.ok(await evaluate(`document.querySelectorAll('main [role="alert"]').length > 0`))
-  console.log('Solicitudes Jikan reales:', JSON.stringify(requests))
+  console.log('Solicitudes AniList reales:', JSON.stringify(requests))
   const errors = events.filter((event) => event.method === 'Runtime.exceptionThrown' || event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error')
   assert.deepEqual(errors, [], 'Errores de aplicación')
   console.log('PASS: sin excepciones ni console.error de la aplicación; los errores de red externos se informan por separado')

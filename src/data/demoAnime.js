@@ -12,7 +12,7 @@ export const demoGenres = [
 ]
 
 // Obras originales ficticias. Los números permiten probar orden y filtros;
-// no son estadísticas de Jikan. Se reutilizan las ilustraciones originales.
+// no son estadísticas de AniList. Se reutilizan las ilustraciones originales.
 const seeds = [
   ['Distrito Cero', distrito, [1, 24], 'airing', 9.2, 2],
   ['El jardín de cristal', jardin, [10, 22], 'complete', 8.9, 4],
@@ -34,5 +34,5 @@ export const demoAnime = seeds.map(([title, image, genreIds, statusCode, score, 
   statusCode, status: { airing: 'En emisión (demo)', complete: 'Finalizado (demo)', upcoming: 'Próximamente (demo)' }[statusCode],
   score, popularity, season: 'Temporada ficticia · Demo local',
   episodes: statusCode === 'upcoming' ? null : 12,
-  description: `${title} es una obra ficticia del universo OtakuZone. Esta ficha, su estado, puntuación y popularidad son datos locales de demostración; no proceden de Jikan. La ilustración puede reutilizarse entre títulos.`,
+  description: `${title} es una obra ficticia del universo OtakuZone. Esta ficha, su estado, puntuación y popularidad son datos locales de demostración; no proceden de AniList. La ilustración puede reutilizarse entre títulos.`,
 }))

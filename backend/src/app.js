@@ -19,8 +19,10 @@ import { createCommerceService } from './services/commerceService.js'
 import { createAdminRoutes } from './routes/admin.js'
 import { createAdminRepository } from './repositories/adminRepository.js'
 import { createAdminService } from './services/adminService.js'
+import { createAnilistService } from './services/anilistService.js'
+import { createAnilistRoutes } from './routes/anilist.js'
 
-export function createApp({ config = loadConfig(), repository, authPool } = {}) {
+export function createApp({ config = loadConfig(), repository, authPool, animeService = createAnilistService() } = {}) {
   const app = express()
   const source = repository ? { repository, close: async () => {} } : createCatalogSource(config)
   const authenticationPool = config.auth ? authPool ?? source.pool ?? createDatabasePool(config.database) : null
@@ -46,6 +48,7 @@ export function createApp({ config = loadConfig(), repository, authPool } = {}) 
     handler: (_request, response) => failure(response, 429, 'RATE_LIMITED', 'Demasiadas solicitudes. Espera antes de volver a intentarlo.'),
   }))
   app.use(express.json({ limit: '10kb', strict: true }))
+  app.use('/api/v1', createAnilistRoutes(animeService))
   app.use('/api/v1', createAuthRoutes(authService, config))
   app.use('/api/v1', createAdminRoutes(authenticationPool ? createAdminService(createAdminRepository(authenticationPool)) : null, authService, config))
   app.use('/api/v1', createCommerceRoutes(authenticationPool ? createCommerceService(createCommerceRepository(authenticationPool)) : null, authService, config))

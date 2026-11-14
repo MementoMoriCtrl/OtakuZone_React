@@ -5,13 +5,25 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+export async function assertBrowserApi(browser) {
+  assert.equal(process.env.NODE_ENV, 'test')
+  assert.equal(new URL(process.env.AUDIT_URL).port, '5177')
+  const actual = await browser.evaluate(`import('/src/services/auth.js').then(m=>m.AUTH_API_URL)`)
+  assert.equal(actual, process.env.API_URL, 'El navegador debe usar exclusivamente la API aislada')
+}
 export async function openBrowser() {
   const candidates = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].filter(Boolean)
   let executable
   for (const candidate of candidates) { try { await access(candidate); executable = candidate; break } catch { /* siguiente */ } }
   assert.ok(executable, 'Configura CHROME_PATH con Chrome/Edge instalado')
   const directory = await mkdtemp(join(tmpdir(), 'otakuzone-state-'))
-  const browserProcess = spawn(executable, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--remote-debugging-port=0', `--user-data-dir=${directory}`, 'about:blank'], { windowsHide: true, stdio: 'ignore' })
+  const flags = ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--remote-debugging-port=0', `--user-data-dir=${directory}`, 'about:blank']
+  if (process.env.AUDIT_USE_PROXY === '1' && process.env.HTTPS_PROXY) {
+    const proxy = new URL(process.env.HTTPS_PROXY)
+    assert.ok(!proxy.username && !proxy.password, 'El proxy de Chrome no debe recibir credenciales por argumentos')
+    flags.unshift(`--proxy-server=${proxy.origin}`, '--proxy-bypass-list=localhost;127.0.0.1')
+  }
+  const browserProcess = spawn(executable, flags, { windowsHide: true, stdio: 'ignore' })
   let socket
   try {
     let port
@@ -48,14 +60,29 @@ export async function openBrowser() {
       throw new Error(`Timeout: ${expression}`)
     }
     const navigate = async (path) => {
-      await send('Page.navigate', { url: `${globalThis.process.env.AUDIT_URL ?? 'http://127.0.0.1:5173'}${path}` })
-      await waitFor(`location.pathname === ${JSON.stringify(path.split('?')[0])} && !!document.querySelector('main h1')`, 30000)
+      for(let attempt=0;attempt<2;attempt++) {
+        const navigation=await send('Page.navigate', { url: `${globalThis.process.env.AUDIT_URL ?? 'http://127.0.0.1:5173'}${path}` })
+        try {
+          assert.ok(!navigation.errorText,navigation.errorText)
+          await waitFor(`location.pathname === ${JSON.stringify(path.split('?')[0])} && !!document.querySelector('main h1')`, 30000)
+          return
+        } catch(error) {
+          const blank=await evaluate(`!document.body?.textContent.trim()`)
+          // Retry only an empty initial document, never rendered errors or JS exceptions.
+          if(attempt===0&&blank&&!events.some(e=>e.method==='Runtime.exceptionThrown')) {
+            console.warn(`RETRY navegación en blanco: ${path}`)
+            await send('Page.stopLoading')
+          } else throw error
+        }
+      }
     }
-    const click = async (selector) => { await evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`); await delay(80) }
+    const readyControl = selector => waitFor(`!!document.querySelector(${JSON.stringify(selector)}) && !document.querySelector(${JSON.stringify(selector)}).disabled`,30000)
+    const click = async (selector) => { await readyControl(selector); await evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`); await delay(80) }
     const input = async (selector, value) => {
+      await readyControl(selector)
       await evaluate(`(() => { const element = document.querySelector(${JSON.stringify(selector)}); const prototype = element.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; Object.getOwnPropertyDescriptor(prototype, 'value').set.call(element, ${JSON.stringify(value)}); element.dispatchEvent(new Event('input', { bubbles: true })); })()`)
     }
-    const select = async (name, value) => { await evaluate(`(() => { const element = document.querySelector('select[name="${name}"]'); element.value = ${JSON.stringify(value)}; element.dispatchEvent(new Event('change', { bubbles: true })); })()`); await delay(80) }
+    const select = async (name, value) => { await readyControl(`select[name="${name}"]`); await evaluate(`(() => { const element = document.querySelector('select[name="${name}"]'); element.value = ${JSON.stringify(value)}; element.dispatchEvent(new Event('change', { bubbles: true })); })()`); await delay(80) }
     const screenshot = async (name) => {
       const capture = await send('Page.captureScreenshot', { format: 'png' })
       const file = join(directory, `${name}.png`)

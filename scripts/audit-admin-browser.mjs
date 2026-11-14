@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { randomUUID,randomBytes } from 'node:crypto'
-import { openBrowser } from './browser-session.mjs'
+import { openBrowser, assertBrowserApi } from './browser-session.mjs'
 import { loadEnvironment } from '../backend/src/config/loadEnvironment.js'
 import { loadDatabaseConfig } from '../backend/src/config/database.js'
 import { createDatabasePool } from '../backend/src/db/pool.js'
@@ -11,6 +11,7 @@ let browser
 try {
   browser=await openBrowser();const {navigate,input,evaluate,waitFor,resize,screenshot}=browser
   await navigate('/cuenta')
+  await assertBrowserApi(browser)
   await waitFor(`!!document.querySelector('form[aria-label="Registro"] [name="name"]')`,30000)
   for(const [name,value] of Object.entries({name:'Admin de prueba',email,password:'Aa1-'+randomBytes(20).toString('hex')})){
     await input(`form[aria-label="Registro"] [name="${name}"]`,value)
@@ -70,10 +71,10 @@ try {
   for(const section of ['','productos','categorias','inventario','pedidos','usuarios']){
     await navigate('/admin'+(section?'/'+section:''))
     await waitFor(`!document.querySelector('main').textContent.includes('Cargando información')`)
-    for(const width of [320,390,768,1440]){await resize(width);assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),`${section}@${width}`)}
+    for(const width of [320,375,768,1024,1440]){await resize(width);assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),`${section}@${width}`)}
   }
   await navigate('/admin/productos');await resize(390);await screenshot('admin-productos-movil')
   const errors=browser.events.filter(e=>e.method==='Runtime.exceptionThrown'||e.method==='Runtime.consoleAPICalled'&&e.params.type==='error');assert.deepEqual(errors,[])
-  console.log('PASS Chrome ADMIN: dashboard real, CRUD, inventario, pedido/cancelación, usuarios y seis módulos a 320/390/768/1440 sin excepciones')
+  console.log('PASS Chrome ADMIN: dashboard real, CRUD, inventario, pedido/cancelación, usuarios y seis módulos a 320/375/768/1024/1440 sin excepciones')
 } catch(e){console.error('Navegador ADMIN:',e.message);if(browser)await browser.screenshot('admin-error');process.exitCode=1}
 finally{if(browser)await browser.close();await pool.end()}

@@ -43,7 +43,7 @@ async function ready(url, process) {
 try {
   // Refuse port reuse: the browser must never reach an existing development server.
   const { createServer } = await import('node:net')
-  for (const port of [4407, 5177]) {
+  for (const port of [4407, 5177, ...(process.argv.includes('--quality')?[4409]:[])]) {
     const probe = createServer().listen(port, '127.0.0.1'); await once(probe, 'listening'); await new Promise(resolve => probe.close(resolve))
   }
   console.log('Esquema origen (solo lectura):', JSON.stringify(await checkDatabaseSchema(admin, {allowPendingAdmin:process.argv.includes('--admin')})))
@@ -81,15 +81,34 @@ try {
   Object.assign(process.env, env)
   await assertTestIsolation(loadDatabaseConfig())
   console.log('Base aislada preparada:', database, '; sin usuarios, sesiones ni pedidos de origen')
-  if(!process.argv.includes('--admin-only')) await run('backend/scripts/verify-commerce.js')
+  if(process.argv.includes('--quality')) {
+    await run('backend/scripts/verify-db.js')
+    await run('backend/scripts/verify-auth.js')
+  }
+  if(!process.argv.includes('--admin-only')&&!process.argv.includes('--anilist-only')) await run('backend/scripts/verify-commerce.js')
   if(process.argv.includes('--admin')) await run('backend/scripts/verify-admin.js')
   const api = child('backend/src/server.js'); services.push(api)
   await ready(env.API_URL + '/health', api)
   const vite = child('node_modules/vite/bin/vite.js', ['--host', '127.0.0.1', '--port', '5177', '--strictPort']); services.push(vite)
   await ready(env.AUDIT_URL, vite)
-  if(!process.argv.includes('--admin-only')) await run('scripts/audit-commerce-browser.mjs')
+  if(process.argv.includes('--quality')) {
+    await run('backend/scripts/verify-db-http.js')
+    await run('backend/scripts/verify-quality.js')
+    await run('scripts/audit-auth-browser.mjs')
+    await run('scripts/audit-interactivity.mjs')
+  }
+  if(!process.argv.includes('--admin-only')&&!process.argv.includes('--anilist-only')) await run('scripts/audit-commerce-browser.mjs')
   if(process.argv.includes('--admin')) await run('scripts/audit-admin-browser.mjs')
-  console.log('PASS cierre funcional HTTP + navegador sobre MySQL aislado')
+  if(process.argv.includes('--anilist')) await run('scripts/audit-anilist-browser.mjs')
+  if(process.argv.includes('--quality-recheck')) await run('scripts/audit-quality-browser.mjs')
+  if(process.argv.includes('--quality')) {
+    await run('scripts/audit-quality-browser.mjs')
+    const json=child('node_modules/json-server/lib/cli/bin.js',['mock/db.json','--read-only','--host','127.0.0.1','--port','4409','--quiet']);services.push(json)
+    await ready('http://127.0.0.1:4409/products',json)
+    env.OTAKUZONE_API_URL='http://127.0.0.1:4409'
+    await run('scripts/check-apis.mjs')
+  }
+  console.log(process.argv.includes('--quality-recheck') ? 'PASS verificaciones locales; revisar por separado el estado externo de Jikan' : 'PASS cierre funcional HTTP + navegador sobre MySQL aislado')
 } catch (error) {
   console.error('Cierre aislado detenido:', error.code ?? error.message); process.exitCode = 1
 } finally {

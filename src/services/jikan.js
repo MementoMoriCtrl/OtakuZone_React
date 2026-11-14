@@ -1,3 +1,4 @@
+// LEGADO: conservado para pruebas hist?ricas; no importado por la aplicaci?n activa.
 import { ApiError, createClient, createRateGate, requireList, safeImage } from './http.js'
 import { buildAnimeSearchParams } from '../domain/catalog.js'
 

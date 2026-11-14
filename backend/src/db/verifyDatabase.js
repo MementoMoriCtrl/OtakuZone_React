@@ -15,7 +15,11 @@ export async function verifyDatabase(pool, log = console.log) {
   const rollbackId = `${id}-rollback`
   const email = `${token}@example.test`
   const product = { id, categoryId: 'mangas', name: 'Producto temporal de verificación', description: 'Registro técnico de prueba, eliminado al finalizar.', price: 10.25, imageKey: 'manga', imageAlt: 'Prueba de integridad' }
-  const rejected = (promise, ...codes) => assert.rejects(promise, (error) => codes.includes(error.code))
+  // MySQL may withhold FK details from a restricted account (1216/1217).
+  // Require the same integrity failure, without granting REFERENCES to the test user.
+  const rejected = (promise, ...codes) => assert.rejects(promise, (error) => codes.includes(error.code)
+    || codes.includes('ER_NO_REFERENCED_ROW_2') && [1216,1452].includes(error.errno)
+    || codes.includes('ER_ROW_IS_REFERENCED_2') && [1217,1451].includes(error.errno))
   try {
     assert.ok((await repository.findProducts()).length >= 12)
     assert.equal((await repository.findCategories()).length, 5)

@@ -19,7 +19,10 @@
     "auth:secret": "node scripts/init-auth-secret.js",
     "commerce:verify": "node scripts/verify-commerce.js",
     "admin:verify": "node scripts/close-phase7.js --admin",
-    "admin:schema": "node scripts/apply-admin-schema.js"
+    "admin:schema": "node scripts/apply-admin-schema.js",
+    "quality:verify": "node scripts/close-phase7.js --admin --quality",
+    "anime:verify": "node scripts/check-anilist.js",
+    "anime:verify:browser": "node scripts/close-phase7.js --anilist --anilist-only"
   },
   "dependencies": {
     "bcryptjs": "3.0.3",

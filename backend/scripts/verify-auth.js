@@ -1,3 +1,4 @@
+import { assertTestIsolation } from './test-isolation.js'
 import assert from 'node:assert/strict'
 import { once } from 'node:events'
 import { randomBytes, randomUUID } from 'node:crypto'
@@ -12,6 +13,7 @@ import { createMysqlCatalogRepository } from '../src/repositories/mysqlCatalogRe
 import { createApp } from '../src/app.js'
 
 loadEnvironment()
+await assertTestIsolation(loadConfig().database)
 let pool
 const servers = []
 const nonce = randomUUID()

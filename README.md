@@ -1,6 +1,14 @@
 ﻿# OtakuZone — Neo Tokyo
 
-## Estado actual — Fase 6: autenticación y seguridad
+## Estado actual — Fase 9: integración y calidad
+
+React, Express y MySQL integrados con autenticación, tienda, carrito, pedidos, suscripciones y panel ADMIN. El proveedor activo de anime es **AniList GraphQL a través de Express**: [ANILIST_MIGRACION.md](ANILIST_MIGRACION.md). Jikan queda como origen de favoritos anteriores y antecedentes históricos, sin consumo activo en React. Consulta también la auditoría [CALIDAD_FASE_9.md](CALIDAD_FASE_9.md) y la propuesta manual de permisos [FASE_9_CORRECCIONES.md](FASE_9_CORRECCIONES.md). No se ha certificado un despliegue productivo.
+
+Las secciones de fases anteriores que mencionan Jikan y sus pruebas describen el estado de aquellas entregas; no son la configuración vigente del proveedor. Para el catálogo actual iniciar Express y Vite; el frontend usa VITE_ANIME_API_URL (por defecto http://127.0.0.1:4000/api/v1), sin tokens AniList ni OAuth.
+
+Documentación funcional: [autenticación](AUTENTICACION_FASE_6.md), [tienda](TIENDA_FASE_7.md) y [administración](ADMINISTRACION_FASE_8.md). MySQL actual: 17 tablas y siete migraciones. Pruebas con escrituras: `npm --prefix backend run quality:verify`, exclusivamente en la base aislada que prepara el guion; no ejecutar verificaciones antiguas sobre desarrollo.
+
+## Antecedente — Fase 6: autenticación y seguridad
 
 Registro, login, logout y perfil conectados a Express/MySQL. Contraseñas bcrypt, JWT en cookie HttpOnly, CSRF, autorización ADMIN/CLIENTE en el servidor y rutas privadas en React. No se avanza a Fase 7.
 

@@ -21,7 +21,7 @@ export default function AnimeSearchForm({ filters, genres, revision, onUpdate })
     timer.current = setTimeout(() => onUpdate({ q: value }, true), 450)
   }
   return <form onSubmit={(event) => { event.preventDefault(); update({}) }} className="grid items-end gap-4 rounded-xl border border-neo-violet/25 bg-neo-slate/30 p-5 sm:grid-cols-2" role="search" aria-label="Buscar anime">
-    <label className="min-w-0 text-sm">Fuente<select name="source" value={source} onChange={(event) => update({ source: event.target.value })} className={controlClass}><option value="jikan">Jikan · Información real</option><option value="demo">Demo local · Datos ficticios</option></select></label>
+    <label className="min-w-0 text-sm">Fuente<select name="source" value={source} onChange={(event) => update({ source: event.target.value })} className={controlClass}><option value="anilist">AniList · Información real</option><option value="demo">Demo local · Datos ficticios</option></select></label>
     <label className="min-w-0 text-sm">Título<input ref={input} name="q" type="search" maxLength={150} defaultValue={query} onChange={changeQuery} placeholder={source === 'demo' ? 'Por ejemplo: Distrito' : 'Por ejemplo: Naruto'} aria-describedby="search-help" className={controlClass} /></label>
     <label className="min-w-0 text-sm">Género<select name="genre" value={genre} onChange={(event) => update({ genre: event.target.value })} className={controlClass}>
       <option value="">Todos los géneros</option>
