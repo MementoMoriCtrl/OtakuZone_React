@@ -35,7 +35,6 @@ function PublicLayout() {
       <Header key={pathname} />
       <main ref={main} id="main-content" tabIndex={-1} className={`mx-auto w-full flex-1 px-5 py-10 outline-none sm:px-8 sm:py-12 ${pathname === '/' ? 'max-w-7xl' : 'max-w-5xl'}`}>
         <Outlet />
-        {pathname !== '/' && pathname !== '/suscripciones' && !pathname.startsWith('/tienda') && <p className="mt-6 text-xs leading-relaxed text-neo-white/55">OtakuZone — Neo Tokyo · Proyecto académico</p>}
       </main>
       <Footer />
     </div>

@@ -5,9 +5,17 @@ export function presentSubscription(plan) {
     name: premium ? 'Premium' : plan.code === 'free' ? 'Free' : plan.name,
     price: Number(plan.price),
     featured: premium,
-    tagline: premium ? 'Disfruta de una experiencia más exclusiva dentro de OtakuZone.' : 'Explora el universo OtakuZone sin costo y descubre nuevas historias.',
+    tagline: premium ? 'Disfruta de ventajas especiales dentro del universo OtakuZone.' : 'Explora el universo OtakuZone sin costo.',
     benefits: premium
-      ? ['Todos los beneficios del plan Free.', 'Navegación sin espacios promocionales en Inicio.', 'Insignia Premium visible en el encabezado de tu cuenta.']
-      : ['Acceso al catálogo de anime.', 'Búsqueda y exploración por géneros.', 'Lista personal de animes favoritos.', 'Acceso a la tienda Otaku.', 'Descubrimiento de novedades de la temporada.'],
+      ? ['Todos los beneficios del plan Free.', 'Insignia Premium exclusiva en tu perfil, visible en el encabezado.']
+      : ['Acceso al catálogo completo de anime.', 'Búsqueda y exploración por géneros.', 'Lista personal de animes favoritos.', 'Acceso a Tienda Otaku.', 'Descubre novedades y temporadas.'],
+    upcomingBenefits: premium ? [
+      'Descuentos especiales en productos de Tienda Otaku.',
+      'Colecciones personalizadas de anime.',
+      'Seguimiento de animes vistos y pendientes.',
+      'Historial personal de exploración.',
+      'Recomendaciones basadas en tus preferencias.',
+      'Selección destacada de novedades y próximos estrenos.',
+    ] : [],
   }
 }

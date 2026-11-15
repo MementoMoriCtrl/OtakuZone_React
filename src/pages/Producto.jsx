@@ -9,5 +9,5 @@ export default function Producto() {
   const { id } = useParams()
   const loader = useCallback((options) => getProduct(id, options), [id])
   const resource = useResource(loader)
-  return <div className="space-y-6"><h1 className="font-heading text-3xl font-semibold">Detalle del producto</h1><ShopNavigation /><ResourceState resource={resource} />{resource.data && <div className="max-w-lg"><ProductCard product={resource.data} inStore /></div>}</div>
+  return <div className="space-y-6"><h1 className="font-heading text-3xl font-semibold">Detalle del producto</h1><ShopNavigation /><p className="text-sm leading-relaxed text-neo-white/70">Las imágenes son ilustrativas. No se realizan cobros ni envíos reales; las existencias mostradas no representan stock para entrega.</p><ResourceState resource={resource} />{resource.data && <div className="max-w-lg"><ProductCard product={resource.data} inStore /></div>}</div>
 }

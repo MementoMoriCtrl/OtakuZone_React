@@ -19,7 +19,7 @@ test('HTTP 404 no se reintenta; JSON incorrecto se informa', async () => {
   let calls = 0
   await assert.rejects(fetchJSON('https://test.invalid', { fetcher: async () => { calls++; return new Response('', { status: 404 }) } }), (error) => error.status === 404)
   assert.equal(calls, 1)
-  await assert.rejects(fetchJSON('https://test.invalid', { fetcher: async () => new Response('not json') }), /JSON inválida/)
+  await assert.rejects(fetchJSON('https://test.invalid', { fetcher: async () => new Response('not json') }), /No se pudo leer la información recibida/)
 })
 
 test('429 permite un único reintento y respeta Retry-After largo', async () => {

@@ -22,6 +22,6 @@ export async function getCatalogDetails(anime, options) {
   const { demoAnime } = await import('../data/demoAnime.js')
   options?.signal?.throwIfAborted()
   const item = demoAnime.find((record) => record.id === anime.id)
-  if (!item) throw new Error('Esta ficha demostrativa ya no está disponible.')
+  if (!item) throw new Error('Esta ficha de ejemplo ya no está disponible.')
   return item
 }

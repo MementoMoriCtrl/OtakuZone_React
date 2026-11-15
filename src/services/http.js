@@ -40,7 +40,7 @@ export async function fetchJSON(url, { signal, gate, fetcher = fetch } = {}) {
     } catch (error) {
       if (signal?.aborted) throw signal.reason
       if (!attempt) { await wait(1000, signal); continue }
-      throw new ApiError(error.name === 'TimeoutError' ? 'El servicio tardó demasiado. Inténtalo de nuevo.' : 'No se pudo conectar con el servicio. Comprueba tu conexión y que la API esté disponible.')
+      throw new ApiError(error.name === 'TimeoutError' ? 'El servicio tardó demasiado. Inténtalo de nuevo.' : 'No se pudo conectar con OtakuZone. Comprueba tu conexión e inténtalo de nuevo.')
     }
     if (!response.ok) {
       if (!attempt && (response.status === 429 || response.status >= 500)) {
@@ -50,9 +50,9 @@ export async function fetchJSON(url, { signal, gate, fetcher = fetch } = {}) {
         // No ignorar un Retry-After largo: ofrecer reintento manual en ese caso.
         if (Number.isFinite(delay) && delay <= 10000) { await wait(Math.max(1000, delay), signal); continue }
       }
-      throw new ApiError(response.status === 429 ? 'Límite de solicitudes alcanzado. Espera un momento antes de reintentar.' : `El servicio respondió con un error HTTP ${response.status}. Inténtalo de nuevo.`, response.status)
+      throw new ApiError(response.status === 429 ? 'Límite de solicitudes alcanzado. Espera un momento antes de reintentar.' : `No se pudo completar la consulta (error ${response.status}). Inténtalo de nuevo.`, response.status)
     }
-    try { return await response.json() } catch { throw new ApiError('El servicio devolvió una respuesta JSON inválida.') }
+    try { return await response.json() } catch { throw new ApiError('No se pudo leer la información recibida. Inténtalo de nuevo.') }
   }
 }
 

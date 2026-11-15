@@ -52,7 +52,7 @@ export default function Header() {
       </div>
       <div id="mobile-navigation" hidden={!menuOpen} className="border-t border-neo-white/10 bg-neo-slate/40 px-4 py-4 sm:px-8 lg:hidden">
         <Navbar mobile onNavigate={closeMenu} />
-        <p className="mt-4 border-t border-neo-white/10 pt-4 text-xs leading-relaxed text-neo-white/55">Busca animes y explora tu carrito académico.</p>
+        <p className="mt-4 border-t border-neo-white/10 pt-4 text-xs leading-relaxed text-neo-white/55">Busca animes y explora tu carrito.</p>
       </div>
       {premium && <div className="px-5 pb-2 text-right text-xs text-neo-cyan" aria-label="Insignia Premium">PREMIUM</div>}
     </header>

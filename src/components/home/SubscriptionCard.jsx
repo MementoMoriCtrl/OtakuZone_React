@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Sparkles } from 'lucide-react'
+import { ArrowRight, Check, Clock3, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function SubscriptionCard({ plan, onChoose, disabled = false, to = '/suscripciones' }) {
@@ -13,6 +13,13 @@ export default function SubscriptionCard({ plan, onChoose, disabled = false, to 
       <ul className="my-7 space-y-4">
         {plan.benefits.map((benefit) => <li key={benefit} className="flex items-start gap-3 text-sm leading-relaxed text-neo-white/80"><Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-neo-cyan" />{benefit}</li>)}
       </ul>
+      {!!plan.upcomingBenefits?.length && <div className="mb-7 border-t border-neo-white/10 pt-5">
+        <h4 className="font-heading text-sm font-semibold text-neo-white/80">Próximos beneficios</h4>
+        <p className="mt-2 text-xs leading-relaxed text-neo-white/65">Futuros beneficios. Aún no están disponibles al activar Premium.</p>
+        <ul className="mt-4 space-y-3">
+          {plan.upcomingBenefits.map((benefit) => <li key={benefit} className="flex items-start gap-3 text-sm leading-relaxed text-neo-white/70"><Clock3 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-neo-white/55" /><span>{benefit}</span></li>)}
+        </ul>
+      </div>}
       {onChoose ? <button type="button" disabled={disabled} onClick={onChoose} className="mt-auto min-h-12 rounded-lg bg-neo-violet px-4 py-3 text-sm font-semibold transition-colors hover:bg-neo-violet/80 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-neo-cyan">{plan.action}</button> : <Link to={to} className={`mt-auto inline-flex min-h-12 items-center justify-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neo-cyan motion-reduce:transition-none ${plan.featured ? 'bg-neo-violet hover:bg-neo-violet/80' : 'border border-neo-white/20 hover:border-neo-cyan/50 hover:text-neo-cyan'}`}>{plan.action}<ArrowRight aria-hidden="true" className="size-4" /></Link>}
     </article>
   )

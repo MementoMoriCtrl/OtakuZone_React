@@ -9,7 +9,7 @@ const get=createClient({ttl:15000,fetcher:async(url,options)=>{
 }})
 async function request(path,options){
   return get(ANIME_API_URL+path,{...options,transform:body=>{
-    if(body?.success!==true||body.meta?.source!=='anilist'||body.data==null)throw new ApiError('El catálogo AniList devolvió una respuesta inesperada.')
+    if(body?.success!==true||body.meta?.source!=='anilist'||body.data==null)throw new ApiError('No se pudo cargar el catálogo. Inténtalo de nuevo.')
     return body.data
   }})
 }
