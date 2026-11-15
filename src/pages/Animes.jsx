@@ -29,8 +29,8 @@ export default function Animes() {
     }, { replace })
   }
   return <div className="space-y-8">
-    <div><p className="text-xs tracking-wider text-neo-cyan">CATÁLOGO · {source === 'demo' ? 'DEMOSTRACIÓN LOCAL' : 'ANILIST'}</p><h1 className="mt-3 font-heading text-3xl font-semibold sm:text-5xl">Animes<span className="text-neo-cyan">.</span></h1><p className="mt-4 text-sm leading-relaxed text-neo-white/70">Busca por título, combina filtros, ordena resultados y guarda favoritos en este navegador.</p></div>
-    {source === 'demo' ? <p role="note" className="rounded-xl border border-neo-cyan/40 bg-neo-slate/50 p-5 text-sm leading-relaxed text-neo-cyan">DEMO LOCAL: obras, puntuaciones, popularidad y estados ficticios. Se reutilizan ilustraciones locales. No son resultados de AniList ni una prueba de que la API esté disponible.</p> : <p className="text-sm text-neo-white/65">Fuente real: AniList. Las sinopsis pueden estar en inglés. Si el servicio no responde, puedes elegir Demo local para probar la interfaz.</p>}
+    <div><p className="text-xs tracking-wider text-neo-cyan">CATÁLOGO · {source === 'demo' ? 'DEMOSTRACIÓN LOCAL' : 'ANILIST'}</p><h1 className="mt-3 font-heading text-3xl font-semibold sm:text-5xl">Animes<span className="text-neo-cyan">.</span></h1><p className="mt-4 text-sm leading-relaxed text-neo-white/70">Busca por título, combina filtros, ordena resultados y guarda tus favoritos.</p></div>
+    {source === 'demo' ? <p role="note" className="rounded-xl border border-neo-cyan/40 bg-neo-slate/50 p-5 text-sm leading-relaxed text-neo-cyan">DEMO LOCAL: obras, puntuaciones, popularidad y estados ficticios. Se reutilizan ilustraciones locales. No son resultados de AniList ni una prueba de que la API esté disponible.</p> : <p className="text-sm text-neo-white/65">Las sinopsis pueden estar en inglés. </p>}
     <AnimeSearchForm filters={filters} genres={genres.data ?? []} revision={params.toString()} onUpdate={update} />
     <ResourceState resource={genres} empty={!genres.data?.length} emptyMessage="No hay géneros disponibles; puedes buscar por título." />
     <section aria-label="Resultados del catálogo" aria-busy={resource.loading}>

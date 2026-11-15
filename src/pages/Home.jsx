@@ -1,4 +1,5 @@
-﻿import Hero from '../components/home/Hero.jsx'
+import { presentSubscription } from '../data/homeData.js'
+import Hero from '../components/home/Hero.jsx'
 import AnimeSection from '../components/home/AnimeSection.jsx'
 import CategoryCard from '../components/home/CategoryCard.jsx'
 import ProductCard from '../components/home/ProductCard.jsx'
@@ -44,10 +45,10 @@ export default function Home() {
         </div>}
       </section>
       <section aria-labelledby="plans-title">
-        <SectionHeading id="plans-title" eyebrow="ELIGE CÓMO VIVIRLO" title="Un universo, dos maneras de explorarlo" description="Planes Free y Premium académicos: activa beneficios simulados desde tu cuenta, sin cobros ni tarjetas." />
+        <SectionHeading id="plans-title" eyebrow="ELIGE CÓMO VIVIRLO" title="Un universo, dos maneras de explorarlo" description="Explora con Free o elige Premium para disfrutar de tu insignia y navegar sin espacios promocionales en Inicio." />
         <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
           <ResourceState resource={plans} empty={!plans.data?.length} emptyMessage="No hay planes disponibles." />
-          {plans.data?.map((plan) => <SubscriptionCard key={plan.code} plan={{ name: plan.name, price: Number(plan.price), featured: plan.code === 'premium', tagline: 'Suscripción académica, sin cobros', benefits: plan.code === 'premium' ? ['Catálogo y favoritos', 'Sin espacios promocionales simulados', 'Insignia Premium y zona exclusiva de demostración'] : ['Catálogo y favoritos', 'Espacios promocionales simulados'], action: 'Ver suscripciones' }} />)}
+          {plans.data?.map((plan) => <SubscriptionCard key={plan.code} plan={{ ...presentSubscription(plan), action: 'Ver suscripciones' }} />)}
         </div>
       </section>
       <CTASection />

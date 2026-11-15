@@ -22,7 +22,7 @@ export default function AnimeSearchForm({ filters, genres, revision, onUpdate })
   }
   return <form onSubmit={(event) => { event.preventDefault(); update({}) }} className="grid items-end gap-4 rounded-xl border border-neo-violet/25 bg-neo-slate/30 p-5 sm:grid-cols-2" role="search" aria-label="Buscar anime">
     <label className="min-w-0 text-sm">Fuente<select name="source" value={source} onChange={(event) => update({ source: event.target.value })} className={controlClass}><option value="anilist">AniList · Información real</option><option value="demo">Demo local · Datos ficticios</option></select></label>
-    <label className="min-w-0 text-sm">Título<input ref={input} name="q" type="search" maxLength={150} defaultValue={query} onChange={changeQuery} placeholder={source === 'demo' ? 'Por ejemplo: Distrito' : 'Por ejemplo: Naruto'} aria-describedby="search-help" className={controlClass} /></label>
+    <label className="min-w-0 text-sm">Título<input ref={input} name="q" type="search" maxLength={150} defaultValue={query} onChange={changeQuery} placeholder={source === 'demo' ? 'Por ejemplo: Distrito' : 'Por ejemplo: Naruto'} className={controlClass} /></label>
     <label className="min-w-0 text-sm">Género<select name="genre" value={genre} onChange={(event) => update({ genre: event.target.value })} className={controlClass}>
       <option value="">Todos los géneros</option>
       {genre && !genres.some((item) => String(item.id) === genre) && <option value={genre}>Género seleccionado ({genre})</option>}
@@ -31,6 +31,5 @@ export default function AnimeSearchForm({ filters, genres, revision, onUpdate })
     <label className="min-w-0 text-sm">Estado<select name="status" value={status} onChange={(event) => update({ status: event.target.value })} className={controlClass}><option value="">Todos los estados</option>{statusOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
     <label className="min-w-0 text-sm">Ordenar por<select name="order" value={order} onChange={(event) => update({ order: event.target.value })} className={controlClass}><option value="popularity">Popularidad</option><option value="score">Puntuación (mayor primero)</option></select></label>
     <button type="submit" className="min-h-11 cursor-pointer rounded-lg bg-neo-violet px-5 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neo-cyan">Buscar</button>
-    <p id="search-help" className="text-xs leading-relaxed text-neo-white/65 sm:col-span-2">La búsqueda se actualiza 450 ms después de dejar de escribir. Los filtros se aplican al seleccionarlos. También puedes pulsar Buscar.</p>
   </form>
 }

@@ -5,7 +5,7 @@ import { loadDatabaseConfig } from './database.js'
 import { loadAuthConfig } from './auth.js'
 
 const backendRoot = fileURLToPath(new URL('../../', import.meta.url))
-const developmentOrigins = 'http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:4173,http://localhost:4173'
+const developmentOrigins = 'http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:5174,http://localhost:5174,http://127.0.0.1:4173,http://localhost:4173'
 const origin = z.string().url().refine((value) => {
   try {
     const url = new URL(value)

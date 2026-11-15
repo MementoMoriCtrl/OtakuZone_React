@@ -1,5 +1,13 @@
-// Planes propuestos de demostración; no son datos de AniList ni suscripciones activas.
-export const subscriptions = [
-  { id: 'free', name: 'FREE', tagline: 'Tu primer paso al universo anime.', price: 0, benefits: ['Acceso al catálogo de anime', 'Consulta de información y detalles', 'Gestión de favoritos', 'Espacios promocionales simulados'], action: 'Conocer plan Free' },
-  { id: 'premium', name: 'PREMIUM', tagline: 'Una experiencia con tu propia insignia.', price: 19.90, benefits: ['Todos los beneficios del plan Free', 'Experiencia sin publicidad simulada', 'Insignia Premium', 'Beneficios exclusivos demostrativos'], action: 'Conocer plan Premium', featured: true },
-]
+// Presentación de planes; precios y suscripción activa proceden del servidor.
+export function presentSubscription(plan) {
+  const premium = plan.code === 'premium'
+  return {
+    name: premium ? 'Premium' : plan.code === 'free' ? 'Free' : plan.name,
+    price: Number(plan.price),
+    featured: premium,
+    tagline: premium ? 'Disfruta de una experiencia más exclusiva dentro de OtakuZone.' : 'Explora el universo OtakuZone sin costo y descubre nuevas historias.',
+    benefits: premium
+      ? ['Todos los beneficios del plan Free.', 'Navegación sin espacios promocionales en Inicio.', 'Insignia Premium visible en el encabezado de tu cuenta.']
+      : ['Acceso al catálogo de anime.', 'Búsqueda y exploración por géneros.', 'Lista personal de animes favoritos.', 'Acceso a la tienda Otaku.', 'Descubrimiento de novedades de la temporada.'],
+  }
+}

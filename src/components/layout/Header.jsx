@@ -38,7 +38,7 @@ export default function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:gap-6 sm:px-8">
         <Link to="/" onClick={closeMenu} aria-label="OtakuZone — Inicio" className="flex shrink-0 items-center gap-2 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neo-cyan">
           <span className="hidden size-9 items-center min-[375px]:flex justify-center rounded-lg border border-neo-violet/50 bg-neo-violet/15 text-neo-cyan"><Zap aria-hidden="true" className="size-5" /></span>
-          <span className="font-heading text-xs font-semibold tracking-wider sm:text-lg">OTAKUZONE<span className="text-neo-cyan">.</span><span className="mt-0.5 block text-[9px] tracking-[0.3em] text-neo-white/55">NEO TOKYO</span></span>
+          <span className="font-heading text-xs font-semibold tracking-wider sm:text-lg">OTAKUZONE<span className="text-neo-cyan">.</span><span className="mt-0.5 block text-[9px] tracking-[0.3em] text-neo-white/55">UNIVERSO ANIME</span></span>
         </Link>
         <div className="hidden lg:block"><Navbar /></div>
         <div className="flex items-center gap-0.5 sm:gap-1" aria-label="Acciones de usuario">
@@ -54,7 +54,7 @@ export default function Header() {
         <Navbar mobile onNavigate={closeMenu} />
         <p className="mt-4 border-t border-neo-white/10 pt-4 text-xs leading-relaxed text-neo-white/55">Busca animes y explora tu carrito académico.</p>
       </div>
-      {premium && <div className="px-5 pb-2 text-right text-xs text-neo-cyan" aria-label="Insignia Premium">PREMIUM · demostrativo</div>}
+      {premium && <div className="px-5 pb-2 text-right text-xs text-neo-cyan" aria-label="Insignia Premium">PREMIUM</div>}
     </header>
   )
 }
