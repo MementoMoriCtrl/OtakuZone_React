@@ -1,4 +1,4 @@
-export const AUTH_API_URL = (import.meta.env?.VITE_AUTH_API_URL || 'http://127.0.0.1:4000/api/v1').replace(/\/$/, '')
+export const AUTH_API_URL = (import.meta.env?.VITE_AUTH_API_URL || 'http://localhost:4000/api/v1').replace(/\/$/, '')
 let csrfToken = null
 let sessionPending = null
 let revision = 0
