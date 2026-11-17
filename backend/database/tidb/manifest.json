@@ -1,0 +1,104 @@
+{
+  "dialect": "tidb",
+  "ledger": "schema_migrations_tidb",
+  "status": "ready",
+  "bootstrap": {
+    "file": "ledger.sql",
+    "sha256": "405b954405b0a4e07820fad8f30974dcd9b48fa4bd426f9e944b4a951835ae3b"
+  },
+  "sources": [
+    {
+      "file": "001_create_database.sql",
+      "sha256": "5e7af2dd955fe4a8e9fad68228240f0c80521b2d84c293bbe6ed4d1d66616fbb"
+    },
+    {
+      "file": "002_relational_schema.sql",
+      "sha256": "c7eb87dda45af52185d697996cc6f24dbab706d0eac0b7c350d01c25c40a5237"
+    },
+    {
+      "file": "003_roles_and_plans.sql",
+      "sha256": "2280ea97e6ecfff549ec4fa20681bbd81bd2970b66d6a0f88063760597f40d92"
+    },
+    {
+      "file": "004_demo_catalog.sql",
+      "sha256": "d87b745c21d6167ce0e59297755ee4eabb3783493bc4051ff9c36a0f96aeaed7"
+    },
+    {
+      "file": "005_auth_sessions.sql",
+      "sha256": "dc7dfce218f252dbc051d9ab8aa22385a89568cc4bd071d74d6a90a1ad2b7a8c"
+    },
+    {
+      "file": "006_commerce.sql",
+      "sha256": "2042173bbf22384c553239fb3c98f440962ba611ece696be64f3e3cd3ac9345e"
+    },
+    {
+      "file": "007_admin_inventory.sql",
+      "sha256": "244478c340d887cd001c2270511b89169bf122a0c6938aceaab7e2c4b9e83520"
+    }
+  ],
+  "migrations": [
+    {
+      "file": "001_create_database.sql",
+      "transactional": false,
+      "sha256": "5e7af2dd955fe4a8e9fad68228240f0c80521b2d84c293bbe6ed4d1d66616fbb",
+      "source": {
+        "file": "001_create_database.sql",
+        "sha256": "5e7af2dd955fe4a8e9fad68228240f0c80521b2d84c293bbe6ed4d1d66616fbb"
+      }
+    },
+    {
+      "file": "002_relational_schema.sql",
+      "transactional": false,
+      "sha256": "8ed28b2f71988471005dca2d57ee0695462b039f19fc6ac44617e21f5e64ee1c",
+      "source": {
+        "file": "002_relational_schema.sql",
+        "sha256": "c7eb87dda45af52185d697996cc6f24dbab706d0eac0b7c350d01c25c40a5237"
+      }
+    },
+    {
+      "file": "003_roles_and_plans.sql",
+      "transactional": true,
+      "sha256": "2280ea97e6ecfff549ec4fa20681bbd81bd2970b66d6a0f88063760597f40d92",
+      "source": {
+        "file": "003_roles_and_plans.sql",
+        "sha256": "2280ea97e6ecfff549ec4fa20681bbd81bd2970b66d6a0f88063760597f40d92"
+      }
+    },
+    {
+      "file": "004_demo_catalog.sql",
+      "transactional": true,
+      "sha256": "d87b745c21d6167ce0e59297755ee4eabb3783493bc4051ff9c36a0f96aeaed7",
+      "source": {
+        "file": "004_demo_catalog.sql",
+        "sha256": "d87b745c21d6167ce0e59297755ee4eabb3783493bc4051ff9c36a0f96aeaed7"
+      }
+    },
+    {
+      "file": "005_auth_sessions.sql",
+      "transactional": false,
+      "sha256": "dc7dfce218f252dbc051d9ab8aa22385a89568cc4bd071d74d6a90a1ad2b7a8c",
+      "source": {
+        "file": "005_auth_sessions.sql",
+        "sha256": "dc7dfce218f252dbc051d9ab8aa22385a89568cc4bd071d74d6a90a1ad2b7a8c"
+      }
+    },
+    {
+      "file": "006_commerce.sql",
+      "transactional": false,
+      "sha256": "2042173bbf22384c553239fb3c98f440962ba611ece696be64f3e3cd3ac9345e",
+      "source": {
+        "file": "006_commerce.sql",
+        "sha256": "2042173bbf22384c553239fb3c98f440962ba611ece696be64f3e3cd3ac9345e"
+      }
+    },
+    {
+      "file": "007_admin_inventory.sql",
+      "transactional": false,
+      "sha256": "244478c340d887cd001c2270511b89169bf122a0c6938aceaab7e2c4b9e83520",
+      "source": {
+        "file": "007_admin_inventory.sql",
+        "sha256": "244478c340d887cd001c2270511b89169bf122a0c6938aceaab7e2c4b9e83520"
+      }
+    }
+  ]
+}

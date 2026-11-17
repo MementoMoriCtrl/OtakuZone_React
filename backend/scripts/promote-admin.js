@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { normalizeEmail } from '../src/validators/email.js'
 import { loadEnvironment } from '../src/config/loadEnvironment.js'
 import { loadDatabaseConfig } from '../src/config/database.js'
 import { createDatabasePool } from '../src/db/pool.js'
@@ -8,7 +8,7 @@ import { withTransaction } from '../src/db/transaction.js'
 loadEnvironment()
 let pool
 try {
-  const email = z.string().email().max(254).parse(process.argv[2]).trim().toLowerCase()
+  const email = normalizeEmail(process.argv[2])
   pool = createDatabasePool(loadDatabaseConfig())
   await withTransaction(pool, async (connection) => {
     const [rows] = await connection.execute("SELECT id FROM usuarios WHERE email = ? AND estado = 'activo' AND password_hash IS NOT NULL FOR UPDATE", [email])

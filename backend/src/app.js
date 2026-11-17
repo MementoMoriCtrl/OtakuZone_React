@@ -30,7 +30,7 @@ export function createApp({ config = loadConfig(), repository, authPool, animeSe
   app.locals.closeResources = async () => { await source.close(); if (authenticationPool && authenticationPool !== authPool && authenticationPool !== source.pool) await authenticationPool.end() }
   app.set('env', config.environment)
   app.disable('x-powered-by')
-  app.set('trust proxy', false)
+  app.set('trust proxy', config.trustProxy ?? false)
   app.set('query parser', 'simple')
   app.use(helmet())
   app.use((_request, response, next) => { response.set('Cache-Control', 'no-store'); next() })

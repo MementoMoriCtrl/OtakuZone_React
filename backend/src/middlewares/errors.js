@@ -1,5 +1,6 @@
 import HttpError from '../utils/HttpError.js'
 import { failure } from '../utils/responses.js'
+import { databaseHttpError } from '../db/errors.js'
 
 export function notFound(_request, _response, next) {
   next(new HttpError(404, 'ROUTE_NOT_FOUND', 'La ruta solicitada no existe.'))
@@ -9,6 +10,7 @@ export function methodNotAllowed(_request, response, next) {
   next(new HttpError(405, 'METHOD_NOT_ALLOWED', 'Este recurso solo admite consultas.'))
 }
 export function errorHandler(error, _request, response, next) {
+  error = databaseHttpError(error)
   if (response.headersSent) return next(error)
   if (error instanceof HttpError) return failure(response, error.status, error.code, error.message, error.details)
   if (error.type === 'entity.parse.failed') return failure(response, 400, 'INVALID_JSON', 'El cuerpo de la solicitud no contiene JSON válido.')

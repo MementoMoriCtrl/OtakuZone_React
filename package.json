@@ -3,14 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:local": "vite build --mode local-preview",
     "lint": "oxlint",
     "preview": "vite preview",
+    "preview:local": "vite preview --mode local-preview --outDir dist-local",
     "api": "json-server --watch mock/db.json --host 127.0.0.1 --port 3001",
     "test": "node --test tests/*.test.mjs",
-    "check:apis": "node scripts/check-apis.mjs"
+    "check:apis": "node scripts/check-apis.mjs",
+    "check:local": "node scripts/check-local-config.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

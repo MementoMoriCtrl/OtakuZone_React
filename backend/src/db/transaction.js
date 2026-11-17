@@ -1,3 +1,5 @@
+import { isConnectionFailure } from './errors.js'
+
 export async function withTransaction(pool, operation) {
   const connection = await pool.getConnection()
   let started = false
@@ -10,7 +12,8 @@ export async function withTransaction(pool, operation) {
     await connection.commit()
     return result
   } catch (error) {
-    if (started) {
+    if (isConnectionFailure(error)) { reusable = false; connection.destroy() }
+    else if (started) {
       try { await connection.rollback() }
       catch { reusable = false; connection.destroy() }
     }

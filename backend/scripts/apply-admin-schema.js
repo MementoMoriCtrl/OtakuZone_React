@@ -3,17 +3,24 @@ import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { loadEnvironment } from '../src/config/loadEnvironment.js'
 import { loadDatabaseConfig } from '../src/config/database.js'
-import { createDatabasePool } from '../src/db/pool.js'
+import { createDatabasePool, checkDatabaseConnection } from '../src/db/pool.js'
+import { readMigrationCatalog, assertMigrationDialect } from '../src/db/migrationCatalog.js'
 
 // Apply only 007, with the same checksum normalization as migrate.js.
 // No existing migration SQL is executed. DDL is not transactional in MySQL.
 loadEnvironment()
-const pool=createDatabasePool(loadDatabaseConfig())
+const config=loadDatabaseConfig()
+const catalog=await readMigrationCatalog(config.engine)
+assertMigrationDialect(catalog,config.engine)
+const pool=createDatabasePool(config)
 let c,locked=false
 try {
   c=await pool.getConnection()
+  await checkDatabaseConnection(c,{expectedEngine:'mysql',phase:'bootstrap'})
   const [[lock]]=await c.execute('SELECT GET_LOCK(?,10) AS acquired',['otakuzone_db:migrations'])
   assert.equal(Number(lock.acquired),1,'Otro proceso está migrando');locked=true
+  const [existing]=await c.execute('SELECT TABLE_NAME AS name FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE()')
+  assertMigrationDialect(catalog,'mysql',existing.map(row=>row.name))
   const [ledger]=await c.execute('SELECT version,checksum FROM schema_migrations ORDER BY version')
   const manifest=JSON.parse(await readFile(new URL('../database/migrations/manifest.json',import.meta.url),'utf8'))
   const prepared=[]

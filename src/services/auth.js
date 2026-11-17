@@ -1,4 +1,5 @@
-export const AUTH_API_URL = (import.meta.env?.VITE_AUTH_API_URL || 'http://localhost:4000/api/v1').replace(/\/$/, '')
+import { resolveApiUrls } from '../config/api.js'
+export const AUTH_API_URL = resolveApiUrls(import.meta.env).auth
 let csrfToken = null
 let sessionPending = null
 let revision = 0

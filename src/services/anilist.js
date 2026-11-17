@@ -1,5 +1,6 @@
 import { ApiError,createClient } from './http.js'
-export const ANIME_API_URL=(import.meta.env?.VITE_ANIME_API_URL||import.meta.env?.VITE_AUTH_API_URL||'http://127.0.0.1:4000/api/v1').replace(/\/$/,'')
+import { resolveApiUrls } from '../config/api.js'
+export const ANIME_API_URL=resolveApiUrls(import.meta.env).anime
 // The Express service owns upstream scheduling/cache. Do not retry its 429s in a loop.
 const get=createClient({ttl:15000,fetcher:async(url,options)=>{
   const response=await fetch(url,options)

@@ -1,8 +1,14 @@
 import mysql from 'mysql2/promise'
-import HttpError from '../utils/HttpError.js'
+import { inspectDatabaseEngine, identifyDatabaseEngine, assertEngineVersion } from './engine.js'
+import { preflightTidb } from './tidbPreflight.js'
+import { installConnectionLifetime } from './connectionLifecycle.js'
+import { databaseHttpError } from './errors.js'
+import { installTidbSessionGuard } from './tidbSession.js'
 
-export function createDatabasePool(config) {
-  return mysql.createPool({
+const poolEngines = new WeakMap()
+
+export function databasePoolOptions(config) {
+  return {
     host: config.host, port: config.port, database: config.database,
     user: config.user, password: config.password,
     connectionLimit: config.connectionLimit, connectTimeout: config.connectTimeout,
@@ -10,25 +16,44 @@ export function createDatabasePool(config) {
     enableKeepAlive: true, charset: 'utf8mb4', timezone: 'Z',
     decimalNumbers: false, supportBigNumbers: true, bigNumberStrings: true,
     multipleStatements: false,
-    ...(config.ssl ? { ssl: { rejectUnauthorized: true } } : {}),
-  })
+    ...(config.engine === 'tidb' ? { maxIdle: Math.max(0, config.connectionLimit - 1), idleTimeout: config.idleTimeout ?? 60000 } : {}),
+    ...databaseTlsOptions(config),
+  }
+}
+
+export function createDatabasePool(config) {
+  const pool = mysql.createPool(databasePoolOptions(config))
+  poolEngines.set(pool, config.engine ?? 'mysql')
+  if (config.engine === 'tidb') {
+    installTidbSessionGuard(pool)
+    const dispose = installConnectionLifetime(pool, { maxLifetimeMs: config.maxLifetime ?? 300000 })
+    const end = pool.end.bind(pool)
+    pool.end = async () => { dispose(); return end() }
+  }
+  return pool
+}
+
+export function databaseTlsOptions(config) {
+  return config.ssl ? { ssl: { rejectUnauthorized: true, ...(config.sslCa ? { ca: config.sslCa } : {}) } } : {}
 }
 
 export function assertMysqlVersion(version) {
-  const match = /^(\d+)\.(\d+)\.(\d+)/.exec(version)
-  if (!match || /mariadb/i.test(version) || Number(match[1]) < 8 || Number(match[1]) === 8 && Number(match[2]) === 0 && Number(match[3]) < 16) throw new Error('Se requiere MySQL 8.0.16 o posterior con CHECK aplicado; no MariaDB.')
+  const identity = identifyDatabaseEngine({ version, versionComment: 'MySQL Community Server' })
+  if (identity.engine !== 'mysql') throw new Error('Se requiere MySQL; TiDB tiene identificación y preflight separados.')
+  assertEngineVersion(identity)
 }
-export async function checkDatabaseConnection(pool) {
-  const [rows] = await pool.execute('SELECT VERSION() AS version, DATABASE() AS databaseName, 1 AS ready')
-  assertMysqlVersion(rows[0].version)
-  return rows[0]
+export async function checkDatabaseConnection(pool, { expectedEngine = poolEngines.get(pool) ?? 'mysql', phase = 'runtime' } = {}) {
+  // Pin all observations to the same physical session.
+  const connection = typeof pool.getConnection === 'function' ? await pool.getConnection() : pool
+  try {
+    const result = await inspectDatabaseEngine(connection)
+    if (result.identity.engine !== expectedEngine) throw new Error('El motor detectado no coincide con DB_ENGINE; no se permite fallback de dialecto.')
+    if (expectedEngine === 'tidb') await preflightTidb(connection, result.databaseName, { phase })
+    return result
+  } finally { if (connection !== pool) connection.release() }
 }
 
-const unavailable = new Set(['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'PROTOCOL_CONNECTION_LOST', 'ER_ACCESS_DENIED_ERROR', 'ER_BAD_DB_ERROR', 'POOL_CLOSED'])
 export async function executeRows(executor, sql, parameters = []) {
   try { return (await executor.execute(sql, parameters))[0] }
-  catch (error) {
-    if (unavailable.has(error.code)) throw new HttpError(503, 'DATABASE_UNAVAILABLE', 'La fuente de datos no está disponible. Inténtalo más tarde.')
-    throw error
-  }
+  catch (error) { throw databaseHttpError(error) }
 }

@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { z } from 'zod'
 import { loadDatabaseConfig } from './database.js'
 import { loadAuthConfig } from './auth.js'
+import { loadTrustProxy } from './proxy.js'
 
 const backendRoot = fileURLToPath(new URL('../../', import.meta.url))
 const developmentOrigins = 'http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:5174,http://localhost:5174,http://127.0.0.1:4173,http://localhost:4173'
@@ -25,12 +26,15 @@ const schema = z.object({
 })
 
 export function loadConfig(environment = process.env) {
-  const parsed = schema.safeParse({ ...environment, CORS_ORIGINS: environment.CORS_ORIGINS ?? (environment.NODE_ENV === 'production' ? '' : developmentOrigins) })
+  if (environment.DB_ENGINE === 'tidb' && (environment.CATALOG_SOURCE !== 'mysql' || environment.AUTH_ENABLED !== 'true')) throw new Error('TiDB requiere CATALOG_SOURCE=mysql y AUTH_ENABLED=true explícitos; no se permite fallback demo.')
+  if (environment.NODE_ENV === 'production' && (environment.DB_ENGINE === undefined || environment.CATALOG_SOURCE !== 'mysql' || environment.AUTH_ENABLED !== 'true')) throw new Error('Producción requiere DB_ENGINE, CATALOG_SOURCE=mysql y AUTH_ENABLED=true explícitos.')
+  const parsed = schema.safeParse({ ...environment, HOST: environment.HOST ?? (environment.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'), CORS_ORIGINS: environment.CORS_ORIGINS ?? (environment.NODE_ENV === 'production' ? '' : developmentOrigins) })
   if (!parsed.success) throw new Error(`Configuración inválida: ${[...new Set(parsed.error.issues.map((issue) => issue.path[0]))].join(', ')}`)
   const value = parsed.data
   if (value.NODE_ENV === 'production' && value.CORS_ORIGINS.some((item) => !item.startsWith('https://'))) throw new Error('Configuración inválida: CORS_ORIGINS debe usar HTTPS en producción.')
   return Object.freeze({
     environment: value.NODE_ENV, host: value.HOST, port: value.PORT,
+    trustProxy: loadTrustProxy(environment.TRUST_PROXY),
     origins: [...new Set(value.CORS_ORIGINS)],
     rateLimitWindowMs: value.RATE_LIMIT_WINDOW_MS, rateLimitMax: value.RATE_LIMIT_MAX,
     demoDataPath: resolve(backendRoot, value.DEMO_DATA_PATH),

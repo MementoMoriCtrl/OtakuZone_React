@@ -2,7 +2,8 @@ import { ApiError, createClient, safeImage } from './http.js'
 import { productImages } from '../data/productImages.js'
 import { readStoreCollection } from './storeContract.js'
 
-export const OTAKUZONE_URL = (import.meta.env?.VITE_OTAKUZONE_API_URL || 'http://127.0.0.1:4000/api/v1').replace(/\/$/, '')
+import { resolveApiUrls } from '../config/api.js'
+export const OTAKUZONE_URL = resolveApiUrls(import.meta.env).store
 const get = createClient({ ttl: 30000 })
 const getLive = createClient({ ttl: 0 })
 function adaptProduct(item) {

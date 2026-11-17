@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
 import HttpError from '../utils/HttpError.js'
+import { normalizeEmail } from '../validators/email.js'
 
 const unauthorized = () => new HttpError(401, 'UNAUTHENTICATED', 'Inicia sesión para continuar.')
 const roles = { cliente: 'CLIENTE', administrador: 'ADMIN' }
@@ -20,16 +21,17 @@ export function createAuthService(repository, config) {
   })
   return {
     async register(input) {
+      const email = normalizeEmail(input.email)
       const passwordHash = await bcrypt.hash(input.password, config.rounds)
       const session = sessionRecord()
-      try { return issued(await repository.registerWithSession({ name: input.name, email: input.email, passwordHash }, session), session) }
+      try { return issued(await repository.registerWithSession({ name: input.name, email, passwordHash }, session), session) }
       catch (error) {
         if (error.code === 'ER_DUP_ENTRY') throw new HttpError(409, 'REGISTRATION_UNAVAILABLE', 'No se pudo completar el registro con esos datos. Revisa los datos o inicia sesión si ya tienes una cuenta.')
         throw error
       }
     },
     async login(input) {
-      const row = await repository.findByEmail(input.email)
+      const row = await repository.findByEmail(normalizeEmail(input.email))
       const matches = await bcrypt.compare(input.password, row?.passwordHash || await dummyHash)
       if (!matches || !row || row.state !== 'activo') throw new HttpError(401, 'INVALID_CREDENTIALS', 'Correo o contraseña incorrectos.')
       const session = sessionRecord()

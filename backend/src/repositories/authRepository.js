@@ -1,15 +1,17 @@
 import { authSql } from '../db/authSql.js'
 import { executeRows } from '../db/pool.js'
 import { withTransaction } from '../db/transaction.js'
+import { normalizeEmail } from '../validators/email.js'
 
 export function createAuthRepository(pool) {
   return {
-    async findByEmail(email) { return (await executeRows(pool, authSql.byEmail, [email]))[0] ?? null },
+    async findByEmail(email) { return (await executeRows(pool, authSql.byEmail, [normalizeEmail(email)]))[0] ?? null },
     async registerWithSession(input, session) {
+      const email = normalizeEmail(input.email)
       return withTransaction(pool, async (connection) => {
         const roles = await executeRows(connection, authSql.clientRole, ['cliente'])
         if (!roles.length) throw new Error('Falta el rol de registro')
-        const result = await executeRows(connection, authSql.register, [roles[0].id, input.name, input.email, input.passwordHash])
+        const result = await executeRows(connection, authSql.register, [roles[0].id, input.name, email, input.passwordHash])
         const id = String(result.insertId)
         await executeRows(connection, authSql.insertSession, [session.id, id, session.expiresAt])
         return (await executeRows(connection, authSql.byId, [id]))[0]

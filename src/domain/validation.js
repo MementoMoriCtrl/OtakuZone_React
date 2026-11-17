@@ -1,7 +1,10 @@
+import { normalizeAsciiEmail } from '../../backend/src/domain/emailPolicy.js'
+
 export function validateProfile(values) {
   const errors = {}
   const name = String(values.name ?? '').trim()
-  const email = String(values.email ?? '').trim()
+  let email = ''
+  try { email = normalizeAsciiEmail(values.email ?? '') } catch { /* Generic validation message below. */ }
   if (name.length < 2 || name.length > 60) errors.name = 'Escribe un nombre de entre 2 y 60 caracteres.'
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Escribe un correo válido, por ejemplo nombre@dominio.com.'
   if (String(values.bio ?? '').length > 300) errors.bio = 'La presentación debe tener como máximo 300 caracteres.'
