@@ -1,0 +1,2711 @@
+{
+  "format": "otakuzone-tidb006-snapshot-v3",
+  "engine": "tidb",
+  "database": "otakuzone_db",
+  "metadataComplete": false,
+  "ledger": [
+    {
+      "version": "001_create_database.sql",
+      "checksum": "5e7af2dd955fe4a8e9fad68228240f0c80521b2d84c293bbe6ed4d1d66616fbb",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:52.974"
+    },
+    {
+      "version": "002_relational_schema.sql",
+      "checksum": "8ed28b2f71988471005dca2d57ee0695462b039f19fc6ac44617e21f5e64ee1c",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:56.405"
+    },
+    {
+      "version": "003_roles_and_plans.sql",
+      "checksum": "2280ea97e6ecfff549ec4fa20681bbd81bd2970b66d6a0f88063760597f40d92",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:57.460"
+    },
+    {
+      "version": "004_demo_catalog.sql",
+      "checksum": "d87b745c21d6167ce0e59297755ee4eabb3783493bc4051ff9c36a0f96aeaed7",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:58.800"
+    },
+    {
+      "version": "005_auth_sessions.sql",
+      "checksum": "dc7dfce218f252dbc051d9ab8aa22385a89568cc4bd071d74d6a90a1ad2b7a8c",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:45:00.024"
+    },
+    {
+      "version": "006_commerce.sql",
+      "checksum": "2042173bbf22384c553239fb3c98f440962ba611ece696be64f3e3cd3ac9345e",
+      "status": "applying",
+      "applied_at": null
+    }
+  ],
+  "tables": {
+    "pedidos": {
+      "tableType": "BASE TABLE",
+      "engine": "InnoDB",
+      "charset": "utf8mb4",
+      "collation": "utf8mb4_0900_ai_ci",
+      "columns": {
+        "id": {
+          "type": {
+            "state": "observed-value",
+            "value": "bigint unsigned",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/id/type",
+              "typeValue": "bigint unsigned",
+              "typeEvidenceSha256": "68eedbd3d543b7e6eea96c2226b0bf4a8a06d788c5e2d8323d79f3dee9a1905d"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "collation": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/id/type",
+              "typeValue": "bigint unsigned",
+              "typeEvidenceSha256": "68eedbd3d543b7e6eea96c2226b0bf4a8a06d788c5e2d8323d79f3dee9a1905d"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "default": {
+            "state": "observed-sql-null",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/default"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "observed-value",
+            "value": "auto_increment",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/extra"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/id/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "usuario_id": {
+          "type": {
+            "state": "observed-value",
+            "value": "bigint unsigned",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/usuario_id/type",
+              "typeValue": "bigint unsigned",
+              "typeEvidenceSha256": "05afc7f01a8c378c74573e32938b4a8b9e7ec1ace385899374f6ab8deabdb17e"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "collation": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/usuario_id/type",
+              "typeValue": "bigint unsigned",
+              "typeEvidenceSha256": "05afc7f01a8c378c74573e32938b4a8b9e7ec1ace385899374f6ab8deabdb17e"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "default": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            },
+            "partialFacts": [
+              {
+                "path": "#/tables/pedidos/columns/usuario_id/default",
+                "name": "default_is_null",
+                "value": 0,
+                "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+                "evidenceRefs": [
+                  "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:81"
+                ]
+              }
+            ]
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            },
+            "partialFacts": [
+              {
+                "path": "#/tables/pedidos/columns/usuario_id/extra",
+                "name": "extra_is_null",
+                "value": 0,
+                "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+                "evidenceRefs": [
+                  "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+                ]
+              }
+            ]
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/usuario_id/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "estado": {
+          "type": {
+            "state": "observed-value",
+            "value": "enum('pendiente','confirmado','cancelado','completado')",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "observed-value",
+            "value": "utf8mb4",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado/charset"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "observed-value",
+            "value": "utf8mb4_0900_ai_ci",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado/collation"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "observed-value",
+            "value": "pendiente",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado/default"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            },
+            "partialFacts": [
+              {
+                "path": "#/tables/pedidos/columns/estado/extra",
+                "name": "extra_is_null",
+                "value": 0,
+                "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+                "evidenceRefs": [
+                  "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+                ]
+              }
+            ]
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/estado/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "moneda": {
+          "type": {
+            "state": "observed-value",
+            "value": "char(3)",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "observed-value",
+            "value": "ascii",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda/charset"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "observed-value",
+            "value": "ascii_bin",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda/collation"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "observed-value",
+            "value": "PEN",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda/default"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            },
+            "partialFacts": [
+              {
+                "path": "#/tables/pedidos/columns/moneda/extra",
+                "name": "extra_is_null",
+                "value": 0,
+                "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+                "evidenceRefs": [
+                  "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+                ]
+              }
+            ]
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/moneda/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "costo_envio": {
+          "type": {
+            "state": "observed-value",
+            "value": "decimal(10,2)",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/costo_envio/type",
+              "typeValue": "decimal(10,2)",
+              "typeEvidenceSha256": "4994d6b331cbceebbbe458618c57e18f758e4c09339128b5991c9e23b6d37a97"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "collation": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/costo_envio/type",
+              "typeValue": "decimal(10,2)",
+              "typeEvidenceSha256": "4994d6b331cbceebbbe458618c57e18f758e4c09339128b5991c9e23b6d37a97"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "default": {
+            "state": "observed-value",
+            "value": "0.00",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio/default"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            },
+            "partialFacts": [
+              {
+                "path": "#/tables/pedidos/columns/costo_envio/extra",
+                "name": "extra_is_null",
+                "value": 0,
+                "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+                "evidenceRefs": [
+                  "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+                ]
+              }
+            ]
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/costo_envio/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "creado_en": {
+          "type": {
+            "state": "observed-value",
+            "value": "timestamp(3)",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/creado_en/type",
+              "typeValue": "timestamp(3)",
+              "typeEvidenceSha256": "3122ff083a2738214cc9eb5864fc7029ca069f8e651efcb73101c3e6655dc761"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "collation": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/pedidos/columns/creado_en/type",
+              "typeValue": "timestamp(3)",
+              "typeEvidenceSha256": "3122ff083a2738214cc9eb5864fc7029ca069f8e651efcb73101c3e6655dc761"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "default": {
+            "state": "observed-value",
+            "value": "CURRENT_TIMESTAMP(3)",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en/default"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            },
+            "partialFacts": [
+              {
+                "path": "#/tables/pedidos/columns/creado_en/extra",
+                "name": "extra_is_null",
+                "value": 0,
+                "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+                "evidenceRefs": [
+                  "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+                ]
+              }
+            ]
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/pedidos/columns/creado_en/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        }
+      },
+      "indexes": [
+        {
+          "name": "PRIMARY",
+          "unique": true,
+          "type": "BTREE",
+          "visible": true,
+          "columns": [
+            {
+              "name": "id",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            }
+          ]
+        },
+        {
+          "name": "ix_pedidos_estado_fecha",
+          "unique": false,
+          "type": "BTREE",
+          "visible": true,
+          "columns": [
+            {
+              "name": "estado",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            },
+            {
+              "name": "creado_en",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            }
+          ]
+        },
+        {
+          "name": "ix_pedidos_usuario_fecha",
+          "unique": false,
+          "type": "BTREE",
+          "visible": true,
+          "columns": [
+            {
+              "name": "usuario_id",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            },
+            {
+              "name": "creado_en",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            }
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_pedidos_usuario",
+          "columns": [
+            "usuario_id"
+          ],
+          "referencedSchema": "otakuzone_db",
+          "referencedTable": "usuarios",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "RESTRICT",
+          "onUpdate": "RESTRICT",
+          "enforcementEvidence": {
+            "format": "otakuzone-enforcement-evidence-v1",
+            "declarative": [],
+            "configuration": [],
+            "functional": []
+          }
+        }
+      ],
+      "checks": [
+        {
+          "name": "ck_pedidos_moneda",
+          "clause": "moneda = 'PEN'",
+          "enforcementEvidence": {
+            "format": "otakuzone-enforcement-evidence-v1",
+            "declarative": [],
+            "configuration": [],
+            "functional": []
+          }
+        },
+        {
+          "name": "ck_pedidos_envio",
+          "clause": "costo_envio >= 0",
+          "enforcementEvidence": {
+            "format": "otakuzone-enforcement-evidence-v1",
+            "declarative": [],
+            "configuration": [],
+            "functional": []
+          }
+        }
+      ],
+      "triggers": []
+    },
+    "carritos": {
+      "tableType": "BASE TABLE",
+      "engine": "InnoDB",
+      "charset": "utf8mb4",
+      "collation": "utf8mb4_0900_ai_ci",
+      "columns": {
+        "id": {
+          "type": {
+            "state": "observed-value",
+            "value": "bigint unsigned",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "observed-value",
+            "value": false,
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/nullable"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/carritos/columns/id/type",
+              "typeValue": "bigint unsigned",
+              "typeEvidenceSha256": "f1159fab7a0b0a535b43130ca995193fa300751e7c475d4ee7298e07437d5e20"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "collation": {
+            "state": "not-applicable",
+            "provenance": {
+              "source": "docs/DESPLIEGUE_ETAPA_4_1_CONTRATO_TIPADO_V3.md",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/type"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            },
+            "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1",
+            "basis": {
+              "typeEvidenceRef": "#/tables/carritos/columns/id/type",
+              "typeValue": "bigint unsigned",
+              "typeEvidenceSha256": "f1159fab7a0b0a535b43130ca995193fa300751e7c475d4ee7298e07437d5e20"
+            },
+            "previous": {
+              "state": "unknown",
+              "reason": "missing-v2-attribute",
+              "provenance": {
+                "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+                "evidenceRefs": [
+                  "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id"
+                ],
+                "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+                "completeness": "partial",
+                "integrity": "manual-unverified"
+              }
+            }
+          },
+          "default": {
+            "state": "observed-sql-null",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/default"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "observed-value",
+            "value": "auto_increment",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/extra"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "observed-value",
+            "value": "",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/id/generationExpression"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "complete",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "usuario_id": {
+          "type": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "usuario_activo_id": {
+          "type": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/usuario_activo_id"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "estado": {
+          "type": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/estado"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "creado_en": {
+          "type": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/creado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          }
+        },
+        "actualizado_en": {
+          "type": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "nullable": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "charset": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "collation": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "default": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "extra": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          },
+          "generationExpression": {
+            "state": "unknown",
+            "reason": "missing-v2-attribute",
+            "provenance": {
+              "source": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+              "evidenceRefs": [
+                "docs/snapshots/tidb-006-snapshot-v2-candidate.json#/tables/carritos/columns/actualizado_en"
+              ],
+              "engineVersion": "8.0.11-TiDB-v8.5.3-serverless",
+              "completeness": "partial",
+              "integrity": "manual-unverified"
+            }
+          }
+        }
+      },
+      "indexes": [
+        {
+          "name": "PRIMARY",
+          "unique": true,
+          "type": "BTREE",
+          "visible": true,
+          "columns": [
+            {
+              "name": "id",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            }
+          ]
+        },
+        {
+          "name": "ix_carritos_usuario_estado",
+          "unique": false,
+          "type": "BTREE",
+          "visible": true,
+          "columns": [
+            {
+              "name": "usuario_id",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            },
+            {
+              "name": "estado",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            }
+          ]
+        },
+        {
+          "name": "uq_carritos_usuario_activo",
+          "unique": true,
+          "type": "BTREE",
+          "visible": true,
+          "columns": [
+            {
+              "name": "usuario_activo_id",
+              "prefix": null,
+              "order": "ASC",
+              "expression": null
+            }
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_carritos_usuario",
+          "columns": [
+            "usuario_id"
+          ],
+          "referencedSchema": "otakuzone_db",
+          "referencedTable": "usuarios",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "RESTRICT",
+          "onUpdate": "RESTRICT",
+          "enforcementEvidence": {
+            "format": "otakuzone-enforcement-evidence-v1",
+            "declarative": [],
+            "configuration": [],
+            "functional": []
+          }
+        }
+      ],
+      "checks": [],
+      "triggers": []
+    },
+    "historial_pedidos": null
+  },
+  "data": {
+    "ordersCount": 0,
+    "historyRows": 0,
+    "ordersMissingHistory": 0,
+    "duplicateCartGroups": null,
+    "duplicateRequestGroups": null,
+    "orphanCartReferences": null,
+    "orphanHistoryReferences": null
+  },
+  "evidenceContext": {
+    "engineVersion": "8.0.11-TiDB-v8.5.3-serverless"
+  },
+  "evidenceTrust": "manual-unverified",
+  "readyForRemoteExecution": false,
+  "ledgerTransitionAllowed": false,
+  "allow007": false,
+  "columnAttributeFormat": "otakuzone-column-attribute-v1",
+  "columnRules": [
+    "tidb-8.5.3-nontext-character-attributes-v1"
+  ],
+  "adaptation": {
+    "format": "otakuzone-v2-to-v3-adaptation-v1",
+    "sourceRef": "docs/snapshots/tidb-006-snapshot-v2-candidate.json",
+    "sourceSha256": "3c11aa5ed05b2f086d8833a16d7920a6729a0a6cd5af28c8a0bb8d815fc7fc64",
+    "originalSnapshot": {
+      "format": "otakuzone-tidb006-snapshot-v2",
+      "engine": "tidb",
+      "database": "otakuzone_db",
+      "metadataComplete": false,
+      "ledger": [
+        {
+          "version": "001_create_database.sql",
+          "checksum": "5e7af2dd955fe4a8e9fad68228240f0c80521b2d84c293bbe6ed4d1d66616fbb",
+          "status": "applied",
+          "applied_at": "2026-11-17 04:44:52.974"
+        },
+        {
+          "version": "002_relational_schema.sql",
+          "checksum": "8ed28b2f71988471005dca2d57ee0695462b039f19fc6ac44617e21f5e64ee1c",
+          "status": "applied",
+          "applied_at": "2026-11-17 04:44:56.405"
+        },
+        {
+          "version": "003_roles_and_plans.sql",
+          "checksum": "2280ea97e6ecfff549ec4fa20681bbd81bd2970b66d6a0f88063760597f40d92",
+          "status": "applied",
+          "applied_at": "2026-11-17 04:44:57.460"
+        },
+        {
+          "version": "004_demo_catalog.sql",
+          "checksum": "d87b745c21d6167ce0e59297755ee4eabb3783493bc4051ff9c36a0f96aeaed7",
+          "status": "applied",
+          "applied_at": "2026-11-17 04:44:58.800"
+        },
+        {
+          "version": "005_auth_sessions.sql",
+          "checksum": "dc7dfce218f252dbc051d9ab8aa22385a89568cc4bd071d74d6a90a1ad2b7a8c",
+          "status": "applied",
+          "applied_at": "2026-11-17 04:45:00.024"
+        },
+        {
+          "version": "006_commerce.sql",
+          "checksum": "2042173bbf22384c553239fb3c98f440962ba611ece696be64f3e3cd3ac9345e",
+          "status": "applying",
+          "applied_at": null
+        }
+      ],
+      "tables": {
+        "pedidos": {
+          "tableType": "BASE TABLE",
+          "engine": "InnoDB",
+          "charset": "utf8mb4",
+          "collation": "utf8mb4_0900_ai_ci",
+          "columns": {
+            "id": {
+              "type": "bigint unsigned",
+              "nullable": false,
+              "default": null,
+              "extra": "auto_increment",
+              "generationExpression": ""
+            },
+            "usuario_id": {
+              "type": "bigint unsigned",
+              "nullable": false,
+              "generationExpression": ""
+            },
+            "estado": {
+              "type": "enum('pendiente','confirmado','cancelado','completado')",
+              "nullable": false,
+              "charset": "utf8mb4",
+              "collation": "utf8mb4_0900_ai_ci",
+              "default": "pendiente",
+              "generationExpression": ""
+            },
+            "moneda": {
+              "type": "char(3)",
+              "nullable": false,
+              "charset": "ascii",
+              "collation": "ascii_bin",
+              "default": "PEN",
+              "generationExpression": ""
+            },
+            "costo_envio": {
+              "type": "decimal(10,2)",
+              "nullable": false,
+              "default": "0.00",
+              "generationExpression": ""
+            },
+            "creado_en": {
+              "type": "timestamp(3)",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP(3)",
+              "generationExpression": ""
+            }
+          },
+          "indexes": [
+            {
+              "name": "PRIMARY",
+              "unique": true,
+              "type": "BTREE",
+              "visible": true,
+              "columns": [
+                {
+                  "name": "id",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                }
+              ]
+            },
+            {
+              "name": "ix_pedidos_estado_fecha",
+              "unique": false,
+              "type": "BTREE",
+              "visible": true,
+              "columns": [
+                {
+                  "name": "estado",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                },
+                {
+                  "name": "creado_en",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                }
+              ]
+            },
+            {
+              "name": "ix_pedidos_usuario_fecha",
+              "unique": false,
+              "type": "BTREE",
+              "visible": true,
+              "columns": [
+                {
+                  "name": "usuario_id",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                },
+                {
+                  "name": "creado_en",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                }
+              ]
+            }
+          ],
+          "foreignKeys": [
+            {
+              "name": "fk_pedidos_usuario",
+              "columns": [
+                "usuario_id"
+              ],
+              "referencedSchema": "otakuzone_db",
+              "referencedTable": "usuarios",
+              "referencedColumns": [
+                "id"
+              ],
+              "onDelete": "RESTRICT",
+              "onUpdate": "RESTRICT",
+              "enforcementEvidence": {
+                "format": "otakuzone-enforcement-evidence-v1",
+                "declarative": [],
+                "configuration": [],
+                "functional": []
+              }
+            }
+          ],
+          "checks": [
+            {
+              "name": "ck_pedidos_moneda",
+              "clause": "moneda = 'PEN'",
+              "enforcementEvidence": {
+                "format": "otakuzone-enforcement-evidence-v1",
+                "declarative": [],
+                "configuration": [],
+                "functional": []
+              }
+            },
+            {
+              "name": "ck_pedidos_envio",
+              "clause": "costo_envio >= 0",
+              "enforcementEvidence": {
+                "format": "otakuzone-enforcement-evidence-v1",
+                "declarative": [],
+                "configuration": [],
+                "functional": []
+              }
+            }
+          ],
+          "triggers": []
+        },
+        "carritos": {
+          "tableType": "BASE TABLE",
+          "engine": "InnoDB",
+          "charset": "utf8mb4",
+          "collation": "utf8mb4_0900_ai_ci",
+          "columns": {
+            "id": {
+              "type": "bigint unsigned",
+              "nullable": false,
+              "default": null,
+              "extra": "auto_increment",
+              "generationExpression": ""
+            },
+            "usuario_id": {},
+            "usuario_activo_id": {},
+            "estado": {},
+            "creado_en": {},
+            "actualizado_en": {}
+          },
+          "indexes": [
+            {
+              "name": "PRIMARY",
+              "unique": true,
+              "type": "BTREE",
+              "visible": true,
+              "columns": [
+                {
+                  "name": "id",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                }
+              ]
+            },
+            {
+              "name": "ix_carritos_usuario_estado",
+              "unique": false,
+              "type": "BTREE",
+              "visible": true,
+              "columns": [
+                {
+                  "name": "usuario_id",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                },
+                {
+                  "name": "estado",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                }
+              ]
+            },
+            {
+              "name": "uq_carritos_usuario_activo",
+              "unique": true,
+              "type": "BTREE",
+              "visible": true,
+              "columns": [
+                {
+                  "name": "usuario_activo_id",
+                  "prefix": null,
+                  "order": "ASC",
+                  "expression": null
+                }
+              ]
+            }
+          ],
+          "foreignKeys": [
+            {
+              "name": "fk_carritos_usuario",
+              "columns": [
+                "usuario_id"
+              ],
+              "referencedSchema": "otakuzone_db",
+              "referencedTable": "usuarios",
+              "referencedColumns": [
+                "id"
+              ],
+              "onDelete": "RESTRICT",
+              "onUpdate": "RESTRICT",
+              "enforcementEvidence": {
+                "format": "otakuzone-enforcement-evidence-v1",
+                "declarative": [],
+                "configuration": [],
+                "functional": []
+              }
+            }
+          ],
+          "checks": [],
+          "triggers": []
+        },
+        "historial_pedidos": null
+      },
+      "data": {
+        "ordersCount": 0,
+        "historyRows": 0,
+        "ordersMissingHistory": 0,
+        "duplicateCartGroups": null,
+        "duplicateRequestGroups": null,
+        "orphanCartReferences": null,
+        "orphanHistoryReferences": null
+      },
+      "evidenceContext": {
+        "engineVersion": "8.0.11-TiDB-v8.5.3-serverless"
+      },
+      "evidenceTrust": "manual-unverified",
+      "readyForRemoteExecution": false,
+      "ledgerTransitionAllowed": false,
+      "allow007": false
+    },
+    "originalCanonicalSha256": "5443f8ea2980eab065f0874507f425efe858143e2d69b940f0aa83bf15291c36",
+    "presentValuePolicy": "confirmed-v2-transcription-v1",
+    "conversions": [
+      {
+        "path": "#/format",
+        "from": "otakuzone-tidb006-snapshot-v2",
+        "to": "otakuzone-tidb006-snapshot-v3"
+      },
+      {
+        "path": "#/metadataComplete",
+        "from": false,
+        "to": false,
+        "operation": "require-independent-review"
+      },
+      {
+        "path": "#/evidenceTrust",
+        "from": "manual-unverified",
+        "to": "manual-unverified"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/type",
+        "from": {
+          "present": true,
+          "value": "bigint unsigned"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/default",
+        "from": {
+          "present": true,
+          "value": null
+        },
+        "toState": "observed-sql-null"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/extra",
+        "from": {
+          "present": true,
+          "value": "auto_increment"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/type",
+        "from": {
+          "present": true,
+          "value": "bigint unsigned"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/default",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/type",
+        "from": {
+          "present": true,
+          "value": "enum('pendiente','confirmado','cancelado','completado')"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/charset",
+        "from": {
+          "present": true,
+          "value": "utf8mb4"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/collation",
+        "from": {
+          "present": true,
+          "value": "utf8mb4_0900_ai_ci"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/default",
+        "from": {
+          "present": true,
+          "value": "pendiente"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/type",
+        "from": {
+          "present": true,
+          "value": "char(3)"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/charset",
+        "from": {
+          "present": true,
+          "value": "ascii"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/collation",
+        "from": {
+          "present": true,
+          "value": "ascii_bin"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/default",
+        "from": {
+          "present": true,
+          "value": "PEN"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/type",
+        "from": {
+          "present": true,
+          "value": "decimal(10,2)"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/default",
+        "from": {
+          "present": true,
+          "value": "0.00"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/type",
+        "from": {
+          "present": true,
+          "value": "timestamp(3)"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/default",
+        "from": {
+          "present": true,
+          "value": "CURRENT_TIMESTAMP(3)"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/type",
+        "from": {
+          "present": true,
+          "value": "bigint unsigned"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/nullable",
+        "from": {
+          "present": true,
+          "value": false
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/default",
+        "from": {
+          "present": true,
+          "value": null
+        },
+        "toState": "observed-sql-null"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/extra",
+        "from": {
+          "present": true,
+          "value": "auto_increment"
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/generationExpression",
+        "from": {
+          "present": true,
+          "value": ""
+        },
+        "toState": "observed-value"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/type",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/nullable",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/default",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_id/generationExpression",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/type",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/nullable",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/default",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/usuario_activo_id/generationExpression",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/type",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/nullable",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/default",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/estado/generationExpression",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/type",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/nullable",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/default",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/creado_en/generationExpression",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/type",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/nullable",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/charset",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/collation",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/default",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/extra",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/carritos/columns/actualizado_en/generationExpression",
+        "from": {
+          "present": false
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/default",
+        "operation": "attach-partial-fact",
+        "fact": {
+          "path": "#/tables/pedidos/columns/usuario_id/default",
+          "name": "default_is_null",
+          "value": 0,
+          "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+          "evidenceRefs": [
+            "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:81"
+          ]
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/extra",
+        "operation": "attach-partial-fact",
+        "fact": {
+          "path": "#/tables/pedidos/columns/usuario_id/extra",
+          "name": "extra_is_null",
+          "value": 0,
+          "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+          "evidenceRefs": [
+            "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+          ]
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/estado/extra",
+        "operation": "attach-partial-fact",
+        "fact": {
+          "path": "#/tables/pedidos/columns/estado/extra",
+          "name": "extra_is_null",
+          "value": 0,
+          "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+          "evidenceRefs": [
+            "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+          ]
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/moneda/extra",
+        "operation": "attach-partial-fact",
+        "fact": {
+          "path": "#/tables/pedidos/columns/moneda/extra",
+          "name": "extra_is_null",
+          "value": 0,
+          "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+          "evidenceRefs": [
+            "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+          ]
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/extra",
+        "operation": "attach-partial-fact",
+        "fact": {
+          "path": "#/tables/pedidos/columns/costo_envio/extra",
+          "name": "extra_is_null",
+          "value": 0,
+          "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+          "evidenceRefs": [
+            "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+          ]
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/extra",
+        "operation": "attach-partial-fact",
+        "fact": {
+          "path": "#/tables/pedidos/columns/creado_en/extra",
+          "name": "extra_is_null",
+          "value": 0,
+          "source": "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md",
+          "evidenceRefs": [
+            "docs/DESPLIEGUE_ETAPA_3_21_SNAPSHOT_V2.md:36"
+          ]
+        },
+        "toState": "unknown"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/charset",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/id/collation",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/charset",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/usuario_id/collation",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/charset",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/costo_envio/collation",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/charset",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/pedidos/columns/creado_en/collation",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/charset",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      },
+      {
+        "path": "#/tables/carritos/columns/id/collation",
+        "fromState": "unknown",
+        "toState": "not-applicable",
+        "ruleVersion": "tidb-8.5.3-nontext-character-attributes-v1"
+      }
+    ],
+    "metadataApproval": false
+  }
+}

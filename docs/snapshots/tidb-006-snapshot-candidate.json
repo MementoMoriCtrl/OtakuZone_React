@@ -1,0 +1,282 @@
+{
+  "format": "otakuzone-tidb006-snapshot-v1",
+  "engine": "tidb",
+  "database": "otakuzone_db",
+  "metadataComplete": false,
+  "ledger": [
+    {
+      "version": "001_create_database.sql",
+      "checksum": "5e7af2dd955fe4a8e9fad68228240f0c80521b2d84c293bbe6ed4d1d66616fbb",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:52.974"
+    },
+    {
+      "version": "002_relational_schema.sql",
+      "checksum": "8ed28b2f71988471005dca2d57ee0695462b039f19fc6ac44617e21f5e64ee1c",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:56.405"
+    },
+    {
+      "version": "003_roles_and_plans.sql",
+      "checksum": "2280ea97e6ecfff549ec4fa20681bbd81bd2970b66d6a0f88063760597f40d92",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:57.460"
+    },
+    {
+      "version": "004_demo_catalog.sql",
+      "checksum": "d87b745c21d6167ce0e59297755ee4eabb3783493bc4051ff9c36a0f96aeaed7",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:44:58.800"
+    },
+    {
+      "version": "005_auth_sessions.sql",
+      "checksum": "dc7dfce218f252dbc051d9ab8aa22385a89568cc4bd071d74d6a90a1ad2b7a8c",
+      "status": "applied",
+      "applied_at": "2026-11-17 04:45:00.024"
+    },
+    {
+      "version": "006_commerce.sql",
+      "checksum": "2042173bbf22384c553239fb3c98f440962ba611ece696be64f3e3cd3ac9345e",
+      "status": "applying",
+      "applied_at": null
+    }
+  ],
+  "tables": {
+    "pedidos": {
+      "tableType": "BASE TABLE",
+      "engine": "InnoDB",
+      "charset": "utf8mb4",
+      "collation": "utf8mb4_0900_ai_ci",
+      "columns": {
+        "id": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "usuario_id": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "estado": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "moneda": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "costo_envio": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "creado_en": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        }
+      },
+      "indexes": [
+        {
+          "name": "PRIMARY",
+          "unique": true,
+          "type": null,
+          "visible": null,
+          "columns": [
+            {
+              "name": "id"
+            }
+          ]
+        },
+        {
+          "name": "ix_pedidos_estado_fecha",
+          "unique": false,
+          "type": null,
+          "visible": null,
+          "columns": [
+            {
+              "name": "estado"
+            },
+            {
+              "name": "creado_en"
+            }
+          ]
+        },
+        {
+          "name": "ix_pedidos_usuario_fecha",
+          "unique": false,
+          "type": null,
+          "visible": null,
+          "columns": [
+            {
+              "name": "usuario_id"
+            },
+            {
+              "name": "creado_en"
+            }
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_pedidos_usuario",
+          "columns": [
+            "usuario_id"
+          ],
+          "referencedSchema": "otakuzone_db",
+          "referencedTable": "usuarios",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "RESTRICT",
+          "onUpdate": "RESTRICT",
+          "enforced": null
+        }
+      ],
+      "checks": [
+        {
+          "name": "ck_pedidos_moneda",
+          "clause": "moneda = 'PEN'",
+          "enforced": null
+        },
+        {
+          "name": "ck_pedidos_envio",
+          "clause": "costo_envio >= 0",
+          "enforced": null
+        }
+      ],
+      "triggers": []
+    },
+    "carritos": {
+      "tableType": "BASE TABLE",
+      "engine": "InnoDB",
+      "charset": "utf8mb4",
+      "collation": "utf8mb4_0900_ai_ci",
+      "columns": {
+        "id": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "usuario_id": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "usuario_activo_id": {
+          "type": null,
+          "nullable": null,
+          "charset": null,
+          "collation": null,
+          "default": null,
+          "extra": null,
+          "generationExpression": null
+        },
+        "estado": {},
+        "creado_en": {},
+        "actualizado_en": {}
+      },
+      "indexes": [
+        {
+          "name": "PRIMARY",
+          "unique": true,
+          "type": null,
+          "visible": null,
+          "columns": [
+            {
+              "name": "id"
+            }
+          ]
+        },
+        {
+          "name": "ix_carritos_usuario_estado",
+          "unique": false,
+          "type": null,
+          "visible": null,
+          "columns": [
+            {
+              "name": "usuario_id"
+            },
+            {
+              "name": "estado"
+            }
+          ]
+        },
+        {
+          "name": "uq_carritos_usuario_activo",
+          "unique": true,
+          "type": null,
+          "visible": null,
+          "columns": [
+            {
+              "name": "usuario_activo_id"
+            }
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_carritos_usuario",
+          "columns": [
+            "usuario_id"
+          ],
+          "referencedSchema": "otakuzone_db",
+          "referencedTable": "usuarios",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "RESTRICT",
+          "onUpdate": "RESTRICT",
+          "enforced": null
+        }
+      ],
+      "checks": [],
+      "triggers": []
+    },
+    "historial_pedidos": null
+  },
+  "data": {
+    "ordersCount": 0,
+    "historyRows": 0,
+    "ordersMissingHistory": 0,
+    "duplicateCartGroups": null,
+    "duplicateRequestGroups": null,
+    "orphanCartReferences": null,
+    "orphanHistoryReferences": null
+  }
+}
