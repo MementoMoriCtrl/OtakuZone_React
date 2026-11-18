@@ -10,7 +10,7 @@ import { once } from 'node:events'
 import { createApp } from '../src/app.js'
 import { loadConfig } from '../src/config/env.js'
 
-const tidbConfig = overrides => loadDatabaseConfig({ DB_ENGINE: 'tidb', DB_HOST: 'db.fixture.test', DB_SSL: 'true', DB_USER: 'fixture.runtime', DB_PASSWORD: 'fixture-only-not-a-credential', ...overrides })
+const tidbConfig = overrides => loadDatabaseConfig({ DB_ENGINE: 'tidb', DB_NAME: 'otakuzone_prod', DB_HOST: 'db.fixture.test', DB_SSL: 'true', DB_USER: 'fixture.runtime', DB_PASSWORD: 'fixture-only-not-a-credential', ...overrides })
 function clockFixture() {
   let time = 0, id = 0
   const timers = new Map(), pool = new EventEmitter(), connection = new EventEmitter()

@@ -1,4 +1,4 @@
-import { checkDatabaseConnection, databasePoolEngine } from './pool.js'
+import { checkDatabaseConnection, databasePoolEngine, databasePoolDatabase } from './pool.js'
 import { readFile } from 'node:fs/promises'
 import { readMigrationCatalog } from './migrationCatalog.js'
 
@@ -6,7 +6,7 @@ export const expectedTables = ['roles', 'usuarios', 'categorias', 'productos', '
 export async function checkDatabaseSchema(pool, { allowPendingAdmin = false } = {}) {
   const executor = typeof pool.getConnection === 'function' ? await pool.getConnection() : pool
   try {
-    const connection = await checkDatabaseConnection(executor, { expectedEngine: databasePoolEngine(pool) })
+    const connection = await checkDatabaseConnection(executor, { expectedEngine: databasePoolEngine(pool), expectedDatabase: databasePoolDatabase(pool) })
     const tidb = connection.identity.engine === 'tidb'
     const catalog = tidb ? await readMigrationCatalog('tidb') : null
     const [tables] = await executor.execute('SELECT TABLE_NAME AS name, ENGINE AS engine FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?', [connection.databaseName])

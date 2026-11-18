@@ -1,6 +1,7 @@
 import { readMigrationCatalog, validateAppliedMigrations } from './migrationCatalog.js'
 import { identifyDatabaseEngine, assertEngineVersion } from './engine.js'
 import { compatibilityError, readPreflightRows, uniqueVariables, verifyRuntimeConstraints } from './tidbRuntimeIntegrity.js'
+import { productionTidbTarget } from './tidbDatabase.js'
 
 export const requiredEmailCollation = 'utf8mb4_0900_bin'
 export function assertEmailCollation(collations, actual = requiredEmailCollation) {
@@ -18,6 +19,10 @@ const identityRow = async executor => {
 
 // Read-only. A future bootstrap may inspect an empty schema; runtime must not.
 export async function preflightTidb(executor, databaseName, options = {}) {
+  if ((options.phase ?? 'runtime') === 'runtime') {
+    try { productionTidbTarget(databaseName) }
+    catch { throw compatibilityError('session', 'production-target-required', 'configured database') }
+  }
   let connection
   try { connection = typeof executor.getConnection === 'function' ? await executor.getConnection() : executor }
   catch { throw compatibilityError('session', 'connection-unavailable', 'connection-lease') }
@@ -60,7 +65,7 @@ async function pinnedPreflight(executor, databaseName, { phase = 'runtime' } = {
     assertEmailCollation(collations.map(row => row.Collation))
     if (collations.find(row => row.Collation === requiredEmailCollation)?.Pad_attribute !== 'NO PAD') fail('NO PAD de email no verificable.', 'declarative')
     if (phase === 'runtime') {
-      if (databaseName !== 'otakuzone_db' || initial.databaseName !== databaseName) fail('base runtime no seleccionada o destino no verificado.')
+      if (productionTidbTarget(databaseName) !== initial.databaseName) fail('base runtime no seleccionada o destino no verificado.')
       const tables = await readPreflightRows(executor, 'SELECT TABLE_NAME AS name FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?', [databaseName])
       if (tables.some(row => row.name === 'schema_migrations')) fail('historial MySQL encontrado en destino TiDB.')
       if (!tables.some(row => row.name === 'schema_migrations_tidb')) fail('historial TiDB aprobado ausente; ejecutar el bootstrap mediante el migrador únicamente con autorización expresa.')

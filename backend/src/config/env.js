@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { loadDatabaseConfig } from './database.js'
 import { loadAuthConfig } from './auth.js'
 import { loadTrustProxy } from './proxy.js'
+import { productionTidbTarget } from '../db/tidbDatabase.js'
 
 const backendRoot = fileURLToPath(new URL('../../', import.meta.url))
 const developmentOrigins = 'http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:5174,http://localhost:5174,http://127.0.0.1:4173,http://localhost:4173'
@@ -32,6 +33,8 @@ export function loadConfig(environment = process.env) {
   if (!parsed.success) throw new Error(`Configuración inválida: ${[...new Set(parsed.error.issues.map((issue) => issue.path[0]))].join(', ')}`)
   const value = parsed.data
   if (value.NODE_ENV === 'production' && value.CORS_ORIGINS.some((item) => !item.startsWith('https://'))) throw new Error('Configuración inválida: CORS_ORIGINS debe usar HTTPS en producción.')
+  const database = value.CATALOG_SOURCE === 'mysql' || value.AUTH_ENABLED === 'true' ? loadDatabaseConfig(environment) : null
+  if (database?.engine === 'tidb') productionTidbTarget(environment.DB_NAME)
   return Object.freeze({
     environment: value.NODE_ENV, host: value.HOST, port: value.PORT,
     trustProxy: loadTrustProxy(environment.TRUST_PROXY),
@@ -39,7 +42,7 @@ export function loadConfig(environment = process.env) {
     rateLimitWindowMs: value.RATE_LIMIT_WINDOW_MS, rateLimitMax: value.RATE_LIMIT_MAX,
     demoDataPath: resolve(backendRoot, value.DEMO_DATA_PATH),
     catalogSource: value.CATALOG_SOURCE,
-    database: value.CATALOG_SOURCE === 'mysql' || value.AUTH_ENABLED === 'true' ? loadDatabaseConfig(environment) : null,
+    database,
     auth: value.AUTH_ENABLED === 'true' ? loadAuthConfig(environment) : null,
   })
 }

@@ -11,10 +11,10 @@ const originalConnect = net.Socket.prototype.connect
 let attempts = 0
 before(() => { net.Socket.prototype.connect = function () { attempts++; throw new Error('Network forbidden in compatibility tests') } })
 after(() => { net.Socket.prototype.connect = originalConnect; assert.equal(attempts, 0) })
-const run = overrides => preflightTidb(preflightFixture(overrides), 'otakuzone_db')
+const run = overrides => preflightTidb(preflightFixture(overrides), 'otakuzone_prod')
 
 test('Serverless sin ENFORCED: verifica 21 CHECK y 18 FK, funcional unknown', async () => {
-  const c = preflightFixture({ omitCheckRows: true }), r = await preflightTidb(c, 'otakuzone_db')
+  const c = preflightFixture({ omitCheckRows: true }), r = await preflightTidb(c, 'otakuzone_prod')
   assert.equal(r.runtimeApproved, true)
   assert.equal(r.constraints.filter(x => x.restrictionType === 'CHECK').length, 21)
   assert.equal(r.constraints.filter(x => x.restrictionType === 'FOREIGN KEY').length, 18)
@@ -42,7 +42,7 @@ for (const [name, overrides] of [
   ['versión no interpretada', { version: '8.5.4' }],
 ]) test(`declaración inválida/desconocida bloquea: ${name}`, async () => { await assert.rejects(run(overrides), e => e.dimension === (overrides.version ? 'identity' : 'declarative')) })
 test('metadatos duplicados o contradictorios nunca se eligen por mayoría', async () => {
-  const c = await runtimeConstraintContract()
+  const c = await runtimeConstraintContract('otakuzone_prod')
   await assert.rejects(run({ constraints: [...c, c[0]] }), e => e.reason === 'contradictory-metadata')
   await assert.rejects(run({ duplicateGlobal: true }), e => e.reason === 'contradictory-or-duplicate-variable')
   await assert.rejects(run({ drift: true }), e => e.reason === 'contradictory-observations')
@@ -56,20 +56,20 @@ test('una conexión correcta no presta su aprobación a otra con FK OFF', async 
   const a = preflightFixture({ connectionId: 101 }), b = preflightFixture({ connectionId: 202, session: { foreign_key_checks: 'OFF' } })
   let count = 0
   const pool = { getConnection: async () => count++ === 0 ? a : b }
-  assert.equal((await preflightTidb(pool, 'otakuzone_db')).connectionId, '101')
-  await assert.rejects(preflightTidb(pool, 'otakuzone_db'), /foreign_key_checks/)
+  assert.equal((await preflightTidb(pool, 'otakuzone_prod')).connectionId, '101')
+  await assert.rejects(preflightTidb(pool, 'otakuzone_prod'), /foreign_key_checks/)
   assert.equal(a.calls.at(-1), 'release'); assert.equal(b.calls.at(-1), 'release')
 })
 test('identidad de sesión diferente al final bloquea aunque controles coincidan', async () => {
   await assert.rejects(run({ changedConnection: true }), e => e.reason === 'connection-changed')
 })
 test('overrides de restricciones no permiten omitir el catálogo real', async () => {
-  await assert.rejects(preflightTidb(preflightFixture({ constraints: [] }), 'otakuzone_db', { expectedConstraints: [] }), /restricciones/)
+  await assert.rejects(preflightTidb(preflightFixture({ constraints: [] }), 'otakuzone_prod', { expectedConstraints: [] }), /restricciones/)
 })
 test('schemaCheck TiDB mantiene una sola conexión y no consulta ENFORCED', async () => {
   // mysql2 creates no network connection until acquisition. Replace acquisition with
   // the fixture before use; the socket guard above forbids accidental connections.
-  const pool = createDatabasePool({ engine: 'tidb', host: 'fixture.invalid', user: 'fixture', password: 'synthetic', database: 'otakuzone_db', connectionLimit: 2, ssl: true })
+  const pool = createDatabasePool({ engine: 'tidb', host: 'fixture.invalid', user: 'fixture', password: 'synthetic', database: 'otakuzone_prod', connectionLimit: 2, ssl: true })
   const c = preflightFixture({ tables: expectedTables.map(n => n === 'schema_migrations' ? 'schema_migrations_tidb' : n) })
   let acquisitions = 0; pool.getConnection = async () => { acquisitions++; return c }
   try {

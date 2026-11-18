@@ -4,6 +4,7 @@ import { requiredEmailCollation } from '../../src/db/tidbPreflight.js'
 
 const rows = values => Object.entries(values).map(([Variable_name, Value]) => ({ Variable_name, Value }))
 export function preflightFixture(overrides = {}) {
+  const database = overrides.database ?? 'otakuzone_prod'
   const globals = { tidb_enable_check_constraint: 'ON', tidb_enable_foreign_key: 'ON', ...overrides.global }
   const session = { foreign_key_checks: 'ON', sql_mode: 'STRICT_TRANS_TABLES,ONLY_FULL_GROUP_BY', time_zone: '+00:00', system_time_zone: 'UTC', tidb_txn_mode: 'pessimistic', tidb_constraint_check_in_place_pessimistic: 'ON', autocommit: 'ON', ...overrides.session }
   const calls = []; let identityReads = 0, globalReads = 0
@@ -11,9 +12,9 @@ export function preflightFixture(overrides = {}) {
     calls.push(sql)
     if (overrides.unavailable || overrides.errorAt && sql.includes(overrides.errorAt)) throw new Error('private details must never leak')
     if (/\bENFORCED\s+AS\s+enforced/i.test(sql)) throw new Error('Unknown column ENFORCED')
-    const contract = await runtimeConstraintContract()
-    if (sql.startsWith('SELECT CONNECTION_ID')) return [[{ connectionId: ++identityReads > 1 && overrides.changedConnection ? 22 : overrides.connectionId ?? 11, version: `8.0.11-TiDB-v${overrides.version ?? '8.5.3'}-serverless`, databaseName: 'otakuzone_db' }]]
-    if (sql.startsWith('SELECT VERSION()')) return [[{ version: '8.0.11-TiDB-v8.5.3-serverless', databaseName: 'otakuzone_db' }]]
+    const contract = await runtimeConstraintContract(database)
+    if (sql.startsWith('SELECT CONNECTION_ID')) return [[{ connectionId: ++identityReads > 1 && overrides.changedConnection ? 22 : overrides.connectionId ?? 11, version: `8.0.11-TiDB-v${overrides.version ?? '8.5.3'}-serverless`, databaseName: database }]]
+    if (sql.startsWith('SELECT VERSION()')) return [[{ version: '8.0.11-TiDB-v8.5.3-serverless', databaseName: database }]]
     if (sql.startsWith('SELECT TIDB_VERSION')) return [[{ tidbVersion: `Release Version: v${overrides.version ?? '8.5.3'}-serverless\nEdition: Community\nGit Commit Hash: fixture` }]]
     if (sql.includes("Variable_name = 'tidb_txn_mode'")) return [rows({ tidb_txn_mode: session.tidb_txn_mode })]
     if (sql.startsWith('SHOW GLOBAL')) return [overrides.duplicateGlobal ? [...rows(globals), ...rows(globals)] : rows(++globalReads > 1 && overrides.drift ? { ...globals, tidb_enable_foreign_key: 'OFF' } : globals)]

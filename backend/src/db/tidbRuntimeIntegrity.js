@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readMigrationCatalog, expectedIntegrityConstraints } from './migrationCatalog.js'
 import { catalogConstraintDefinitions, inspectConstraintDeclaration, declaredConstraintNames } from './tidbEnforcementEvidence.js'
+import { tidbDatabase } from './tidbDatabase.js'
 
 export function compatibilityError(dimension, reason, source) {
   const error = new Error(`Preflight TiDB: ${dimension}/${reason}; fuente ${source}.`)
@@ -22,11 +23,12 @@ export function uniqueVariables(rows, scope) {
   }
   return values
 }
-export async function runtimeConstraintContract() {
+export async function runtimeConstraintContract(target) {
+  const database = tidbDatabase(target)
   let catalog
   try { catalog = await readMigrationCatalog('tidb') }
   catch { throw compatibilityError('catalog', 'checksum-or-source-unavailable', 'local TiDB catalog') }
-  const definitions = catalog.migrations.flatMap(m => catalogConstraintDefinitions(m.sql).map(d => ({ ...d, migration: m.file, checksum: m.checksum })))
+  const definitions = catalog.migrations.flatMap(m => catalogConstraintDefinitions(m.sql, database).map(d => ({ ...d, migration: m.file, checksum: m.checksum })))
   const names = await expectedIntegrityConstraints('tidb')
   if (definitions.length !== names.length || names.some(n => definitions.filter(d => d.name === n.name && d.type === n.type).length !== 1)) throw compatibilityError('catalog', 'definition-unavailable', 'local TiDB catalog')
   return definitions
@@ -34,7 +36,7 @@ export async function runtimeConstraintContract() {
 const action = value => value === 'NO ACTION' ? 'RESTRICT' : value
 
 export async function verifyRuntimeConstraints(connection, database, context) {
-  const expected = await runtimeConstraintContract()
+  const expected = await runtimeConstraintContract(database)
   const constraints = await readPreflightRows(connection, 'SELECT TABLE_NAME AS tableName, CONSTRAINT_NAME AS name, CONSTRAINT_TYPE AS type FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = ?', [database])
   if (constraints.some(c => ['CHECK', 'FOREIGN KEY'].includes(c.type) && !expected.some(e => e.name === c.name && e.type === c.type && e.tableName === c.tableName))) throw compatibilityError('declarative', 'unexpected-constraint', 'TABLE_CONSTRAINTS')
   const fkRows = await readPreflightRows(connection, 'SELECT k.TABLE_NAME AS tableName, k.CONSTRAINT_NAME AS name, k.ORDINAL_POSITION AS position, k.COLUMN_NAME AS columnName, k.REFERENCED_TABLE_SCHEMA AS referencedSchema, k.REFERENCED_TABLE_NAME AS referencedTable, k.REFERENCED_COLUMN_NAME AS referencedColumn, r.DELETE_RULE AS onDelete, r.UPDATE_RULE AS onUpdate FROM information_schema.KEY_COLUMN_USAGE k JOIN information_schema.REFERENTIAL_CONSTRAINTS r ON r.CONSTRAINT_SCHEMA = k.CONSTRAINT_SCHEMA AND r.TABLE_NAME = k.TABLE_NAME AND r.CONSTRAINT_NAME = k.CONSTRAINT_NAME WHERE k.TABLE_SCHEMA = ? ORDER BY k.TABLE_NAME, k.CONSTRAINT_NAME, k.ORDINAL_POSITION', [database])

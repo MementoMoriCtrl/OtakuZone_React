@@ -1,3 +1,4 @@
+import { tidbDatabase } from './tidbDatabase.js'
 // Pure offline interpretation. No SQL execution, driver, environment or credentials.
 export const evidenceFormat = 'otakuzone-enforcement-evidence-v1'
 export const interpretationRuleVersion = 'tidb-8.5.3-markers-v2'
@@ -185,7 +186,8 @@ export function declaredConstraintNames(ddl, identity) {
 }
 
 // This reader is only for checksum-validated local catalog SQL. It never executes it.
-export function catalogConstraintDefinitions(sql) {
+export function catalogConstraintDefinitions(sql, target) {
+  const database = tidbDatabase(target)
   const ts = tokens(sql.replace(/^\s*--.*$/gm, ''))
   if (!ts) throw new Error('Catálogo: definición SQL no interpretable.')
   const statements = []; let current = []
@@ -226,7 +228,7 @@ export function catalogConstraintDefinitions(sql) {
         if (reference < 0) throw new Error('Catálogo: FK incompleta.')
         const close = c.findIndex((t, i) => i > reference + 1 && symbol(t, ')'))
         const names = list => list.filter(identifier).map(t => t.value)
-        const definition = { name, columns: names(c.slice(5, reference - 1)), referencedSchema: 'otakuzone_db', referencedTable: c[reference + 1]?.value,
+        const definition = { name, columns: names(c.slice(5, reference - 1)), referencedSchema: database, referencedTable: c[reference + 1]?.value,
           referencedColumns: names(c.slice(reference + 3, close)), onDelete: onDelete < 0 ? 'RESTRICT' : c[onDelete + 2]?.value.toUpperCase(), onUpdate: onUpdate < 0 ? 'RESTRICT' : c[onUpdate + 2]?.value.toUpperCase() }
         definitions.push({ name, type: 'FOREIGN KEY', tableName, definition })
       } else throw new Error('Catálogo: tipo de restricción no interpretable.')

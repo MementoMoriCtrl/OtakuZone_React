@@ -19,7 +19,7 @@ test('MySQL producción exige host explícito y TLS; CA conserva verificación',
   assert.throws(() => loadDatabaseConfig(environment), /DB_HOST/)
   assert.throws(() => loadDatabaseConfig({ ...environment, DB_HOST: 'db.test' }), /DB_SSL/)
   const config = loadDatabaseConfig({ ...environment, DB_HOST: 'db.test', DB_SSL: 'true', DB_SSL_CA: 'line1\\nline2' })
-  assert.deepEqual(databaseTlsOptions(config), { ssl: { rejectUnauthorized: true, ca: 'line1\nline2' } })
+  assert.deepEqual(databaseTlsOptions(config), { ssl: { rejectUnauthorized: true, verifyIdentity: true, ca: 'line1\nline2' } })
 })
 test('headers falsificados no eluden límite detrás de un proxy confiable', async context => {
   const config = loadConfig({ NODE_ENV: 'test', TRUST_PROXY: '127.0.0.1/32,::1/128', RATE_LIMIT_MAX: '2' })

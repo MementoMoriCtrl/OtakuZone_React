@@ -24,7 +24,7 @@ test('migration acepta root TiDB sin cambiar TLS ni el objeto de configuración 
   assert.equal(config.engine, 'tidb')
   assert.equal(config.user, 'fixture.root')
   assert.equal(config.database, 'otakuzone_db')
-  assert.deepEqual(databaseTlsOptions(config), { ssl: { rejectUnauthorized: true } })
+  assert.deepEqual(databaseTlsOptions(config), { ssl: { rejectUnauthorized: true, verifyIdentity: true } })
   assert.equal('context' in config, false)
   assert.throws(() => loadDatabaseConfig(environment()), /runtime sin root/)
 })

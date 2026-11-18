@@ -4,9 +4,12 @@ import { preflightTidb } from './tidbPreflight.js'
 import { installConnectionLifetime } from './connectionLifecycle.js'
 import { databaseHttpError } from './errors.js'
 import { installTidbSessionGuard } from './tidbSession.js'
+import { productionTidbTarget } from './tidbDatabase.js'
 
 const poolEngines = new WeakMap()
+const poolDatabases = new WeakMap()
 export const databasePoolEngine = pool => poolEngines.get(pool) ?? 'mysql'
+export const databasePoolDatabase = pool => poolDatabases.get(pool)
 
 export function databasePoolOptions(config) {
   return {
@@ -23,8 +26,10 @@ export function databasePoolOptions(config) {
 }
 
 export function createDatabasePool(config) {
+  if (config.engine === 'tidb') productionTidbTarget(config.database)
   const pool = mysql.createPool(databasePoolOptions(config))
   poolEngines.set(pool, config.engine ?? 'mysql')
+  poolDatabases.set(pool, config.database)
   if (config.engine === 'tidb') {
     installTidbSessionGuard(pool)
     const dispose = installConnectionLifetime(pool, { maxLifetimeMs: config.maxLifetime ?? 300000 })
@@ -35,7 +40,7 @@ export function createDatabasePool(config) {
 }
 
 export function databaseTlsOptions(config) {
-  return config.ssl ? { ssl: { rejectUnauthorized: true, ...(config.sslCa ? { ca: config.sslCa } : {}) } } : {}
+  return config.ssl ? { ssl: { rejectUnauthorized: true, verifyIdentity: true, ...(config.sslCa ? { ca: config.sslCa } : {}) } } : {}
 }
 
 export function assertMysqlVersion(version) {
@@ -43,12 +48,13 @@ export function assertMysqlVersion(version) {
   if (identity.engine !== 'mysql') throw new Error('Se requiere MySQL; TiDB tiene identificación y preflight separados.')
   assertEngineVersion(identity)
 }
-export async function checkDatabaseConnection(pool, { expectedEngine = poolEngines.get(pool) ?? 'mysql', phase = 'runtime' } = {}) {
+export async function checkDatabaseConnection(pool, { expectedEngine = poolEngines.get(pool) ?? 'mysql', expectedDatabase = poolDatabases.get(pool), phase = 'runtime' } = {}) {
   // Pin all observations to the same physical session.
   const connection = typeof pool.getConnection === 'function' ? await pool.getConnection() : pool
   try {
     const result = await inspectDatabaseEngine(connection)
     if (result.identity.engine !== expectedEngine) throw new Error('El motor detectado no coincide con DB_ENGINE; no se permite fallback de dialecto.')
+    if (expectedDatabase && result.databaseName !== expectedDatabase) throw new Error('La conexión no seleccionó la base de datos configurada.')
     if (expectedEngine === 'tidb') result.preflight = await preflightTidb(connection, result.databaseName, { phase })
     return result
   } finally { if (connection !== pool) connection.release() }
