@@ -6,6 +6,7 @@ import { databaseHttpError } from './errors.js'
 import { installTidbSessionGuard } from './tidbSession.js'
 
 const poolEngines = new WeakMap()
+export const databasePoolEngine = pool => poolEngines.get(pool) ?? 'mysql'
 
 export function databasePoolOptions(config) {
   return {
@@ -48,7 +49,7 @@ export async function checkDatabaseConnection(pool, { expectedEngine = poolEngin
   try {
     const result = await inspectDatabaseEngine(connection)
     if (result.identity.engine !== expectedEngine) throw new Error('El motor detectado no coincide con DB_ENGINE; no se permite fallback de dialecto.')
-    if (expectedEngine === 'tidb') await preflightTidb(connection, result.databaseName, { phase })
+    if (expectedEngine === 'tidb') result.preflight = await preflightTidb(connection, result.databaseName, { phase })
     return result
   } finally { if (connection !== pool) connection.release() }
 }

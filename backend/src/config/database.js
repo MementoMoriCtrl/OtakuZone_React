@@ -16,14 +16,18 @@ const schema = z.object({
   DB_POOL_MAX_LIFETIME_MS: z.coerce.number().int().min(1000).max(300000).default(300000),
 })
 
-export function loadDatabaseConfig(environment = process.env) {
+export function loadDatabaseConfig(environment = process.env, { context = 'runtime' } = {}) {
+  if (!['runtime', 'migration'].includes(context)) throw new Error('Contexto de configuración de base de datos no admitido.')
   const parsed = schema.safeParse(environment)
   if (!parsed.success) throw new Error(`Configuración MySQL incompleta o inválida: ${[...new Set(parsed.error.issues.map((issue) => issue.path[0]))].join(', ')}`)
   const value = parsed.data
+  const rootSuffix = value.DB_USER.split('.').at(-1).toLowerCase() === 'root'
+  if (context === 'migration' && value.DB_ENGINE !== 'tidb' && value.DB_USER.includes('.') && rootSuffix) throw new Error('La excepción de usuario .root del migrador requiere DB_ENGINE=tidb.')
   if (value.DB_ENGINE === 'tidb') {
     if (value.DB_SSL !== 'true' || isIP(value.DB_HOST) || !environment.DB_HOST || !/^[a-zA-Z0-9.-]+$/.test(value.DB_HOST) || value.DB_HOST === 'localhost') throw new Error('Configuración TiDB inválida: DB_SSL=true y hostname explícito son obligatorios.')
     if (value.DB_POOL_SIZE < 2 || value.DB_POOL_SIZE > 5) throw new Error('Configuración TiDB inválida: DB_POOL_SIZE debe estar entre 2 y 5.')
-    if (!/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value.DB_USER) || value.DB_USER.split('.').at(-1).toLowerCase() === 'root') throw new Error('Configuración TiDB inválida: usuario runtime con prefijo de instancia, sin root; máximo 32 caracteres completos.')
+    if (!/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value.DB_USER)) throw new Error('Configuración TiDB inválida: usuario con prefijo de instancia y máximo 32 caracteres completos.')
+    if (context === 'runtime' && rootSuffix) throw new Error('Configuración TiDB inválida: usuario runtime sin root.')
   }
   if (environment.NODE_ENV === 'production' && (value.DB_SSL !== 'true' || !environment.DB_HOST)) throw new Error('Configuración MySQL de producción inválida: DB_HOST explícito y DB_SSL=true son obligatorios.')
   if (value.DB_SSL_CA && value.DB_SSL !== 'true') throw new Error('DB_SSL_CA requiere DB_SSL=true.')
