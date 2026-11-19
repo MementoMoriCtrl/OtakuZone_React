@@ -4,6 +4,7 @@ import { createApp } from './app.js'
 import { createCatalogSource } from './config/catalogSource.js'
 import { checkDatabaseConnection, createDatabasePool } from './db/pool.js'
 import { runDatabaseNetworkDiagnostics } from './db/networkDiagnostics.js'
+import { withStartupDiagnostics, startupStage } from './db/startupDiagnostics.js'
 
 loadEnvironment()
 let source
@@ -13,14 +14,16 @@ try {
   const config = loadConfig()
   if (process.env.DB_NETWORK_DIAGNOSTICS === 'true') await runDatabaseNetworkDiagnostics(config.database)
   source = createCatalogSource(config)
-  if (source.pool) await checkDatabaseConnection(source.pool)
+  if (source.pool) await withStartupDiagnostics(() => checkDatabaseConnection(source.pool))
   if (config.auth) {
     authPool = source.pool ?? createDatabasePool(config.database)
-    if (authPool !== source.pool) await checkDatabaseConnection(authPool)
-    await authPool.execute('SELECT id FROM auth_sesiones LIMIT 0')
-    await authPool.execute('SELECT id FROM historial_pedidos LIMIT 0')
-    await authPool.execute('SELECT id FROM movimientos_inventario LIMIT 0')
-    await authPool.execute('SELECT carrito_origen_id,clave_solicitud FROM pedidos LIMIT 0')
+    if (authPool !== source.pool) await withStartupDiagnostics(() => checkDatabaseConnection(authPool))
+    await withStartupDiagnostics(async () => {
+      await startupStage('auth-sessions-check', () => authPool.execute('SELECT id FROM auth_sesiones LIMIT 0'))
+      await startupStage('order-history-check', () => authPool.execute('SELECT id FROM historial_pedidos LIMIT 0'))
+      await startupStage('inventory-movements-check', () => authPool.execute('SELECT id FROM movimientos_inventario LIMIT 0'))
+      await startupStage('order-columns-check', () => authPool.execute('SELECT carrito_origen_id,clave_solicitud FROM pedidos LIMIT 0'))
+    })
   }
   const server = createApp({ config, repository: source.repository, authPool }).listen(config.port, config.host, () => {
     console.log(`OtakuZone API: http://${config.host}:${config.port}/api/v1`)

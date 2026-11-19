@@ -1,3 +1,7 @@
+import { startupStage } from './startupDiagnostics.js'
+
+const guardedPools = new WeakSet()
+export const hasTidbSessionGuard = pool => guardedPools.has(pool)
 // Only connection-local UTC is set. Integrity modes are required, never weakened.
 export async function prepareTidbSession(connection) {
   await connection.query("SET SESSION time_zone = '+00:00'")
@@ -9,10 +13,11 @@ export async function prepareTidbSession(connection) {
 }
 
 export function installTidbSessionGuard(pool) {
+  guardedPools.add(pool)
   const acquire = pool.getConnection.bind(pool)
   pool.getConnection = async () => {
-    const connection = await acquire()
-    try { await prepareTidbSession(connection); return connection }
+    const connection = await startupStage('mysql2-acquire', acquire)
+    try { await startupStage('tidb-session', () => prepareTidbSession(connection)); return connection }
     catch (error) { connection.destroy(); throw error }
   }
   // PromisePool.execute/query otherwise acquire internally and bypass the guard.

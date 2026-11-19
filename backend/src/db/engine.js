@@ -29,16 +29,24 @@ export function assertEngineVersion(identity) {
 }
 
 export async function inspectDatabaseEngine(executor) {
-  const [rows] = await executor.execute('SELECT VERSION() AS version, @@version_comment AS versionComment, DATABASE() AS databaseName, 1 AS ready')
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value)
+  const rowsFrom = result => {
+    if (!Array.isArray(result) || !Array.isArray(result[0]) || result[0].some(row => !object(row))) fail('respuesta de identificación malformada.')
+    return result[0]
+  }
+  const rows = rowsFrom(await executor.execute('SELECT VERSION() AS version, @@version_comment AS versionComment, DATABASE() AS databaseName, 1 AS ready'))
   const row = rows[0]
   if (!row) fail('no se pudo leer VERSION.')
   let evidence = {}
   if (typeof row.version === 'string' && row.version.includes('-TiDB-')) {
-    try {
-      const [[detail]] = await executor.execute('SELECT TIDB_VERSION() AS tidbVersion')
-      const [variables] = await executor.execute("SHOW SESSION VARIABLES WHERE Variable_name = 'tidb_txn_mode'")
-      evidence = { tidbVersion: detail?.tidbVersion, tidbTxnMode: variables.find(v => v.Variable_name === 'tidb_txn_mode')?.Value }
-    } catch { fail('no se pudo corroborar identidad TiDB; consultas de solo lectura fallaron.') }
+    // Await execution outside response validation: transport errors retain identity and cause.
+    const details = await executor.execute('SELECT TIDB_VERSION() AS tidbVersion')
+    const modes = await executor.execute("SHOW SESSION VARIABLES WHERE Variable_name = 'tidb_txn_mode'")
+    const [detail] = rowsFrom(details)
+    const variables = rowsFrom(modes)
+    const mode = variables.find(v => v.Variable_name === 'tidb_txn_mode')
+    if (typeof detail?.tidbVersion !== 'string' || typeof mode?.Value !== 'string') fail('identidad TiDB no corroborada; respuesta incompleta.')
+    evidence = { tidbVersion: detail.tidbVersion, tidbTxnMode: mode.Value }
   }
   const identity = identifyDatabaseEngine({ ...row, ...evidence })
   assertEngineVersion(identity)

@@ -3,7 +3,8 @@ import { inspectDatabaseEngine, identifyDatabaseEngine, assertEngineVersion } fr
 import { preflightTidb } from './tidbPreflight.js'
 import { installConnectionLifetime } from './connectionLifecycle.js'
 import { databaseHttpError } from './errors.js'
-import { installTidbSessionGuard } from './tidbSession.js'
+import { installTidbSessionGuard, hasTidbSessionGuard } from './tidbSession.js'
+import { startupStage } from './startupDiagnostics.js'
 import { productionTidbTarget } from './tidbDatabase.js'
 
 const poolEngines = new WeakMap()
@@ -50,12 +51,16 @@ export function assertMysqlVersion(version) {
 }
 export async function checkDatabaseConnection(pool, { expectedEngine = poolEngines.get(pool) ?? 'mysql', expectedDatabase = poolDatabases.get(pool), phase = 'runtime' } = {}) {
   // Pin all observations to the same physical session.
-  const connection = typeof pool.getConnection === 'function' ? await pool.getConnection() : pool
+  const connection = typeof pool.getConnection === 'function'
+    ? await (hasTidbSessionGuard(pool) ? pool.getConnection() : startupStage('mysql2-acquire', () => pool.getConnection())) : pool
   try {
-    const result = await inspectDatabaseEngine(connection)
-    if (result.identity.engine !== expectedEngine) throw new Error('El motor detectado no coincide con DB_ENGINE; no se permite fallback de dialecto.')
-    if (expectedDatabase && result.databaseName !== expectedDatabase) throw new Error('La conexión no seleccionó la base de datos configurada.')
-    if (expectedEngine === 'tidb') result.preflight = await preflightTidb(connection, result.databaseName, { phase })
+    const result = await startupStage('engine-identification', async () => {
+      const observed = await inspectDatabaseEngine(connection)
+      if (observed.identity.engine !== expectedEngine) throw new Error('El motor detectado no coincide con DB_ENGINE; no se permite fallback de dialecto.')
+      if (expectedDatabase && observed.databaseName !== expectedDatabase) throw new Error('La conexión no seleccionó la base de datos configurada.')
+      return observed
+    })
+    if (expectedEngine === 'tidb') result.preflight = await startupStage('preflight', () => preflightTidb(connection, result.databaseName, { phase }))
     return result
   } finally { if (connection !== pool) connection.release() }
 }
