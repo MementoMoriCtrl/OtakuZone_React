@@ -27,7 +27,7 @@ test('no sustituye collation de email por una alternativa no equivalente', () =>
 test('runtime rechaza historial MySQL, esquema vacío y restricciones faltantes', async () => {
   await assert.rejects(preflightTidb(fixture({ tables: ['schema_migrations'] }), 'otakuzone_prod'), /historial MySQL/)
   await assert.rejects(preflightTidb(fixture({ tables: [] }), 'otakuzone_prod'), /historial TiDB/)
-  await assert.rejects(preflightTidb(fixture({ constraints: [] }), 'otakuzone_prod'), /restricciones/)
+  await assert.rejects(preflightTidb(fixture({ constraints: [] }), 'otakuzone_prod'), e => e.reason === 'restricciones-FK-absent')
   const constraints = await expectedIntegrityConstraints()
   await assert.rejects(preflightTidb(fixture({ constraints: constraints.map(c => ({ ...c, enforced: 'NO' })) }), 'otakuzone_prod'), /enforcement/)
   assert.equal(constraints.filter(c => c.type === 'CHECK').length, 20)

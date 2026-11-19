@@ -62,26 +62,29 @@ const keyword = (token, value) => token?.kind === 'word' && token.value.toUpperC
 const symbol = (token, value) => token?.kind === 'symbol' && token.value === value
 const identifier = token => ['word', 'id'].includes(token?.kind)
 
-function tableDeclaration(ddl, identity) {
+// Optional diagnostics carry only fixed reason codes, never input SQL or token values.
+function tableDeclaration(ddl, identity, diagnostics) {
+  const reject = detailReason => { if (diagnostics) diagnostics.detailReason = detailReason; return unknown }
   const ts = tokens(ddl)
-  if (!ts || !keyword(ts[0], 'CREATE') || !keyword(ts[1], 'TABLE')) return unknown
+  if (!ts) return reject('ddl-lexically-uninterpretable')
+  if (!keyword(ts[0], 'CREATE') || !keyword(ts[1], 'TABLE')) return reject('create-table-header-invalid')
   let start = 2
-  if (!identifier(ts[start])) return unknown
+  if (!identifier(ts[start])) return reject('table-identifier-invalid')
   let tableName = ts[start++].value
   if (symbol(ts[start], '.')) {
-    if (tableName !== identity.database || !identifier(ts[start + 1])) return unknown
+    if (tableName !== identity.database || !identifier(ts[start + 1])) return reject('table-schema-mismatch-or-invalid')
     tableName = ts[start + 1].value; start += 2
   }
-  if (tableName !== identity.tableName || !symbol(ts[start], '(')) return unknown
+  if (tableName !== identity.tableName || !symbol(ts[start], '(')) return reject('table-name-or-body-invalid')
   let depth = 1, from = start + 1, end = -1; const clauses = []
   for (let i = from; i < ts.length; i++) {
     if (symbol(ts[i], '(')) depth++
     if (symbol(ts[i], ')')) depth--
-    if (depth < 0) return unknown
+    if (depth < 0) return reject('ddl-parentheses-invalid')
     if (depth === 0) { clauses.push(ts.slice(from, i)); end = i; break }
     if (depth === 1 && symbol(ts[i], ',')) { clauses.push(ts.slice(from, i)); from = i + 1 }
   }
-  if (end < 0 || !keyword(ts[end + 1], 'ENGINE') || !symbol(ts[end + 2], '=') || !keyword(ts[end + 3], 'INNODB')) return unknown
+  if (end < 0 || !keyword(ts[end + 1], 'ENGINE') || !symbol(ts[end + 2], '=') || !keyword(ts[end + 3], 'INNODB')) return reject('table-body-or-engine-invalid')
   // Only a bounded grammar of known SHOW CREATE table options is supported.
   const suffix = ts.slice(end + 4), options = new Set()
   for (let i = 0; i < suffix.length;) {
@@ -89,47 +92,48 @@ function tableDeclaration(ddl, identity) {
     const hasDefault = keyword(suffix[i], 'DEFAULT')
     if (hasDefault) i++
     const option = suffix[i++]
-    if (option?.kind !== 'word' || !['CHARSET', 'COLLATE', 'AUTO_INCREMENT', 'COMMENT'].includes(option.value.toUpperCase())) return unknown
+    if (option?.kind !== 'word' || !['CHARSET', 'COLLATE', 'AUTO_INCREMENT', 'COMMENT'].includes(option.value.toUpperCase())) return reject('table-option-unsupported')
     const name = option.value.toUpperCase()
-    if (hasDefault && !['CHARSET', 'COLLATE'].includes(name)) return unknown
-    if (options.has(name) || !symbol(suffix[i++], '=')) return unknown
+    if (hasDefault && !['CHARSET', 'COLLATE'].includes(name)) return reject('table-option-default-invalid')
+    if (options.has(name) || !symbol(suffix[i++], '=')) return reject('table-option-duplicate-or-incomplete')
     options.add(name)
     const value = suffix[i++]
     if (name === 'COMMENT' ? value?.kind !== 'string'
       : name === 'AUTO_INCREMENT' ? value?.kind !== 'word' || !/^\d+$/.test(value.value)
-        : !identifier(value)) return unknown
+        : !identifier(value)) return reject('table-option-value-invalid')
   }
   // Comments preceding a clause or executable comments can hide duplicate objects.
   if (clauses.some(c => !c.length || c.some((t, i) => t.kind === 'comment'
     && (!keyword(c[0], 'CONSTRAINT') || i !== c.length - 1
       || !['!80016 NOT ENFORCED', 'FOREIGN KEY INVALID'].includes(t.value))
-      && !(identity.declarationMode === 'runtime-v1' && i === c.length - 1 && !keyword(c[0], 'CONSTRAINT') && /^T!\[clustered_index\]\s+(?:CLUSTERED|NONCLUSTERED)$/.test(t.value))))) return unknown
+      && !(identity.declarationMode === 'runtime-v1' && i === c.length - 1 && !keyword(c[0], 'CONSTRAINT') && /^T!\[clustered_index\]\s+(?:CLUSTERED|NONCLUSTERED)$/.test(t.value))))) return reject('clause-comment-unsupported-or-ambiguous')
   return clauses
 }
 
 // Pure syntax/marker interpretation, without fabricating offline capture provenance.
-export function inspectConstraintDeclaration(ddl, identity) {
+export function inspectConstraintDeclaration(ddl, identity, diagnostics) {
+  const reject = detailReason => { if (diagnostics) diagnostics.detailReason = detailReason; return unknown }
   if (!['8.5.3', '8.0.11-TiDB-v8.5.3-serverless'].includes(identity?.engineVersion)
-    || !identity.definition || !['CHECK', 'FOREIGN KEY'].includes(identity.type)) return unknown
-  const clauses = tableDeclaration(ddl, identity)
+    || !identity.definition || !['CHECK', 'FOREIGN KEY'].includes(identity.type)) return reject('interpretation-context-unsupported')
+  const clauses = tableDeclaration(ddl, identity, diagnostics)
   if (!Array.isArray(clauses)) return unknown
   const matches = clauses.filter(c => keyword(c[0], 'CONSTRAINT') && identifier(c[1]) && c[1].value === identity.name)
-  if (matches.length !== 1) return unknown
+  if (matches.length !== 1) return reject(matches.length ? 'constraint-duplicate' : 'constraint-absent')
   const clause = matches[0]
   const comments = clause.filter(t => t.kind === 'comment').map(t => t.value)
-  if (comments.some(c => c !== '!80016 NOT ENFORCED' && c !== 'FOREIGN KEY INVALID')) return unknown
+  if (comments.some(c => c !== '!80016 NOT ENFORCED' && c !== 'FOREIGN KEY INVALID')) return reject('constraint-syntax-or-marker-unsupported')
   const body = clause.filter(t => t.kind !== 'comment')
   // Preserve quoted identifier case; JSON tuple encoding cannot collide on '|'.
   const canonical = list => JSON.stringify(list.map(t => ['word', 'id'].includes(t.kind)
     ? ['identifier', t.kind === 'word' ? t.value.toLowerCase() : t.value] : [t.kind, t.value]))
   if (identity.type === 'CHECK') {
-    if (!keyword(body[2], 'CHECK') || !symbol(body[3], '(')) return unknown
+    if (!keyword(body[2], 'CHECK') || !symbol(body[3], '(')) return reject('constraint-syntax-or-marker-unsupported')
     const disabled = comments.includes('!80016 NOT ENFORCED')
-    if (comments.includes('FOREIGN KEY INVALID')) return unknown
+    if (comments.includes('FOREIGN KEY INVALID')) return reject('constraint-syntax-or-marker-unsupported')
     const enabled = keyword(body.at(-1), 'ENFORCED') && !keyword(body.at(-2), 'NOT')
     const explicitDisabled = keyword(body.at(-2), 'NOT') && keyword(body.at(-1), 'ENFORCED')
-    if (enabled && disabled) return unknown
-    if (!symbol(body.at(-1), ')') && !enabled && !explicitDisabled) return unknown
+    if (enabled && disabled) return reject('constraint-syntax-or-marker-unsupported')
+    if (!symbol(body.at(-1), ')') && !enabled && !explicitDisabled) return reject('constraint-syntax-or-marker-unsupported')
     let expression = body.slice(3, explicitDisabled ? -2 : enabled ? -1 : undefined)
     const unwrap = list => {
       while (symbol(list[0], '(') && symbol(list.at(-1), ')')) {
@@ -145,11 +149,11 @@ export function inspectConstraintDeclaration(ddl, identity) {
       return list
     }
     expression = unwrap(expression)
-    if (!expression.length || identity.definition && canonical(expression) !== canonical(unwrap(tokens(identity.definition.clause) ?? []))) return unknown
+    if (!expression.length || identity.definition && canonical(expression) !== canonical(unwrap(tokens(identity.definition.clause) ?? []))) return reject('check-expression-unknown-or-different')
     return disabled || explicitDisabled ? false : true
   }
   if (!keyword(body[2], 'FOREIGN') || !keyword(body[3], 'KEY') || !symbol(body[4], '(')
-    || !body.some(t => keyword(t, 'REFERENCES')) || comments.includes('!80016 NOT ENFORCED')) return unknown
+    || !body.some(t => keyword(t, 'REFERENCES')) || comments.includes('!80016 NOT ENFORCED')) return reject('constraint-syntax-or-marker-unsupported')
   if (identity.declarationMode === 'runtime-v1') {
     const reference = body.findIndex(t => keyword(t, 'REFERENCES'))
     if (identifier(body[reference + 1]) && symbol(body[reference + 2], '(')) body.splice(reference + 1, 0, { kind: 'id', value: identity.database }, { kind: 'symbol', value: '.' })
@@ -163,7 +167,7 @@ export function inspectConstraintDeclaration(ddl, identity) {
     const d = identity.definition
     const ids = names => names.map(name => `\`${name}\``).join(',')
     const expected = tokens(`CONSTRAINT \`${identity.name}\` FOREIGN KEY (${ids(d.columns)}) REFERENCES \`${d.referencedSchema}\`.\`${d.referencedTable}\` (${ids(d.referencedColumns)}) ON DELETE ${d.onDelete} ON UPDATE ${d.onUpdate}`)
-    if (canonical(body) !== canonical(expected)) return unknown
+    if (canonical(body) !== canonical(expected)) return reject('fk-definition-unknown-or-different')
   }
   return comments.includes('FOREIGN KEY INVALID') ? false : true
 }
@@ -173,13 +177,16 @@ function declarative(record, identity) {
   return inspectConstraintDeclaration(record.ddl, identity)
 }
 
-export function declaredConstraintNames(ddl, identity) {
-  const clauses = tableDeclaration(ddl, identity)
+export function declaredConstraintNames(ddl, identity, diagnostics) {
+  const clauses = tableDeclaration(ddl, identity, diagnostics)
   if (!Array.isArray(clauses)) return null
   const names = []
   for (const c of clauses) {
     if (!keyword(c[0], 'CONSTRAINT')) continue
-    if (!identifier(c[1]) || !(keyword(c[2], 'CHECK') || keyword(c[2], 'FOREIGN') && keyword(c[3], 'KEY'))) return null
+    if (!identifier(c[1]) || !(keyword(c[2], 'CHECK') || keyword(c[2], 'FOREIGN') && keyword(c[3], 'KEY'))) {
+      if (diagnostics) diagnostics.detailReason = 'constraint-header-uninterpretable'
+      return null
+    }
     names.push(c[1].value)
   }
   return names

@@ -64,7 +64,7 @@ test('identidad de sesión diferente al final bloquea aunque controles coincidan
   await assert.rejects(run({ changedConnection: true }), e => e.reason === 'connection-changed')
 })
 test('overrides de restricciones no permiten omitir el catálogo real', async () => {
-  await assert.rejects(preflightTidb(preflightFixture({ constraints: [] }), 'otakuzone_prod', { expectedConstraints: [] }), /restricciones/)
+  await assert.rejects(preflightTidb(preflightFixture({ constraints: [] }), 'otakuzone_prod', { expectedConstraints: [] }), e => e.reason === 'restricciones-FK-absent')
 })
 test('schemaCheck TiDB mantiene una sola conexión y no consulta ENFORCED', async () => {
   // mysql2 creates no network connection until acquisition. Replace acquisition with

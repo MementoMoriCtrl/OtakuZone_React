@@ -39,6 +39,7 @@ export function preflightFixture(overrides = {}) {
       if (overrides.omitFkDefaults) parts = parts.map(p => p.startsWith('CONSTRAINT') && p.includes('FOREIGN KEY') ? p.replace(' ON DELETE RESTRICT', '').replace(' ON UPDATE RESTRICT', '') : p)
       let ddl = `CREATE TABLE \`${tableName}\` (id bigint, PRIMARY KEY (id) /*T![clustered_index] CLUSTERED */, ${parts.join(', ')}) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci`
       if (overrides.truncatedDdl) ddl = ddl.slice(0, -20)
+      if (overrides.transformDdl) ddl = overrides.transformDdl(ddl, tableName)
       return [[{ Table: tableName, 'Create Table': ddl }]]
     }
     if (sql.startsWith('SELECT version')) return [overrides.history ?? (await readMigrationCatalog('tidb')).migrations.map(item => ({ version: item.file, checksum: item.checksum, status: 'applied' }))]
