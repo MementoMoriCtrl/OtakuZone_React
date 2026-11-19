@@ -66,6 +66,8 @@ const identifier = token => ['word', 'id'].includes(token?.kind)
 // restores all four ASCII regexp/flag literals with explicit utf8mb4 introducers.
 // Pin the predicate too: a matching name alone must never authorize equivalence.
 const canonicalEmailPredicate = "email IS NOT NULL AND OCTET_LENGTH(email) BETWEEN 1 AND 254 AND NOT REGEXP_LIKE(email, '[^a-z0-9_''+@.-]', 'c') AND REGEXP_LIKE(email, '^([a-z0-9_''+-]+[.])*[a-z0-9_''+-]*[a-z0-9_+-]@([a-z0-9][a-z0-9-]*[.])+[a-z]{2,}$', 'c')"
+// tidb-8.5.3-product-image-check-utf8mb4-v1: exact observed IN-list only.
+const canonicalProductImagePredicate = "image_key IN ('figura','manga','polo','llavero')"
 
 // Optional diagnostics carry only fixed reason codes, never input SQL or token values.
 function tableDeclaration(ddl, identity, diagnostics) {
@@ -163,7 +165,11 @@ export function inspectConstraintDeclaration(ddl, identity, diagnostics) {
       && identity.database === 'otakuzone_prod' && identity.tableName === 'usuarios' && identity.name === 'ck_usuarios_email_canonical'
       && canonical(expectedExpression) === canonical(tokens(canonicalEmailPredicate))
       && canonical(expression) === canonical(expectedExpression.flatMap(t => t.kind === 'string' ? [{ kind: 'word', value: '_utf8mb4' }, t] : [t]))
-    if (!expression.length || !exactMatch && !restoredEmailMatch) return reject('check-expression-unknown-or-different')
+    const restoredProductImageMatch = !exactMatch && identity.declarationMode === 'runtime-v1'
+      && identity.database === 'otakuzone_prod' && identity.tableName === 'productos' && identity.name === 'ck_productos_image'
+      && canonical(expectedExpression) === canonical(tokens(canonicalProductImagePredicate))
+      && canonical(expression) === canonical(expectedExpression.flatMap(t => t.kind === 'string' ? [{ kind: 'word', value: '_utf8mb4' }, t] : [t]))
+    if (!expression.length || !exactMatch && !restoredEmailMatch && !restoredProductImageMatch) return reject('check-expression-unknown-or-different')
     return disabled || explicitDisabled ? false : true
   }
   if (!keyword(body[2], 'FOREIGN') || !keyword(body[3], 'KEY') || !symbol(body[4], '(')
