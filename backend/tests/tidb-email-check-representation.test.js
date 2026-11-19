@@ -57,8 +57,8 @@ test('representation rule does not apply to other identities, versions, predicat
     { ...identity, name: 'other_check' },
     { ...identity, definition: { ...expected.definition, clause: 'email IS NOT NULL' } },
   ]) assert.equal(inspectConstraintDeclaration(ddl(observed), context), 'unknown')
-  const other = { ...identity, tableName: 'pedidos', name: 'ck_pedidos_moneda', definition: { clause: "moneda = 'PEN'" } }
-  assert.equal(inspectConstraintDeclaration("CREATE TABLE pedidos (CONSTRAINT ck_pedidos_moneda CHECK (moneda = _utf8mb4'PEN')) ENGINE=InnoDB", other), 'unknown')
+  const other = { ...identity, tableName: 'pedidos', name: 'other_check', definition: { clause: "moneda = 'PEN'" } }
+  assert.equal(inspectConstraintDeclaration("CREATE TABLE pedidos (CONSTRAINT other_check CHECK (moneda = _utf8mb4'PEN')) ENGINE=InnoDB", other), 'unknown')
 })
 
 const liveFixture = clause => preflightFixture({ transformDdl: (text, table) => table !== 'usuarios' ? text : text.replace(/CONSTRAINT `ck_usuarios_email_canonical` CHECK \([\s\S]*?\)(?=, CONSTRAINT)/, () => clause) })
