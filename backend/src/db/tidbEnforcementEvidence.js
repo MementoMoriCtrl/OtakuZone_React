@@ -62,6 +62,11 @@ const keyword = (token, value) => token?.kind === 'word' && token.value.toUpperC
 const symbol = (token, value) => token?.kind === 'symbol' && token.value === value
 const identifier = token => ['word', 'id'].includes(token?.kind)
 
+// tidb-8.5.3-email-check-utf8mb4-v1: the supplied SHOW CREATE representation
+// restores all four ASCII regexp/flag literals with explicit utf8mb4 introducers.
+// Pin the predicate too: a matching name alone must never authorize equivalence.
+const canonicalEmailPredicate = "email IS NOT NULL AND OCTET_LENGTH(email) BETWEEN 1 AND 254 AND NOT REGEXP_LIKE(email, '[^a-z0-9_''+@.-]', 'c') AND REGEXP_LIKE(email, '^([a-z0-9_''+-]+[.])*[a-z0-9_''+-]*[a-z0-9_+-]@([a-z0-9][a-z0-9-]*[.])+[a-z]{2,}$', 'c')"
+
 // Optional diagnostics carry only fixed reason codes, never input SQL or token values.
 function tableDeclaration(ddl, identity, diagnostics) {
   const reject = detailReason => { if (diagnostics) diagnostics.detailReason = detailReason; return unknown }
@@ -149,7 +154,16 @@ export function inspectConstraintDeclaration(ddl, identity, diagnostics) {
       return list
     }
     expression = unwrap(expression)
-    if (!expression.length || identity.definition && canonical(expression) !== canonical(unwrap(tokens(identity.definition.clause) ?? []))) return reject('check-expression-unknown-or-different')
+    const expectedExpression = unwrap(tokens(identity.definition.clause) ?? [])
+    const exactMatch = canonical(expression) === canonical(expectedExpression)
+    // Runtime already checks usuarios.email VARCHAR(254)/utf8mb4_0900_bin.
+    // Compare a second, fully specified token sequence; never strip arbitrary
+    // charsets, COLLATE clauses, literals, grouping, operators or comments.
+    const restoredEmailMatch = !exactMatch && identity.declarationMode === 'runtime-v1'
+      && identity.database === 'otakuzone_prod' && identity.tableName === 'usuarios' && identity.name === 'ck_usuarios_email_canonical'
+      && canonical(expectedExpression) === canonical(tokens(canonicalEmailPredicate))
+      && canonical(expression) === canonical(expectedExpression.flatMap(t => t.kind === 'string' ? [{ kind: 'word', value: '_utf8mb4' }, t] : [t]))
+    if (!expression.length || !exactMatch && !restoredEmailMatch) return reject('check-expression-unknown-or-different')
     return disabled || explicitDisabled ? false : true
   }
   if (!keyword(body[2], 'FOREIGN') || !keyword(body[3], 'KEY') || !symbol(body[4], '(')
