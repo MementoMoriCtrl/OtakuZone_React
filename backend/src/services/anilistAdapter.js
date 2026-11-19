@@ -1,5 +1,12 @@
 import HttpError from '../utils/HttpError.js'
 const bad = () => { throw new HttpError(502,'ANILIST_INVALID_RESPONSE','AniList devolvió datos que no se pudieron interpretar.') }
+const object = value => value !== null && typeof value === 'object' && !Array.isArray(value)
+const id = value => Number.isSafeInteger(value) && value > 0
+function connection(value, field) {
+  if(value == null)return []
+  if(!object(value) || !Array.isArray(value[field]))bad()
+  return value[field]
+}
 const text = (v,fallback='') => typeof v==='string'&&v.trim()?v.trim():fallback
 const image = v => typeof v==='string'&&v.startsWith('https://')?v:null
 // Never inject upstream HTML. React also renders this as text, without innerHTML.
@@ -26,8 +33,22 @@ export function normalizePage(data) {
 export function normalizeDetails(data) {
   if(data?.Media===null)throw new HttpError(404,'ANIME_NOT_FOUND','El anime solicitado no existe en AniList.')
   const item=data?.Media,anime=normalizeAnime(item)
-  return {...anime,characters:(item.characters?.nodes??[]).slice(0,6).map(c=>({id:c.id,name:text(c.name?.full,'Personaje sin nombre'),image:image(c.image?.medium)})),
-    related:(item.relations?.edges??[]).filter(e=>e.node?.type==='ANIME').slice(0,12).map(e=>({id:e.node.id,title:text(e.node.title?.romaji,text(e.node.title?.english,text(e.node.title?.native,'Anime relacionado'))),image:image(e.node.coverImage?.large),relation:text(e.relationType),season:e.node.season??null,year:e.node.seasonYear??null}))}
+  const characters=connection(item.characters,'nodes')
+  const relations=connection(item.relations,'edges')
+  for(const c of characters) {
+    if(!object(c) || !id(c.id) || !object(c.name) || !text(c.name.full)
+      || c.image != null && (!object(c.image) || c.image.medium != null && typeof c.image.medium !== 'string'))bad()
+  }
+  for(const e of relations) {
+    if(!object(e) || !text(e.relationType) || !object(e.node) || !id(e.node.id) || !['ANIME','MANGA'].includes(e.node.type)
+      || !object(e.node.title) || !['romaji','english','native'].some(k=>text(e.node.title[k]))
+      || ['romaji','english','native'].some(k=>e.node.title[k] != null && typeof e.node.title[k] !== 'string')
+      || e.node.coverImage != null && (!object(e.node.coverImage) || e.node.coverImage.large != null && typeof e.node.coverImage.large !== 'string')
+      || e.node.season != null && !['WINTER','SPRING','SUMMER','FALL'].includes(e.node.season)
+      || e.node.seasonYear != null && (!Number.isInteger(e.node.seasonYear) || e.node.seasonYear < 1))bad()
+  }
+  return {...anime,characters:characters.slice(0,6).map(c=>({id:c.id,name:text(c.name.full),image:image(c.image?.medium)})),
+    related:relations.filter(e=>e.node.type==='ANIME').slice(0,12).map(e=>({id:e.node.id,title:text(e.node.title.romaji,text(e.node.title.english,text(e.node.title.native))),image:image(e.node.coverImage?.large),relation:text(e.relationType),season:e.node.season??null,year:e.node.seasonYear??null}))}
 }
 export function normalizeGenres(data) {
   if(!Array.isArray(data?.GenreCollection)||data.GenreCollection.some(g=>typeof g!=='string'))bad()
