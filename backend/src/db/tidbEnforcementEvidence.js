@@ -70,6 +70,8 @@ const canonicalEmailPredicate = "email IS NOT NULL AND OCTET_LENGTH(email) BETWE
 const canonicalProductImagePredicate = "image_key IN ('figura','manga','polo','llavero')"
 // tidb-8.5.3-order-currency-check-utf8mb4-v1: exact observed currency literal only.
 const canonicalOrderCurrencyPredicate = "moneda = 'PEN'"
+// tidb-8.5.3-promotion-destination-check-utf8mb4-v1: exact observed destinations only.
+const canonicalPromotionDestinationPredicate = "destino IN ('/animes','/tienda')"
 
 // Optional diagnostics carry only fixed reason codes, never input SQL or token values.
 function tableDeclaration(ddl, identity, diagnostics) {
@@ -175,7 +177,11 @@ export function inspectConstraintDeclaration(ddl, identity, diagnostics) {
       && identity.database === 'otakuzone_prod' && identity.tableName === 'pedidos' && identity.name === 'ck_pedidos_moneda'
       && canonical(expectedExpression) === canonical(tokens(canonicalOrderCurrencyPredicate))
       && canonical(expression) === canonical(expectedExpression.flatMap(t => t.kind === 'string' ? [{ kind: 'word', value: '_utf8mb4' }, t] : [t]))
-    if (!expression.length || !exactMatch && !restoredEmailMatch && !restoredProductImageMatch && !restoredOrderCurrencyMatch) return reject('check-expression-unknown-or-different')
+    const restoredPromotionDestinationMatch = !exactMatch && identity.declarationMode === 'runtime-v1'
+      && identity.database === 'otakuzone_prod' && identity.tableName === 'promociones' && identity.name === 'ck_promociones_destino'
+      && canonical(expectedExpression) === canonical(tokens(canonicalPromotionDestinationPredicate))
+      && canonical(expression) === canonical(expectedExpression.flatMap(t => t.kind === 'string' ? [{ kind: 'word', value: '_utf8mb4' }, t] : [t]))
+    if (!expression.length || !exactMatch && !restoredEmailMatch && !restoredProductImageMatch && !restoredOrderCurrencyMatch && !restoredPromotionDestinationMatch) return reject('check-expression-unknown-or-different')
     return disabled || explicitDisabled ? false : true
   }
   if (!keyword(body[2], 'FOREIGN') || !keyword(body[3], 'KEY') || !symbol(body[4], '(')
