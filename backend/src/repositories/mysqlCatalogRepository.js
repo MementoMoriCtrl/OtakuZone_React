@@ -5,6 +5,7 @@ import { withTransaction } from '../db/transaction.js'
 const productDto = (row) => ({ ...row, price: Number(row.price), available: Number(row.available) })
 export function createMysqlCatalogRepository(pool) {
   return {
+    source: 'mysql',
     async findProducts({ categoryId, q } = {}) {
       const rows = await executeRows(pool, catalogSql.products, [categoryId || null, categoryId || null, q || null, q || null])
       return rows.map(productDto)

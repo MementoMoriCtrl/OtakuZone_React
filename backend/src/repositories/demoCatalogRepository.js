@@ -6,6 +6,7 @@ import { demoCatalog } from '../validators/catalog.js'
 export function createDemoCatalogRepository(path) {
   const read = async () => demoCatalog.parse(JSON.parse((await readFile(path, 'utf8')).replace(/^\uFEFF/, '')))
   return {
+    source: 'demo',
     async findProducts({ categoryId, q } = {}) {
       const { products } = await read()
       return products.filter((item) => (!categoryId || item.categoryId === categoryId) && (!q || item.name.toLocaleLowerCase('es').includes(q.toLocaleLowerCase('es'))))

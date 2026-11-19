@@ -2,6 +2,7 @@ import HttpError from '../utils/HttpError.js'
 
 export function createCatalogService(repository) {
   return {
+    source: repository.source,
     async listProducts(query) {
       const items = await repository.findProducts(query)
       const compare = { 'price-asc': (a, b) => a.price - b.price, 'price-desc': (a, b) => b.price - a.price, name: (a, b) => a.name.localeCompare(b.name, 'es') }[query?.order]
