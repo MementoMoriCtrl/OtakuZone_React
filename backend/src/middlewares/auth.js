@@ -1,7 +1,7 @@
 import { parseCookie } from 'cookie'
 import HttpError from '../utils/HttpError.js'
 
-export const cookieOptions = (config) => ({ httpOnly: true, secure: config.secure, sameSite: 'lax', path: '/' })
+export const cookieOptions = (config) => ({ httpOnly: true, secure: config.secure, sameSite: config.sameSite ?? 'lax', path: '/' })
 export function readSessionCookie(request, config) {
   try { return parseCookie(request.headers.cookie || '')[config.cookieName] ?? null } catch { return null }
 }
