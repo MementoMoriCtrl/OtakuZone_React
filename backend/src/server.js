@@ -3,6 +3,7 @@ import { loadConfig } from './config/env.js'
 import { createApp } from './app.js'
 import { createCatalogSource } from './config/catalogSource.js'
 import { checkDatabaseConnection, createDatabasePool } from './db/pool.js'
+import { runDatabaseNetworkDiagnostics } from './db/networkDiagnostics.js'
 
 loadEnvironment()
 let source
@@ -10,6 +11,7 @@ let authPool
 const close = async () => { if (source) await source.close(); if (authPool && authPool !== source?.pool) await authPool.end() }
 try {
   const config = loadConfig()
+  if (process.env.DB_NETWORK_DIAGNOSTICS === 'true') await runDatabaseNetworkDiagnostics(config.database)
   source = createCatalogSource(config)
   if (source.pool) await checkDatabaseConnection(source.pool)
   if (config.auth) {
